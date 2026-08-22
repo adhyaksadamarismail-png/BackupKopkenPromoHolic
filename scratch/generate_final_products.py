@@ -2,17 +2,27 @@ import sqlite3, json, os
 
 conn = sqlite3.connect('/Users/macbook/jasdorbydy/data/jasdor.db')
 c = conn.cursor()
-c.execute("SELECT id, name, image, description, customization_json FROM products WHERE brand_id = 'brand_kopi_kenangan'")
+c.execute("SELECT id, name, image, description, price, category FROM products WHERE brand_id = 'brand_kopi_kenangan'")
 rows = c.fetchall()
 
 db_map = {}
+db_food_items = []
+
 for r in rows:
-    pid, name, image, desc, cust_json = r
+    pid, name, image, desc, price, category = r
     db_map[name.lower().strip()] = {
         'image': image,
         'desc': desc,
-        'cust': cust_json
+        'price': price,
+        'category': category
     }
+    if category == 'Food':
+        db_food_items.append({
+            'name': name,
+            'price': price,
+            'image': image,
+            'desc': desc
+        })
 
 default_images = {
     'kopi': 'https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png',
@@ -90,19 +100,37 @@ raw_catalog = [
     # 🌾 OATSIDE SERIES
     {"name": "Oatside Matcha Latte", "price": 17500, "category": "oatside"},
     {"name": "Oatside Kopi Kenangan", "price": 15500, "category": "oatside"},
-    {"name": "Oatside Latte", "price": 17500, "category": "oatside"},
+    {"name": "Oatside Latte", "price": 17500, "category": "oatside"}
+]
 
-    # 🍞 FOOD
-    {"name": "Blueberry Muffin", "price": 12000, "category": "food"},
-    {"name": "Choco Muffin", "price": 12000, "category": "food"},
-    {"name": "Sandwich Chicken Tartare", "price": 16000, "category": "food"},
-    {"name": "Sandwich Smoked Beef", "price": 16000, "category": "food"},
-    
-    # 🍪 SOFT BAKED COOKIE SERIES IN FOOD
+# Add ALL food items from database into raw_catalog (without duplicates)
+food_names_added = set()
+
+# Add Soft Baked Cookie series first
+soft_cookies = [
     {"name": "Oatmeal Raisin Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9gGgs.jpg"},
     {"name": "Banana Choco Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9rHIp.jpg"},
     {"name": "Sweet Honey Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs943wQ.jpg"}
 ]
+
+for sc in soft_cookies:
+    raw_catalog.append(sc)
+    food_names_added.add(sc["name"].lower().strip())
+
+for fitem in db_food_items:
+    fname = fitem["name"]
+    fname_key = fname.lower().strip()
+    if fname_key not in food_names_added:
+        raw_catalog.append({
+            "name": fname,
+            "price": fitem["price"],
+            "category": "food",
+            "image": fitem["image"],
+            "desc": fitem["desc"]
+        })
+        food_names_added.add(fname_key)
+
+print(f"Total food items included: {len(food_names_added)}")
 
 final_products = []
 seen_names = set()
@@ -125,7 +153,7 @@ for idx, item in enumerate(raw_catalog, 1):
                 break
 
     image = item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
-    desc = db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan."
+    desc = item.get("desc") or (db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan.")
 
     has_suhu = cat in ['kopi', 'non-kopi', 'oatside']
     has_ukuran = cat != 'food'
@@ -182,7 +210,7 @@ for idx, item in enumerate(raw_catalog, 1):
     is_best_seller = name in [
         'Kopi Kenangan Mantan', 'Korean Banana Latte', 'Banana Choco', 
         'Butterscotch Seasalt Latte', 'Creamy Aren Latte', 'Matcha Espresso', 
-        'Oatside Matcha Latte', 'Blueberry Frappe'
+        'Oatside Matcha Latte', 'Blueberry Frappe', 'Roti Coklat Klasik', 'Salt Bread Original'
     ]
 
     original_price = int(price * 1.35)
@@ -203,9 +231,9 @@ for idx, item in enumerate(raw_catalog, 1):
 
     final_products.append(prod_obj)
 
-print(f"Total updated products with custom images: {len(final_products)}")
+print(f"Total catalog products with ALL FOOD items: {len(final_products)}")
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Custom User CDN Images)
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Complete Food Catalog)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
@@ -265,4 +293,4 @@ export const products = {json.dumps(final_products, indent=2)};
 with open('/Users/macbook/BackupKopkenPromoHolic/js/data/products.js', 'w') as f:
     f.write(js_code)
 
-print("Saved js/data/products.js with custom user CDN images successfully!")
+print("Saved js/data/products.js with all food items successfully!")
