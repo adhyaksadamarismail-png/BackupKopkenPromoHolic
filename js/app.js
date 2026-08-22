@@ -49,7 +49,13 @@ let appState = {
     topping: [],
     notes: '',
     quantity: 1
-  }
+  },
+  
+  // Kantung Belanja optional state (default false / Tidak)
+  includeShoppingBag: false,
+  pickupType: 'now',
+  pickupTime: 'Sekarang',
+  checkoutSurcharge: 0
 };
 
 // --- INITIALIZATION ---
@@ -511,19 +517,53 @@ function renderProducts() {
 }
 
 // --- PRODUCT DETAIL MODAL & EDITING ---
+function getNonDefaultCustomizationTokens(options) {
+  if (!options) return [];
+  const tokens = [];
+
+  // Ukuran: only if Large or Jumbo
+  if (options.ukuran && options.ukuran.id !== 'normal') {
+    tokens.push(options.ukuran.name);
+  }
+
+  // Suhu: only if Hot (since Ice is default)
+  if (options.suhu && options.suhu.id === 'hot') {
+    tokens.push('Hot');
+  }
+
+  // Es: only if Less Ice or No Ice (since Normal is default)
+  if (options.es && options.es.id !== 'normal-ice') {
+    tokens.push(options.es.name);
+  }
+
+  // Gula: only if Less Sugar or No Sugar (since Normal is default)
+  if (options.gula && options.gula.id !== 'normal-sugar') {
+    tokens.push(options.gula.name);
+  }
+
+  // Beans: only if Juwara Beans (since Kenangan Blend is default)
+  if (options.beans && options.beans.id === 'juwara-beans') {
+    tokens.push('Juwara');
+  }
+
+  // Syrup: all selected syrups
+  if (options.syrup && options.syrup.length > 0) {
+    options.syrup.forEach(s => tokens.push(s.name));
+  }
+
+  // Topping: all selected toppings
+  if (options.topping && options.topping.length > 0) {
+    options.topping.forEach(t => tokens.push(t.name));
+  }
+
+  return tokens;
+}
+
 function getItemCustomizationSummary(options) {
   if (!options) return '';
-  const opts = [];
-  if (options.ukuran) opts.push(options.ukuran.name);
-  if (options.suhu) opts.push(options.suhu.name);
-  if (options.es) opts.push(options.es.name);
-  if (options.gula) opts.push(options.gula.name);
-  if (options.beans && options.beans.name) opts.push(options.beans.name);
-  if (options.syrup && options.syrup.length > 0) opts.push(...options.syrup.map(s => s.name));
-  if (options.topping && options.topping.length > 0) opts.push(...options.topping.map(t => t.name));
-  if (options.details) opts.push(options.details);
-  if (options.notes) opts.push(`Catatan: ${options.notes}`);
-  return opts.join(', ');
+  const tokens = getNonDefaultCustomizationTokens(options);
+  if (options.notes) tokens.push(`Catatan: ${options.notes}`);
+  return tokens.join(', ');
 }
 
 function openProductDetailModal(productId, cartItemId = null) {
@@ -870,6 +910,8 @@ function setupCheckoutEvents() {
   const btnPickupScheduled = document.getElementById('btn-pickup-scheduled');
   const pickupTimeWrapper = document.getElementById('pickup-time-picker-wrapper');
   const pickupTimeInput = document.getElementById('checkout-pickup-time-input');
+  const btnBagNo = document.getElementById('btn-bag-no');
+  const btnBagYes = document.getElementById('btn-bag-yes');
 
   if (nameInput) {
     nameInput.addEventListener('input', () => {
@@ -908,6 +950,22 @@ function setupCheckoutEvents() {
       validateCheckoutForm();
     });
   }
+
+  if (btnBagNo && btnBagYes) {
+    btnBagNo.addEventListener('click', () => {
+      btnBagNo.classList.add('active');
+      btnBagYes.classList.remove('active');
+      appState.includeShoppingBag = false;
+      renderCheckoutSummary();
+    });
+
+    btnBagYes.addEventListener('click', () => {
+      btnBagYes.classList.add('active');
+      btnBagNo.classList.remove('active');
+      appState.includeShoppingBag = true;
+      renderCheckoutSummary();
+    });
+  }
 }
 
 function renderCheckoutSummary() {
@@ -940,9 +998,14 @@ function renderCheckoutSummary() {
     surchargeRow.style.display = hasSurcharge ? 'flex' : 'none';
   }
 
+  const bagRow = document.getElementById('row-kantung-belanja');
+  if (bagRow) {
+    bagRow.style.display = appState.includeShoppingBag ? 'flex' : 'none';
+  }
+
   const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const kantungBelanja = 1000;
-  const totalFinal = subtotal + kantungBelanja + appState.checkoutSurcharge;
+  const shoppingBagCost = appState.includeShoppingBag ? 1000 : 0;
+  const totalFinal = subtotal + shoppingBagCost + appState.checkoutSurcharge;
 
   container.innerHTML = appState.cart.map((item, idx) => {
     const summaryText = getItemCustomizationSummary(item.options);
@@ -1038,9 +1101,9 @@ function processWhatsAppOrder() {
   }
 
   const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const kantungBelanja = 1000;
+  const shoppingBagCost = appState.includeShoppingBag ? 1000 : 0;
   const surcharge = appState.checkoutSurcharge || 0;
-  const totalFinal = subtotal + kantungBelanja + surcharge;
+  const totalFinal = subtotal + shoppingBagCost + surcharge;
 
   let orderText = `Halo, saya ingin memesan:\n\n`;
   orderText += `☕ Brand: ☕ Kopi Kenangan\n`;
@@ -1050,16 +1113,20 @@ function processWhatsAppOrder() {
   orderText += `🍵 Pesanan:\n`;
 
   appState.cart.forEach(item => {
-    orderText += `• ${item.productName} x${item.quantity} — ${formatRupiah(item.totalPrice)}\n`;
-    const summary = getItemCustomizationSummary(item.options);
-    if (summary) {
-      orderText += `  ${summary}\n`;
+    const tokens = getNonDefaultCustomizationTokens(item.options);
+    const tokenStr = tokens.length > 0 ? ' ' + tokens.map(t => `(${t})`).join(' ') : '';
+    const qtyStr = item.quantity > 1 ? ` x${item.quantity}` : '';
+
+    orderText += `• ${item.productName}${tokenStr}${qtyStr}\n`;
+    if (item.options && item.options.notes) {
+      orderText += `  Catatan: ${item.options.notes}\n`;
     }
-    orderText += `\n`;
   });
 
-  orderText += `💰 Subtotal: ${formatRupiah(subtotal)}\n`;
-  orderText += `🛍️ Kantung Belanja: ${formatRupiah(kantungBelanja)}\n`;
+  orderText += `\n💰 Subtotal: ${formatRupiah(subtotal)}\n`;
+  if (appState.includeShoppingBag) {
+    orderText += `🛍️ Kantung Belanja: Rp1.000\n`;
+  }
   if (surcharge > 0) {
     orderText += `📍 Surcharge Outlet: ${formatRupiah(surcharge)}\n`;
   }

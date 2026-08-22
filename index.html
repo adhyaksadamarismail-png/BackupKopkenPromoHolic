@@ -381,7 +381,7 @@
         </div>
 
         <!-- 3. WAKTU PICKUP (Sekarang vs Pilih Jam) -->
-        <div class="form-group" style="margin-bottom: 20px;">
+        <div class="form-group" style="margin-bottom: 16px;">
           <label class="form-label" style="font-weight: 800; font-size: 13px;">⏰ Waktu Pickup *</label>
           <div class="pickup-options-grid">
             <button class="pickup-pill-btn active" id="btn-pickup-now" data-pickup-type="now">
@@ -403,7 +403,21 @@
           </div>
         </div>
 
-        <!-- 4. ORDER SUMMARY CARD (Matching Reference Screenshot) -->
+        <!-- 4. KANTUNG BELANJA (Optional: Tidak vs Ya +Rp1.000) -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label" style="font-weight: 800; font-size: 13px;">🛍️ Kantung Belanja</label>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Tambahkan kantung belanja?</div>
+          <div class="pickup-options-grid">
+            <button class="pickup-pill-btn active" id="btn-bag-no" data-bag="no">
+              Tidak
+            </button>
+            <button class="pickup-pill-btn" id="btn-bag-yes" data-bag="yes">
+              Ya, +Rp1.000
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. ORDER SUMMARY CARD (Matching Reference Screenshot) -->
         <div class="checkout-summary-card">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
             <h3 style="font-size: 15px; font-weight: 800; color: #0F172A;">Pesanan</h3>
@@ -422,10 +436,9 @@
               <span id="checkout-subtotal-amount" style="font-weight: 800;">Rp 0</span>
             </div>
 
-            <div class="checkout-price-row" id="row-kantung-belanja">
+            <div class="checkout-price-row" id="row-kantung-belanja" style="display: none;">
               <div>
-                <div style="font-weight: 700; color: #0F172A;">Kantung Belanja</div>
-                <div style="font-size: 11px; color: var(--text-muted);">Store Normal · +Rp1.000</div>
+                <div style="font-weight: 700; color: #0F172A;">🛍️ Kantung Belanja</div>
               </div>
               <span style="font-weight: 700;">Rp 1.000</span>
             </div>
