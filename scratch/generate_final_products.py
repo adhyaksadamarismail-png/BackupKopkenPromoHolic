@@ -32,6 +32,7 @@ raw_catalog = [
     {"name": "Vanilla Latte", "price": 18000, "category": "kopi"},
     {"name": "Hazelnut Latte", "price": 18000, "category": "kopi"},
     {"name": "Caramel Latte", "price": 18000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
+    {"name": "Creamy Caramel Latte", "price": 18000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
     {"name": "Caffe Malt Latte", "price": 16500, "category": "kopi"},
     {"name": "Caramel Macchiato", "price": 19000, "category": "kopi"},
     {"name": "Mocha Latte", "price": 18000, "category": "kopi"},
