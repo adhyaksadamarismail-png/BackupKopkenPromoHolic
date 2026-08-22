@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kopi Kenangan - Promo.Holic</title>
+  <meta name="description" content="Pesan Kopi Kenangan favoritmu dengan harga hemat khusus Promo.Holic. Pilih outlet, pilih menu, dan pesan langsung via WhatsApp." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Feather Icons for Clean UI Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Top Site Header -->
+    <header class="site-header">
+      <!-- Main Brand Logo Bar -->
+      <div class="brand-header-bar">
+        <div class="brand-logo-wrapper">
+          <!-- PROMO HOLIC Logo SVG -->
+          <svg class="promoholic-svg-logo" viewBox="0 0 340 76" width="210" height="47" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="holicGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF3A00" />
+                <stop offset="50%" stop-color="#F97316" />
+                <stop offset="100%" stop-color="#FF9E00" />
+              </linearGradient>
+              <filter id="logoShadow" x="-10%" y="-10%" width="130%" height="130%">
+                <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.12"/>
+              </filter>
+            </defs>
+            
+            <g filter="url(#logoShadow)">
+              <!-- PROMO -->
+              <text x="4" y="38" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#0B1B36" letter-spacing="-0.5">
+                PROM
+              </text>
+              <!-- Tag O cutout -->
+              <g transform="translate(108, 12)">
+                <circle cx="13" cy="13" r="13" fill="#0B1B36"/>
+                <path d="M9.5 6.5 L16.5 6.5 L18.5 11.5 L13 18 L7.5 11.5 Z" fill="#FFFFFF"/>
+                <circle cx="12" cy="8.5" r="1.5" fill="#0B1B36"/>
+              </g>
+              
+              <!-- HOLIC -->
+              <text x="138" y="38" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="url(#holicGrad)" letter-spacing="-0.5">
+                H
+              </text>
+              <!-- Heart O cutout -->
+              <g transform="translate(166, 12)">
+                <circle cx="13" cy="13" r="13" fill="url(#holicGrad)"/>
+                <path d="M13 18.5 L12.1 17.7 C8.9 14.8 6.8 12.9 6.8 10.5 C6.8 8.6 8.3 7.1 10.2 7.1 C11.3 7.1 12.3 7.6 13 8.4 C13.7 7.6 14.7 7.1 15.8 7.1 C17.7 7.1 19.2 8.6 19.2 10.5 C19.2 12.9 17.1 14.8 13.9 17.7 L13 18.5 Z" fill="#FFFFFF"/>
+              </g>
+              <text x="195" y="38" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="url(#holicGrad)" letter-spacing="-0.5">
+                LIC
+              </text>
+            </g>
+
+            <!-- Subtitle Pill Badge -->
+            <g transform="translate(48, 48)">
+              <rect x="0" y="0" width="224" height="20" rx="10" fill="#0B1B36"/>
+              <circle cx="12" cy="10" r="2.2" fill="#FFA000"/>
+              <text x="22" y="13.5" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="800" font-size="9" fill="#FFFFFF" letter-spacing="0.4">
+                BEST <tspan fill="#FFA000">DEALS</tspan>, MORE FOR LESS!
+              </text>
+              <circle cx="212" cy="10" r="2.2" fill="#FFA000"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="hamburger-wrap" style="position: absolute; right: 16px; top: 14px;">
+          <button class="header-btn" id="btn-toggle-menu" title="Menu">
+            <i data-feather="menu"></i>
+          </button>
+          <div class="social-dropdown-menu" id="social-dropdown-menu">
+            <a href="https://whatsapp.com/channel/0029Vb7zZawBlHpfQRdpDl17" target="_blank" rel="noopener" class="menu-item-link">
+              <i data-feather="message-circle" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">WhatsApp Channel</div>
+                <div class="menu-item-sub">Info promo terbaru</div>
+              </div>
+            </a>
+            <a href="https://www.instagram.com/promo.holicc/" target="_blank" rel="noopener" class="menu-item-link">
+              <i data-feather="instagram" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">Instagram</div>
+                <div class="menu-item-sub">@promo.holicc</div>
+              </div>
+            </a>
+            <a href="https://www.tiktok.com/@promooo.holicc" target="_blank" rel="noopener" class="menu-item-link">
+              <i data-feather="video" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">TikTok</div>
+                <div class="menu-item-sub">@promooo.holicc</div>
+              </div>
+            </a>
+            <a href="https://wa.me/6285159646922" target="_blank" rel="noopener" class="menu-item-link">
+              <i data-feather="phone-call" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">Kontak Admin</div>
+                <div class="menu-item-sub">Bantuan pemesanan</div>
+              </div>
+            </a>
+            <button class="menu-item-link" id="btn-open-panduan">
+              <i data-feather="help-circle" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">Panduan</div>
+                <div class="menu-item-sub">Cara memesan</div>
+              </div>
+            </button>
+            <button class="menu-item-link" id="btn-open-admin">
+              <i data-feather="settings" class="menu-item-icon"></i>
+              <div>
+                <div class="menu-item-title">Pengaturan Admin</div>
+                <div class="menu-item-sub">Kelola outlet & wa</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-sub-bar">
+        <button class="header-btn" id="btn-header-back" title="Kembali">
+          <i data-feather="arrow-left"></i>
+        </button>
+        <div class="header-title">Kopi Kenangan</div>
+        <button class="header-btn" id="btn-open-cart-header" title="Keranjang">
+          <i data-feather="shopping-bag"></i>
+          <span class="cart-badge" id="cart-badge-count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Brand Banner -->
+    <section class="hero-section">
+      <div class="hero-avatar">
+        <!-- Kopi Kenangan Striped Heart SVG Icon -->
+        <svg viewBox="0 0 40 40" width="34" height="34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 34C20 34 5 24.5 5 13.5 C5 8.5 9 5 13.5 5 C16.5 5 19 6.5 20 8.5 C21 6.5 23.5 5 26.5 5 C31 5 35 8.5 35 13.5 C35 24.5 20 34 20 34 Z" fill="#C8102E"/>
+          <!-- Diagonal stripes -->
+          <path d="M7 11 L33 11 M6 15 L34 15 M7 19 L33 19 M9 23 L31 23 M12 27 L28 27 M15 31 L25 31" stroke="#FCE8EC" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M20 34 L20 37" stroke="#C8102E" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="hero-info">
+        <h1 id="hero-brand-name">Kopi Kenangan</h1>
+        <p id="hero-brand-tagline">Minuman favorit, lebih hemat.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 1: PAKET BUNDLING KOPI KENANGAN (Placed right after hero) -->
+    <section class="bundling-section" id="bundling-section-container">
+      <!-- JS populated Paket Bundling section -->
+    </section>
+
+    <!-- SECTION 2: MENU SATUAN (Placed below bundling) -->
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1.5px solid var(--border-light);">
+      <h2 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Menu Satuan</h2>
+      
+      <!-- Search Menu & Sort Section -->
+      <section class="menu-controls">
+        <div class="search-input-wrapper">
+          <i data-feather="search" class="search-input-icon"></i>
+          <input 
+            type="text" 
+            id="input-menu-search" 
+            class="search-input" 
+            placeholder="Cari menu..." 
+          />
+        </div>
+
+        <div class="sort-wrapper">
+          <span>Urutkan:</span>
+          <select id="select-menu-sort" class="sort-select">
+            <option value="default">Default</option>
+            <option value="low-to-high">Harga Terendah</option>
+            <option value="high-to-low">Harga Tertinggi</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Horizontal Category Scrollable Navigation -->
+      <div class="category-nav-wrapper">
+        <nav class="category-nav" id="category-nav-list">
+          <!-- JS populated category pills -->
+        </nav>
+      </div>
+
+      <!-- Menu Product Cards Grid (2 Columns Mobile) -->
+      <section class="products-grid" id="products-grid">
+        <!-- JS populated product items -->
+      </section>
+    </div>
+
+    <!-- Floating Bottom Cart Bar -->
+    <div class="floating-cart-bar" id="floating-cart-bar" style="display: none;">
+      <div class="cart-bar-left">
+        <i data-feather="shopping-cart"></i>
+        <span id="floating-cart-count">0 item</span>
+      </div>
+      <div class="cart-bar-right" id="floating-cart-total">Rp 0</div>
+    </div>
+
+  </div> <!-- /app-container -->
+
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- PRODUCT DETAIL MODAL / BOTTOM SHEET (Matching Image 2) -->
+  <div class="modal-overlay" id="modal-product-detail">
+    <div class="modal-sheet">
+      
+      <!-- Hero Product Header Image -->
+      <div class="modal-hero">
+        <img id="detail-hero-img" src="" alt="Produk" class="modal-hero-img" />
+        <button class="modal-close-btn" id="btn-close-product-detail">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <h2 class="product-detail-title" id="detail-product-title">Korean Banana Latte</h2>
+        
+        <div class="product-detail-prices">
+          <span class="product-detail-original-price" id="detail-original-price">Rp 23.000</span>
+          <span class="product-detail-promo-price" id="detail-promo-price">Rp 16.500</span>
+        </div>
+
+        <!-- Store Pickup Notice Box -->
+        <div class="pickup-notice-box" id="detail-store-notice">
+          Pickup Only — Jika menu di store kosong, akan kami infokan. Tidak ada biaya tambahan apapun.
+        </div>
+
+        <!-- Dynamic Option Groups -->
+        
+        <!-- SUHU -->
+        <div class="option-group" id="group-suhu">
+          <div class="option-group-title">SUHU</div>
+          <div class="pill-grid" id="pills-suhu"></div>
+        </div>
+
+        <!-- UKURAN -->
+        <div class="option-group" id="group-ukuran">
+          <div class="option-group-title">UKURAN</div>
+          <div class="pill-grid" id="pills-ukuran"></div>
+        </div>
+
+        <!-- ES -->
+        <div class="option-group" id="group-es">
+          <div class="option-group-title">ES</div>
+          <div class="pill-grid" id="pills-es"></div>
+        </div>
+
+        <!-- GULA -->
+        <div class="option-group" id="group-gula">
+          <div class="option-group-title">GULA</div>
+          <div class="pill-grid" id="pills-gula"></div>
+        </div>
+
+        <!-- BEANS -->
+        <div class="option-group" id="group-beans">
+          <div class="option-group-title">BEANS</div>
+          <div class="pill-grid" id="pills-beans"></div>
+        </div>
+
+        <!-- SYRUP -->
+        <div class="option-group" id="group-syrup">
+          <div class="option-group-title">
+            <span>SYRUP</span>
+            <span class="option-sub-label">Opsional - Bisa pilih lebih dari satu</span>
+          </div>
+          <div class="checkbox-list" id="list-syrup"></div>
+        </div>
+
+        <!-- TOPPING -->
+        <div class="option-group" id="group-topping">
+          <div class="option-group-title">
+            <span>TOPPING</span>
+            <span class="option-sub-label">Opsional - Bisa pilih lebih dari satu</span>
+          </div>
+          <div class="checkbox-list" id="list-topping"></div>
+        </div>
+
+        <!-- CATATAN -->
+        <div class="option-group">
+          <div class="option-group-title">Catatan Tambahan</div>
+          <input 
+            type="text" 
+            id="detail-notes-input" 
+            class="notes-input" 
+            placeholder="Catatan tambahan (opsional)..." 
+          />
+        </div>
+
+      </div> <!-- /modal-body -->
+
+      <!-- Modal Footer CTA -->
+      <div class="modal-footer-cta">
+        <div class="counter-row">
+          <div class="quantity-controls">
+            <button class="btn-qty" id="btn-qty-minus">-</button>
+            <span class="qty-val" id="detail-qty-val">1</span>
+            <button class="btn-qty" id="btn-qty-plus">+</button>
+          </div>
+          <div class="modal-price-total" id="detail-calculated-total">Rp 16.500</div>
+        </div>
+        <button class="btn-cta-primary" id="btn-add-to-cart-modal">+ Tambah ke Keranjang</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- CART DRAWER MODAL -->
+  <div class="modal-overlay" id="modal-cart">
+    <div class="modal-sheet">
+      
+      <div style="padding: 16px 20px 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="font-size: 18px; font-weight: 800;">Keranjang Belanja</h2>
+        <button class="modal-close-btn" id="btn-close-cart" style="position: static; background: var(--bg-subtle); color: var(--text-main);">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding-bottom: 120px;">
+        <div id="cart-items-container">
+          <!-- JS Cart items list -->
+        </div>
+
+        <div style="margin-top: 20px; padding: 14px; background-color: var(--bg-subtle); border-radius: var(--radius-md);">
+          <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;">
+            <span>Subtotal</span>
+            <span id="cart-subtotal-val" style="font-weight: 800;">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-cta">
+        <button class="btn-cta-primary" id="btn-proceed-checkout">Lanjut Checkout</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="modal-checkout">
+    <div class="modal-sheet">
+      
+      <div style="padding: 16px 20px 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="font-size: 18px; font-weight: 800;">Checkout Pesanan</h2>
+        <button class="modal-close-btn" id="btn-close-checkout" style="position: static; background: var(--bg-subtle); color: var(--text-main);">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding-bottom: 120px;">
+        
+        <!-- STEP 1: PILIH OUTLET (Required before final order) -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label" style="font-weight: 800; font-size: 14px;">📍 Pilih Outlet *</label>
+          <div class="search-input-wrapper">
+            <i data-feather="search" class="search-input-icon"></i>
+            <input 
+              type="text" 
+              id="input-checkout-outlet-search" 
+              class="search-input" 
+              placeholder="Ketik nama kota atau gerai..." 
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="outlets-dropdown" id="checkout-outlets-dropdown" style="display: none;">
+            <!-- JS populated outlets list -->
+          </div>
+
+          <div class="selected-outlet-card" id="checkout-selected-outlet-card" style="display: none; margin-top: 10px;">
+            <div class="selected-outlet-info">
+              <i data-feather="map-pin" class="selected-outlet-pin"></i>
+              <div>
+                <div class="selected-outlet-name" id="checkout-selected-outlet-name">Kopi Kenangan Kemang</div>
+                <div class="selected-outlet-address" id="checkout-selected-outlet-address">Jl. Kemang Raya No. 12, Jakarta</div>
+                <div id="checkout-surcharge-badge" style="display: none; font-size: 11px; color: #c2410c; font-weight: 700; margin-top: 4px;">⚡ Rest Area / Mall / Outlet Tertentu (+Rp3.000 untuk 2 Large)</div>
+              </div>
+            </div>
+            <button class="btn-change-outlet" id="btn-checkout-change-outlet">Ganti</button>
+          </div>
+        </div>
+        
+        <!-- STEP 2: DATA PEMESAN -->
+        <div class="form-group">
+          <label class="form-label" for="checkout-name">Nama Pemesan *</label>
+          <input type="text" id="checkout-name" class="form-input" placeholder="Masukkan nama Anda" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="checkout-pickup-time">Waktu Pickup *</label>
+          <input type="text" id="checkout-pickup-time" class="form-input" placeholder="Contoh: 13.00 WIB" />
+        </div>
+
+        <!-- Ringkasan Order Preview -->
+        <div style="margin-top: 20px; border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 14px;">
+          <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 10px;">Ringkasan Pesanan</h3>
+          
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">
+            <div><strong>Outlet:</strong> <span id="checkout-summary-outlet">-</span></div>
+          </div>
+
+          <div id="checkout-summary-items" style="font-size: 13px; border-top: 1px dashed var(--border-light); padding-top: 10px;">
+            <!-- JS populated item list -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; border-top: 1.5px solid var(--border-light); margin-top: 10px; padding-top: 10px;">
+            <span>Total Bayar</span>
+            <span id="checkout-summary-total">Rp 0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer-cta">
+        <button class="btn-cta-whatsapp" id="btn-send-whatsapp">
+          <i data-feather="send"></i>
+          Pesan via WhatsApp
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ADMIN / DATA MANAGEMENT MODAL -->
+  <div class="modal-overlay" id="modal-admin">
+    <div class="modal-sheet">
+      
+      <div style="padding: 16px 20px 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="font-size: 18px; font-weight: 800;">Admin Panel Promo.Holic</h2>
+        <button class="modal-close-btn" id="btn-close-admin" style="position: static; background: var(--bg-subtle); color: var(--text-main);">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding-bottom: 40px;">
+        
+        <div class="admin-tabs">
+          <button class="admin-tab-btn active" id="tab-btn-outlets">Manajemen Outlet</button>
+          <button class="admin-tab-btn" id="tab-btn-settings">Pengaturan Admin</button>
+        </div>
+
+        <!-- TAB OUTLETS -->
+        <div id="tab-content-outlets">
+          
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input type="text" id="admin-outlet-search" class="form-input" placeholder="Cari outlet..." />
+            <button class="btn-cta-primary" id="btn-admin-add-outlet" style="width: auto; padding: 0 16px; white-space: nowrap;">+ Outlet</button>
+          </div>
+
+          <div id="admin-outlets-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto;">
+            <!-- JS populated outlets admin list -->
+          </div>
+
+        </div>
+
+        <!-- TAB SETTINGS -->
+        <div id="tab-content-settings" style="display: none;">
+          
+          <div class="form-group">
+            <label class="form-label" for="setting-admin-wa">Nomor WhatsApp Admin (Configurable)</label>
+            <input type="text" id="setting-admin-wa" class="form-input" placeholder="6281234567890" />
+            <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Gunakan format 628... tanpa spasi.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setting-wifi-text">Teks Banner WiFi / Pengumuman</label>
+            <input type="text" id="setting-wifi-text" class="form-input" placeholder="Password WiFi..." />
+          </div>
+
+          <button class="btn-cta-primary" id="btn-save-admin-settings">Simpan Pengaturan</button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- PANDUAN CARA MEMESAN MODAL -->
+  <div class="modal-overlay" id="modal-panduan">
+    <div class="modal-sheet">
+      <div style="padding: 16px 20px 12px 20px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="font-size: 18px; font-weight: 800;">Panduan Cara Memesan</h2>
+        <button class="modal-close-btn" id="btn-close-panduan" style="position: static; background: var(--bg-subtle); color: var(--text-main);">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding-bottom: 30px;">
+        <div class="info-step" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; background: var(--primary-orange); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;">1</div>
+          <div style="font-size: 14px; color: var(--text-main); line-height: 1.5;">
+            <strong>Pilih Outlet Kopi Kenangan</strong><br />
+            Ketik nama kota atau lokasi gerai di kolom pencarian outlet.
+          </div>
+        </div>
+
+        <div class="info-step" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; background: var(--primary-orange); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;">2</div>
+          <div style="font-size: 14px; color: var(--text-main); line-height: 1.5;">
+            <strong>Pilih Menu & Kustomisasi Varian</strong><br />
+            Pilih menu favoritmu, atur suhu, size, sugar level, ice level, serta ekstra syrup/topping.
+          </div>
+        </div>
+
+        <div class="info-step" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; background: var(--primary-orange); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;">3</div>
+          <div style="font-size: 14px; color: var(--text-main); line-height: 1.5;">
+            <strong>Masuk Keranjang & Checkout</strong><br />
+            Periksa kembali rincian pesananmu dan isi nama, nomor WA, serta waktu pickup.
+          </div>
+        </div>
+
+        <div class="info-step" style="display: flex; gap: 12px; margin-bottom: 20px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; background: var(--primary-orange); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;">4</div>
+          <div style="font-size: 14px; color: var(--text-main); line-height: 1.5;">
+            <strong>Kirim Order via WhatsApp</strong><br />
+            Klik tombol <i>Pesan via WhatsApp</i> untuk mengirimkan pesanan ke admin Promo.Holic.
+          </div>
+        </div>
+
+        <button class="btn-cta-primary" id="btn-understood-panduan">Saya Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Main App Script -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
