@@ -9465,7 +9465,7 @@ export const products = [
     "category": "food",
     "price": 14500,
     "originalPrice": 19575,
-    "image": "https://iili.io/CsAf3H7.jpg",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-44672d1e-6fd1-407b-a7dc-b0c0ad953eab.jpg",
     "description": "Adam Ayam Toast lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {

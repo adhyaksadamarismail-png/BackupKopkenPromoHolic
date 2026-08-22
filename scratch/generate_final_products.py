@@ -153,6 +153,9 @@ for idx, item in enumerate(raw_catalog, 1):
                 db_item = v
                 break
 
+    if name == 'Adam Ayam Toast':
+        image = 'https://cdn.phototourl.com/free/2026-08-22-44672d1e-6fd1-407b-a7dc-b0c0ad953eab.jpg'
+
     image = item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
     desc = item.get("desc") or (db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan.")
 
