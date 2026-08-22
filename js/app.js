@@ -481,6 +481,7 @@ function renderProducts() {
     <div class="product-card" data-product-id="${prod.id}">
       <div class="product-img-wrapper">
         ${prod.isBestSeller ? '<span class="best-seller-badge">★ Best Seller</span>' : ''}
+        ${prod.seriesBadge ? `<span class="series-badge">${prod.seriesBadge}</span>` : ''}
         <img src="${prod.image}" alt="${prod.name}" class="product-img" loading="lazy" />
       </div>
       <div>

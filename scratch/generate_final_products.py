@@ -5,7 +5,6 @@ c = conn.cursor()
 c.execute("SELECT id, name, image, description, customization_json FROM products WHERE brand_id = 'brand_kopi_kenangan'")
 rows = c.fetchall()
 
-# Map by lowercased name or partial name for images & descriptions
 db_map = {}
 for r in rows:
     pid, name, image, desc, cust_json = r
@@ -15,7 +14,6 @@ for r in rows:
         'cust': cust_json
     }
 
-# Specific image fallbacks if needed
 default_images = {
     'kopi': 'https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png',
     'non-kopi': 'https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png',
@@ -24,7 +22,6 @@ default_images = {
     'food': 'https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png'
 }
 
-# Define the exact source of truth catalog
 raw_catalog = [
     # ☕ KOPI
     {"name": "Kopi Kenangan Mantan", "price": 14500, "category": "kopi"},
@@ -48,6 +45,10 @@ raw_catalog = [
     {"name": "Pistachio Aren Latte", "price": 14500, "category": "kopi"},
     {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi"},
     {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi"},
+    
+    # 🍌 BANANA SERIES IN KOPI
+    {"name": "Banana Americano", "price": 14500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9tSoJ.jpg"},
+    {"name": "Korean Banana Latte", "price": 16500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9ZyyF.jpg"},
 
     # 🥛 NON-KOPI
     {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi"},
@@ -73,6 +74,9 @@ raw_catalog = [
     {"name": "Raspberry Hibiscus", "price": 15000, "category": "non-kopi"},
     {"name": "Fresh Lemonade", "price": 13500, "category": "non-kopi"},
     {"name": "Lemon Black Tea", "price": 13500, "category": "non-kopi"},
+    
+    # 🍌 BANANA SERIES IN NON-KOPI
+    {"name": "Banana Choco", "price": 17000, "category": "non-kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9D3Ne.jpg"},
 
     # 🧊 FRAPPE (Blueberry Series FIRST)
     {"name": "Blueberry Frappe", "price": 16500, "category": "frappe"},
@@ -91,10 +95,14 @@ raw_catalog = [
     {"name": "Blueberry Muffin", "price": 12000, "category": "food"},
     {"name": "Choco Muffin", "price": 12000, "category": "food"},
     {"name": "Sandwich Chicken Tartare", "price": 16000, "category": "food"},
-    {"name": "Sandwich Smoked Beef", "price": 16000, "category": "food"}
+    {"name": "Sandwich Smoked Beef", "price": 16000, "category": "food"},
+    
+    # 🍪 SOFT BAKED COOKIE SERIES IN FOOD
+    {"name": "Oatmeal Raisin Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9gGgs.jpg"},
+    {"name": "Banana Choco Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9rHIp.jpg"},
+    {"name": "Sweet Honey Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs943wQ.jpg"}
 ]
 
-# Process into products array
 final_products = []
 seen_names = set()
 
@@ -108,19 +116,16 @@ for idx, item in enumerate(raw_catalog, 1):
     cat = item["category"]
     price = item["price"]
 
-    # Match image from DB if possible
     db_item = db_map.get(name_key)
     if not db_item:
-        # Try fuzzy lookup
         for k, v in db_map.items():
             if name_key in k or k in name_key:
                 db_item = v
                 break
 
-    image = db_item['image'] if db_item and db_item.get('image') else default_images[cat]
-    desc = db_item['desc'] if db_item and db_item.get('desc') else f"{name} segar dan nikmat khas Kopi Kenangan."
+    image = item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
+    desc = db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan."
 
-    # Options flags based on category
     has_suhu = cat in ['kopi', 'non-kopi', 'oatside']
     has_ukuran = cat != 'food'
     has_es = cat != 'food'
@@ -174,13 +179,14 @@ for idx, item in enumerate(raw_catalog, 1):
     }
 
     is_best_seller = name in [
-        'Kopi Kenangan Mantan', 'Spanish Latte', 'Butterscotch Seasalt Latte', 
-        'Creamy Aren Latte', 'Matcha Espresso', 'Oatside Matcha Latte', 'Blueberry Frappe'
+        'Kopi Kenangan Mantan', 'Korean Banana Latte', 'Banana Choco', 
+        'Butterscotch Seasalt Latte', 'Creamy Aren Latte', 'Matcha Espresso', 
+        'Oatside Matcha Latte', 'Blueberry Frappe'
     ]
 
     original_price = int(price * 1.35)
 
-    final_products.append({
+    prod_obj = {
         'id': f'kk_prod_{idx}',
         'name': name,
         'category': cat,
@@ -190,11 +196,15 @@ for idx, item in enumerate(raw_catalog, 1):
         'description': desc,
         'isBestSeller': is_best_seller,
         'options': options
-    })
+    }
+    if "seriesBadge" in item:
+        prod_obj["seriesBadge"] = item["seriesBadge"]
 
-print(f"Total Source of Truth products: {len(final_products)}")
+    final_products.append(prod_obj)
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan)
+print(f"Total updated products: {len(final_products)}")
+
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Banana Series & Soft Baked Cookies)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
@@ -254,4 +264,4 @@ export const products = {json.dumps(final_products, indent=2)};
 with open('/Users/macbook/BackupKopkenPromoHolic/js/data/products.js', 'w') as f:
     f.write(js_code)
 
-print("Saved js/data/products.js successfully!")
+print("Saved js/data/products.js with Banana Series & Soft Baked Cookies successfully!")
