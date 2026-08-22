@@ -149,15 +149,14 @@
       </div>
     </section>
 
-    <!-- SECTION 1: PAKET BUNDLING KOPI KENANGAN (Placed right after hero) -->
-    <section class="bundling-section" id="bundling-section-container">
-      <!-- JS populated Paket Bundling section -->
-    </section>
+    <!-- MAIN TAB NAVIGATION: [ Menu ] [ Menu Bundling ] -->
+    <div class="main-tab-wrapper">
+      <button class="main-tab-pill active" id="tab-btn-unit-menu" data-main-tab="unit">Menu</button>
+      <button class="main-tab-pill" id="tab-btn-bundling-menu" data-main-tab="bundling">Menu Bundling</button>
+    </div>
 
-    <!-- SECTION 2: MENU SATUAN (Placed below bundling) -->
-    <div style="margin-top: 24px; padding-top: 16px; border-top: 1.5px solid var(--border-light);">
-      <h2 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Menu Satuan</h2>
-      
+    <!-- TAB CONTENT 1: MENU SATUAN CONTAINER -->
+    <div id="section-unit-menu" class="main-tab-content">
       <!-- Search Menu & Sort Section -->
       <section class="menu-controls">
         <div class="search-input-wrapper">
@@ -190,6 +189,13 @@
       <!-- Menu Product Cards Grid (2 Columns Mobile) -->
       <section class="products-grid" id="products-grid">
         <!-- JS populated product items -->
+      </section>
+    </div>
+
+    <!-- TAB CONTENT 2: MENU BUNDLING CONTAINER -->
+    <div id="section-bundling-menu" class="main-tab-content" style="display: none;">
+      <section class="bundling-section" id="bundling-section-container">
+        <!-- JS populated Paket Bundling section -->
       </section>
     </div>
 

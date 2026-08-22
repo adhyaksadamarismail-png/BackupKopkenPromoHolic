@@ -961,6 +961,32 @@ function setupEventListeners() {
     });
   }
 
+  // Main Tab Navigation Handlers ([ Menu ] vs [ Menu Bundling ])
+  const tabBtnUnit = document.getElementById('tab-btn-unit-menu');
+  const tabBtnBundling = document.getElementById('tab-btn-bundling-menu');
+  const sectionUnit = document.getElementById('section-unit-menu');
+  const sectionBundling = document.getElementById('section-bundling-menu');
+
+  if (tabBtnUnit && tabBtnBundling && sectionUnit && sectionBundling) {
+    tabBtnUnit.addEventListener('click', () => {
+      tabBtnUnit.classList.add('active');
+      tabBtnBundling.classList.remove('active');
+      sectionUnit.style.display = 'block';
+      sectionBundling.style.display = 'none';
+      appState.activeMainTab = 'unit';
+      renderProducts();
+    });
+
+    tabBtnBundling.addEventListener('click', () => {
+      tabBtnBundling.classList.add('active');
+      tabBtnUnit.classList.remove('active');
+      sectionUnit.style.display = 'none';
+      sectionBundling.style.display = 'block';
+      appState.activeMainTab = 'bundling';
+      renderBundlesSection();
+    });
+  }
+
   // Panduan Modal Handlers
   const btnOpenPanduan = document.getElementById('btn-open-panduan');
   const btnClosePanduan = document.getElementById('btn-close-panduan');

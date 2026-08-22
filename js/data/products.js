@@ -6,8 +6,8 @@
 export const productCategories = [
   { id: "kopi", name: "Kopi" },
   { id: "non-kopi", name: "Non-Kopi" },
-  { id: "oatside", name: "Oatside" },
   { id: "frappe", name: "Frappe" },
+  { id: "oatside", name: "Oatside" },
   { id: "food", name: "Food" }
 ];
 
