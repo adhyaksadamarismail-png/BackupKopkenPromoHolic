@@ -8356,6 +8356,145 @@ export const products = [
   },
   {
     "id": "kk_prod_55",
+    "name": "Butterscotch Kenangan Frappe",
+    "category": "frappe",
+    "price": 19500,
+    "originalPrice": 26325,
+    "image": "https://iili.io/Cs9sTgt.jpg",
+    "description": "Butterscotch Kenangan Frappe segar dan nikmat khas Kopi Kenangan.",
+    "isBestSeller": false,
+    "options": {
+      "suhu": [],
+      "ukuran": [
+        {
+          "id": "normal",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "large",
+          "name": "Large",
+          "price": 5000
+        }
+      ],
+      "es": [
+        {
+          "id": "normal-ice",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-ice",
+          "name": "Less Ice",
+          "price": 0
+        },
+        {
+          "id": "no-ice",
+          "name": "No Ice",
+          "price": 0
+        }
+      ],
+      "gula": [
+        {
+          "id": "normal-sugar",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-sugar",
+          "name": "Less Sugar",
+          "price": 0
+        },
+        {
+          "id": "no-sugar",
+          "name": "No Sugar",
+          "price": 0
+        }
+      ],
+      "beans": [],
+      "syrup": [
+        {
+          "id": "vanilla-syrup",
+          "name": "Vanilla Syrup",
+          "price": 6000
+        },
+        {
+          "id": "hazelnut-syrup",
+          "name": "Hazelnut Syrup",
+          "price": 6000
+        },
+        {
+          "id": "caramel-syrup",
+          "name": "Caramel Syrup",
+          "price": 6000
+        },
+        {
+          "id": "salted-caramel",
+          "name": "Salted Caramel Sauce",
+          "price": 6000
+        },
+        {
+          "id": "choco-sauce",
+          "name": "Choco Sauce",
+          "price": 6000
+        },
+        {
+          "id": "butterscotch",
+          "name": "Butterscotch Sauce",
+          "price": 6000
+        }
+      ],
+      "topping": [
+        {
+          "id": "shot-kenangan",
+          "name": "Espresso Shot Kenangan Blend",
+          "price": 6000
+        },
+        {
+          "id": "shot-juwara",
+          "name": "Espresso Shot Juwara Beans",
+          "price": 6000
+        },
+        {
+          "id": "golden-boba",
+          "name": "Golden Boba",
+          "price": 6000
+        },
+        {
+          "id": "grass-jelly",
+          "name": "Grass Jelly",
+          "price": 6000
+        },
+        {
+          "id": "oreo",
+          "name": "Oreo",
+          "price": 6000
+        },
+        {
+          "id": "whipped-choco",
+          "name": "Whipped Cream Chocolate",
+          "price": 6000
+        },
+        {
+          "id": "whipped-vanilla",
+          "name": "Whipped Cream Vanilla",
+          "price": 6000
+        },
+        {
+          "id": "caramel-crumble",
+          "name": "Caramel Crumble",
+          "price": 6000
+        },
+        {
+          "id": "gula-aren",
+          "name": "Gula Aren",
+          "price": 6000
+        }
+      ]
+    }
+  },
+  {
+    "id": "kk_prod_56",
     "name": "Oatside Matcha Latte",
     "category": "oatside",
     "price": 17500,
@@ -8505,7 +8644,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_56",
+    "id": "kk_prod_57",
     "name": "Oatside Kopi Kenangan",
     "category": "oatside",
     "price": 15500,
@@ -8655,7 +8794,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_57",
+    "id": "kk_prod_58",
     "name": "Oatside Latte",
     "category": "oatside",
     "price": 17500,
@@ -8805,7 +8944,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_58",
+    "id": "kk_prod_59",
     "name": "Oatmeal Raisin Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -8825,7 +8964,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_59",
+    "id": "kk_prod_60",
     "name": "Banana Choco Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -8845,7 +8984,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_60",
+    "id": "kk_prod_61",
     "name": "Sweet Honey Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -8865,7 +9004,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_61",
+    "id": "kk_prod_62",
     "name": "Thai Chicken Spaghetti",
     "category": "food",
     "price": 15000,
@@ -8884,7 +9023,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_62",
+    "id": "kk_prod_63",
     "name": "Croissant Abon",
     "category": "food",
     "price": 12500,
@@ -8903,7 +9042,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_63",
+    "id": "kk_prod_64",
     "name": "Pasta Mentai",
     "category": "food",
     "price": 16000,
@@ -8922,7 +9061,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_64",
+    "id": "kk_prod_65",
     "name": "Salt Bread Beef & Cheese",
     "category": "food",
     "price": 11000,
@@ -8941,7 +9080,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_65",
+    "id": "kk_prod_66",
     "name": "Bolu Marble Chocolate",
     "category": "food",
     "price": 11000,
@@ -8960,7 +9099,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_66",
+    "id": "kk_prod_67",
     "name": "Pasta Indoghetti",
     "category": "food",
     "price": 15000,
@@ -8979,7 +9118,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_67",
+    "id": "kk_prod_68",
     "name": "Donut Almond",
     "category": "food",
     "price": 10500,
@@ -8998,7 +9137,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_68",
+    "id": "kk_prod_69",
     "name": "Bolu Marble Ube",
     "category": "food",
     "price": 11000,
@@ -9017,7 +9156,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_69",
+    "id": "kk_prod_70",
     "name": "Bolu Marble Mocha",
     "category": "food",
     "price": 11000,
@@ -9036,7 +9175,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_70",
+    "id": "kk_prod_71",
     "name": "Roti Gulung Abon",
     "category": "food",
     "price": 12500,
@@ -9055,7 +9194,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_71",
+    "id": "kk_prod_72",
     "name": "Roti Gulung Aren",
     "category": "food",
     "price": 11000,
@@ -9074,7 +9213,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_72",
+    "id": "kk_prod_73",
     "name": "Canele Original",
     "category": "food",
     "price": 10500,
@@ -9093,7 +9232,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_73",
+    "id": "kk_prod_74",
     "name": "Canele Toffee Nut",
     "category": "food",
     "price": 11500,
@@ -9112,7 +9251,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_74",
+    "id": "kk_prod_75",
     "name": "Butter Croissant",
     "category": "food",
     "price": 11500,
@@ -9131,7 +9270,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_75",
+    "id": "kk_prod_76",
     "name": "Chocolate Croissant",
     "category": "food",
     "price": 13500,
@@ -9150,7 +9289,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_76",
+    "id": "kk_prod_77",
     "name": "Sandwich Smoked Beef",
     "category": "food",
     "price": 14500,
@@ -9169,7 +9308,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_77",
+    "id": "kk_prod_78",
     "name": "Sandwich Chicken Tartare",
     "category": "food",
     "price": 14500,
@@ -9188,7 +9327,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_78",
+    "id": "kk_prod_79",
     "name": "Sugar Donut",
     "category": "food",
     "price": 9000,
@@ -9207,7 +9346,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_79",
+    "id": "kk_prod_80",
     "name": "Roti Coklat Klasik",
     "category": "food",
     "price": 7000,
@@ -9226,7 +9365,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_80",
+    "id": "kk_prod_81",
     "name": "Roti Sisir Keju",
     "category": "food",
     "price": 11000,
@@ -9245,7 +9384,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_81",
+    "id": "kk_prod_82",
     "name": "Roti Sisir Coklat",
     "category": "food",
     "price": 10500,
@@ -9264,7 +9403,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_82",
+    "id": "kk_prod_83",
     "name": "Roti Susu Manis",
     "category": "food",
     "price": 8500,
@@ -9283,7 +9422,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_83",
+    "id": "kk_prod_84",
     "name": "Roti Srikaya",
     "category": "food",
     "price": 11500,
@@ -9302,7 +9441,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_84",
+    "id": "kk_prod_85",
     "name": "Bambang Choco Cheese",
     "category": "food",
     "price": 12500,
@@ -9321,7 +9460,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_85",
+    "id": "kk_prod_86",
     "name": "Adam Ayam Toast",
     "category": "food",
     "price": 14500,
@@ -9340,7 +9479,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_86",
+    "id": "kk_prod_87",
     "name": "Danish Tiramisu",
     "category": "food",
     "price": 13500,
@@ -9359,7 +9498,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_87",
+    "id": "kk_prod_88",
     "name": "Salt Bread Original",
     "category": "food",
     "price": 9500,
@@ -9378,7 +9517,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_88",
+    "id": "kk_prod_89",
     "name": "Wahyu Sapi Toast",
     "category": "food",
     "price": 14500,
@@ -9397,7 +9536,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_89",
+    "id": "kk_prod_90",
     "name": "Donut Tiramisu",
     "category": "food",
     "price": 10500,
@@ -9416,7 +9555,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_90",
+    "id": "kk_prod_91",
     "name": "Dirty Croissant Milo",
     "category": "food",
     "price": 13500,
@@ -9435,7 +9574,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_91",
+    "id": "kk_prod_92",
     "name": "Choco Chip Cookies",
     "category": "food",
     "price": 11000,
@@ -9454,7 +9593,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_92",
+    "id": "kk_prod_93",
     "name": "Friend Chip Cookie",
     "category": "food",
     "price": 12500,
@@ -9473,7 +9612,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_93",
+    "id": "kk_prod_94",
     "name": "Join the Dark Side Cookie",
     "category": "food",
     "price": 14500,
@@ -9492,7 +9631,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_94",
+    "id": "kk_prod_95",
     "name": "Vanilla Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9511,7 +9650,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_95",
+    "id": "kk_prod_96",
     "name": "Strawberry Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9530,7 +9669,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_96",
+    "id": "kk_prod_97",
     "name": "Chocolate Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9549,7 +9688,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_97",
+    "id": "kk_prod_98",
     "name": "Choco Mocha Swirl Toast",
     "category": "food",
     "price": 14500,
@@ -9568,7 +9707,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_98",
+    "id": "kk_prod_99",
     "name": "Canele Aren",
     "category": "food",
     "price": 11500,
@@ -9587,7 +9726,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_99",
+    "id": "kk_prod_100",
     "name": "Aren Apple Pie",
     "category": "food",
     "price": 12500,
@@ -9606,7 +9745,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_100",
+    "id": "kk_prod_101",
     "name": "Choco Muffin",
     "category": "food",
     "price": 11500,
@@ -9625,7 +9764,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_101",
+    "id": "kk_prod_102",
     "name": "Blueberry Muffin",
     "category": "food",
     "price": 11500,

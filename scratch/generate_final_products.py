@@ -96,6 +96,7 @@ raw_catalog = [
     {"name": "Dutch Choco Kenangan Frappe", "price": 19500, "category": "frappe"},
     {"name": "Kopi Kenangan Mantan Frappe", "price": 18500, "category": "frappe"},
     {"name": "Vanilla Kenangan Frappe", "price": 17500, "category": "frappe"},
+    {"name": "Butterscotch Kenangan Frappe", "price": 19500, "category": "frappe", "image": "https://iili.io/Cs9sTgt.jpg"},
 
     # 🌾 OATSIDE SERIES
     {"name": "Oatside Matcha Latte", "price": 17500, "category": "oatside"},
