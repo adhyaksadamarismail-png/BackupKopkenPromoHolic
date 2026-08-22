@@ -214,6 +214,9 @@ for idx, item in enumerate(raw_catalog, 1):
         'Oatside Matcha Latte', 'Blueberry Frappe', 'Roti Coklat Klasik', 'Salt Bread Original'
     ]
 
+    if name == 'Roti Coklat Klasik':
+        price = 9000
+
     original_price = int(price * 1.35)
 
     prod_obj = {
