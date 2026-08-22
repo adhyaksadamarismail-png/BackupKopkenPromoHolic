@@ -1,4 +1,4 @@
-// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Banana Series & Soft Baked Cookies)
+// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Custom User CDN Images)
 
 export const productCategories = [
   { id: 'kopi', name: 'Kopi' },
@@ -381,7 +381,7 @@ export const products = [
     "category": "kopi",
     "price": 14500,
     "originalPrice": 19575,
-    "image": "https://i.ibb.co.com/Z6KK2CYy/Frame-1410112853.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-a1962281-ed0a-47a4-b23e-7b561d48b314.jpg",
     "description": "Blueberry Americano segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -1186,7 +1186,7 @@ export const products = [
     "category": "kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://i.ibb.co.com/PvFsvH97/Frame-1410112847.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg",
     "description": "Caramel Latte segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -2474,7 +2474,7 @@ export const products = [
     "category": "kopi",
     "price": 16000,
     "originalPrice": 21600,
-    "image": "https://i.ibb.co.com/JRPdckcj/Frame-1410112856.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg",
     "description": "Creamy Aren Latte segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": true,
     "options": {
@@ -3118,7 +3118,7 @@ export const products = [
     "category": "kopi",
     "price": 15500,
     "originalPrice": 20925,
-    "image": "https://i.ibb.co.com/JRPdckcj/Frame-1410112856.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
     "description": "OG Aren Speculoos Latte segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -3279,7 +3279,7 @@ export const products = [
     "category": "kopi",
     "price": 17500,
     "originalPrice": 23625,
-    "image": "https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
     "description": "Dua Shot OG Aren segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -3764,7 +3764,7 @@ export const products = [
     "category": "non-kopi",
     "price": 16500,
     "originalPrice": 22275,
-    "image": "https://i.ibb.co.com/JRPdckcj/Frame-1410112856.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
     "description": "OG Aren Milky Speculoos segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -3914,7 +3914,7 @@ export const products = [
     "category": "non-kopi",
     "price": 14500,
     "originalPrice": 19575,
-    "image": "https://i.ibb.co.com/Zp4Nwdk2/Frame-1410112877.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-f11e3e5a-e4be-4e10-99e0-e379b40d1551.jpg",
     "description": "OG Thai Tea segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -4064,7 +4064,7 @@ export const products = [
     "category": "non-kopi",
     "price": 18500,
     "originalPrice": 24975,
-    "image": "https://i.ibb.co.com/Zp4Nwdk2/Frame-1410112877.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg",
     "description": "Thai Tea Loaded segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -6314,7 +6314,7 @@ export const products = [
     "category": "non-kopi",
     "price": 16000,
     "originalPrice": 21600,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg",
     "description": "Milo Dinosaurus segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {

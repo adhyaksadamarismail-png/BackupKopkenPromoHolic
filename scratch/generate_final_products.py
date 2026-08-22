@@ -26,12 +26,12 @@ raw_catalog = [
     # ☕ KOPI
     {"name": "Kopi Kenangan Mantan", "price": 14500, "category": "kopi"},
     {"name": "Americano", "price": 13500, "category": "kopi"},
-    {"name": "Blueberry Americano", "price": 14500, "category": "kopi"},
+    {"name": "Blueberry Americano", "price": 14500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-a1962281-ed0a-47a4-b23e-7b561d48b314.jpg"},
     {"name": "Latte", "price": 16000, "category": "kopi"},
     {"name": "Cappuccino", "price": 16000, "category": "kopi"},
     {"name": "Vanilla Latte", "price": 18000, "category": "kopi"},
     {"name": "Hazelnut Latte", "price": 18000, "category": "kopi"},
-    {"name": "Caramel Latte", "price": 18000, "category": "kopi"},
+    {"name": "Caramel Latte", "price": 18000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
     {"name": "Caffe Malt Latte", "price": 16500, "category": "kopi"},
     {"name": "Caramel Macchiato", "price": 19000, "category": "kopi"},
     {"name": "Mocha Latte", "price": 18000, "category": "kopi"},
@@ -39,21 +39,21 @@ raw_catalog = [
     {"name": "Toffee Nut Latte", "price": 14500, "category": "kopi"},
     {"name": "Toffee Nut Aren Latte", "price": 15500, "category": "kopi"},
     {"name": "Butterscotch Seasalt Latte", "price": 17500, "category": "kopi"},
-    {"name": "Creamy Aren Latte", "price": 16000, "category": "kopi"},
+    {"name": "Creamy Aren Latte", "price": 16000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
     {"name": "Matcha Espresso", "price": 18000, "category": "kopi"},
     {"name": "Avocado Coffee", "price": 19000, "category": "kopi"},
     {"name": "Pistachio Aren Latte", "price": 14500, "category": "kopi"},
-    {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi"},
-    {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi"},
+    {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
+    {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
     
     # 🍌 BANANA SERIES IN KOPI
     {"name": "Banana Americano", "price": 14500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9tSoJ.jpg"},
     {"name": "Korean Banana Latte", "price": 16500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9ZyyF.jpg"},
 
     # 🥛 NON-KOPI
-    {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi"},
-    {"name": "OG Thai Tea", "price": 14500, "category": "non-kopi"},
-    {"name": "Thai Tea Loaded", "price": 18500, "category": "non-kopi"},
+    {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
+    {"name": "OG Thai Tea", "price": 14500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-f11e3e5a-e4be-4e10-99e0-e379b40d1551.jpg"},
+    {"name": "Thai Tea Loaded", "price": 18500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg"},
     {"name": "Dutch Chocolate", "price": 18000, "category": "non-kopi"},
     {"name": "Hazelnut Dutch Chocolate", "price": 18000, "category": "non-kopi"},
     {"name": "Choco Caramel", "price": 14500, "category": "non-kopi"},
@@ -68,7 +68,7 @@ raw_catalog = [
     {"name": "Air Mineral", "price": 9000, "category": "non-kopi"},
     {"name": "Caramel Dutch Choco", "price": 19000, "category": "non-kopi"},
     {"name": "Kenangan Milk Tea", "price": 16000, "category": "non-kopi"},
-    {"name": "Milo Dino", "price": 16000, "category": "non-kopi"},
+    {"name": "Milo Dino", "price": 16000, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg"},
     {"name": "Oreo Shake", "price": 18000, "category": "non-kopi"},
     {"name": "Butterscotch Seasalt Crumble", "price": 16000, "category": "non-kopi"},
     {"name": "Raspberry Hibiscus", "price": 15000, "category": "non-kopi"},
@@ -202,9 +202,9 @@ for idx, item in enumerate(raw_catalog, 1):
 
     final_products.append(prod_obj)
 
-print(f"Total updated products: {len(final_products)}")
+print(f"Total updated products with custom images: {len(final_products)}")
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Banana Series & Soft Baked Cookies)
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Custom User CDN Images)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
@@ -264,4 +264,4 @@ export const products = {json.dumps(final_products, indent=2)};
 with open('/Users/macbook/BackupKopkenPromoHolic/js/data/products.js', 'w') as f:
     f.write(js_code)
 
-print("Saved js/data/products.js with Banana Series & Soft Baked Cookies successfully!")
+print("Saved js/data/products.js with custom user CDN images successfully!")
