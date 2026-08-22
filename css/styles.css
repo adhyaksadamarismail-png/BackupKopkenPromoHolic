@@ -727,6 +727,30 @@ body {
   transform: translateY(0);
 }
 
+.btn-back-checkout {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-back-checkout:hover {
+  background-color: var(--bg-subtle);
+  color: var(--primary-dark);
+}
+
+.btn-back-checkout:active {
+  transform: scale(0.96);
+}
+
 /* Modal Header Hero Image */
 .modal-hero {
   position: relative;

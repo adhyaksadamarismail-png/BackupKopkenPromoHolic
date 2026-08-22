@@ -1404,6 +1404,19 @@ function setupEventListeners() {
     });
   }
 
+  const btnBackToCart = document.getElementById('btn-back-to-cart');
+  if (btnBackToCart && modalCheckout) {
+    btnBackToCart.addEventListener('click', () => {
+      modalCheckout.classList.remove('active');
+      const modalCart = document.getElementById('modal-cart');
+      if (modalCart) {
+        modalCart.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        renderCartDrawerItems();
+      }
+    });
+  }
+
   const btnSendWa = document.getElementById('btn-send-whatsapp');
   if (btnSendWa) {
     btnSendWa.addEventListener('click', processWhatsAppOrder);
