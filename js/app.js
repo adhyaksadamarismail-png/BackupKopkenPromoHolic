@@ -491,8 +491,46 @@ function renderProducts() {
   `).join('');
 
   grid.querySelectorAll('.product-card').forEach(card => {
+    const prodId = card.getAttribute('data-product-id');
+    const prod = products.find(p => p.id === prodId);
+
+    const btnAdd = card.querySelector('.btn-add-mini');
+    if (btnAdd) {
+      btnAdd.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!prod) return;
+
+        // Default options for quick add via + button
+        const defaultOptions = {
+          suhu: prod.options.suhu.length > 0 ? prod.options.suhu[0] : null,
+          ukuran: prod.options.ukuran.length > 0 ? prod.options.ukuran[0] : null,
+          es: prod.options.es.length > 0 ? prod.options.es[0] : null,
+          gula: prod.options.gula.length > 0 ? prod.options.gula[0] : null,
+          beans: prod.options.beans.length > 0 ? prod.options.beans[0] : null,
+          syrup: [],
+          topping: [],
+          notes: '',
+          quantity: 1
+        };
+
+        const cartItem = {
+          id: 'cart-item-' + Date.now(),
+          productId: prod.id,
+          productName: prod.name,
+          quantity: 1,
+          unitPrice: prod.price,
+          totalPrice: prod.price,
+          options: defaultOptions
+        };
+
+        appState.cart.push(cartItem);
+        saveCartState();
+        updateCartUI();
+      });
+    }
+
     card.addEventListener('click', () => {
-      const prodId = card.getAttribute('data-product-id');
       openProductDetailModal(prodId);
     });
   });
