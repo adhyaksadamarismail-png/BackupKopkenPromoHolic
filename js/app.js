@@ -492,45 +492,19 @@ function renderProducts() {
 
   grid.querySelectorAll('.product-card').forEach(card => {
     const prodId = card.getAttribute('data-product-id');
-    const prod = products.find(p => p.id === prodId);
 
+    // Both product card and + button open Product Customization Modal Sheet
     const btnAdd = card.querySelector('.btn-add-mini');
     if (btnAdd) {
       btnAdd.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!prod) return;
-
-        // Default options for quick add via + button
-        const defaultOptions = {
-          suhu: prod.options.suhu.length > 0 ? prod.options.suhu[0] : null,
-          ukuran: prod.options.ukuran.length > 0 ? prod.options.ukuran[0] : null,
-          es: prod.options.es.length > 0 ? prod.options.es[0] : null,
-          gula: prod.options.gula.length > 0 ? prod.options.gula[0] : null,
-          beans: prod.options.beans.length > 0 ? prod.options.beans[0] : null,
-          syrup: [],
-          topping: [],
-          notes: '',
-          quantity: 1
-        };
-
-        const cartItem = {
-          id: 'cart-item-' + Date.now(),
-          productId: prod.id,
-          productName: prod.name,
-          quantity: 1,
-          unitPrice: prod.price,
-          totalPrice: prod.price,
-          options: defaultOptions
-        };
-
-        appState.cart.push(cartItem);
-        saveCartState();
-        updateCartUI();
+        openProductDetailModal(prodId);
       });
     }
 
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
       openProductDetailModal(prodId);
     });
   });
@@ -548,7 +522,7 @@ function openProductDetailModal(productId) {
     ukuran: prod.options.ukuran.length > 0 ? prod.options.ukuran[0] : null,
     es: prod.options.es.length > 0 ? prod.options.es[0] : null,
     gula: prod.options.gula.length > 0 ? prod.options.gula[0] : null,
-    beans: prod.options.beans.length > 0 ? prod.options.beans[0] : null,
+    beans: prod.options.beans && prod.options.beans.length > 0 ? prod.options.beans[0] : null,
     syrup: [],
     topping: [],
     notes: '',
@@ -562,13 +536,13 @@ function openProductDetailModal(productId) {
   document.getElementById('detail-notes-input').value = '';
   document.getElementById('detail-qty-val').textContent = '1';
 
-  renderPillGroup('suhu', prod.options.suhu);
-  renderPillGroup('ukuran', prod.options.ukuran);
-  renderPillGroup('es', prod.options.es);
-  renderPillGroup('gula', prod.options.gula);
-  renderPillGroup('beans', prod.options.beans);
-  renderCheckboxGroup('syrup', prod.options.syrup);
-  renderCheckboxGroup('topping', prod.options.topping);
+  renderPillGroup('suhu', prod.options.suhu, 'pills-suhu', 'group-suhu');
+  renderPillGroup('ukuran', prod.options.ukuran, 'pills-ukuran', 'group-ukuran');
+  renderPillGroup('es', prod.options.es, 'pills-es', 'group-es');
+  renderPillGroup('gula', prod.options.gula, 'pills-gula', 'group-gula');
+  renderPillGroup('beans', prod.options.beans, 'pills-beans', 'group-beans');
+  renderCheckboxGroup('syrup', prod.options.syrup, 'list-syrup', 'group-syrup');
+  renderCheckboxGroup('topping', prod.options.topping, 'list-topping', 'group-topping');
 
   recalculateModalTotal();
 
@@ -576,37 +550,44 @@ function openProductDetailModal(productId) {
   modal.classList.add('active');
 }
 
-function renderPillGroup(groupName, options) {
-  const container = document.getElementById(`options-group-${groupName}`);
-  if (!container) return;
-
-  const sectionParent = container.closest('.option-section');
+function renderPillGroup(groupName, options, containerId, parentGroupId) {
+  const container = document.getElementById(containerId);
+  const groupParent = document.getElementById(parentGroupId);
+  if (!container || !groupParent) return;
 
   if (!options || options.length === 0) {
-    if (sectionParent) sectionParent.style.display = 'none';
+    groupParent.style.display = 'none';
     return;
   }
 
-  if (sectionParent) sectionParent.style.display = 'block';
+  groupParent.style.display = 'block';
 
   container.innerHTML = options.map(opt => {
     const isSelected = appState.modalSelectedOptions[groupName] && appState.modalSelectedOptions[groupName].id === opt.id;
-    const priceText = opt.price > 0 ? ` (+${formatRupiah(opt.price)})` : '';
+    let labelText = opt.name;
+
+    if (groupName === 'ukuran' && opt.id === 'large') {
+      labelText = 'Large+Rp5.000';
+    } else if (groupName === 'beans' && opt.id === 'juwara-beans') {
+      labelText = 'Juwara Beans +Rp3k';
+    }
+
     return `
-      <button class="option-pill ${isSelected ? 'selected' : ''}" data-group="${groupName}" data-id="${opt.id}">
-        ${opt.name}${priceText}
+      <button class="option-pill-btn ${isSelected ? 'selected' : ''}" data-group="${groupName}" data-id="${opt.id}">
+        ${labelText}
       </button>
     `;
   }).join('');
 
-  container.querySelectorAll('.option-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
+  container.querySelectorAll('.option-pill-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const g = btn.getAttribute('data-group');
       const id = btn.getAttribute('data-id');
       const selectedOpt = options.find(o => o.id === id);
       appState.modalSelectedOptions[g] = selectedOpt;
 
-      container.querySelectorAll('.option-pill').forEach(b => b.classList.remove('selected'));
+      container.querySelectorAll('.option-pill-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
 
       recalculateModalTotal();
@@ -614,43 +595,50 @@ function renderPillGroup(groupName, options) {
   });
 }
 
-function renderCheckboxGroup(groupName, options) {
-  const container = document.getElementById(`options-group-${groupName}`);
-  if (!container) return;
-
-  const sectionParent = container.closest('.option-section');
+function renderCheckboxGroup(groupName, options, containerId, parentGroupId) {
+  const container = document.getElementById(containerId);
+  const groupParent = document.getElementById(parentGroupId);
+  if (!container || !groupParent) return;
 
   if (!options || options.length === 0) {
-    if (sectionParent) sectionParent.style.display = 'none';
+    groupParent.style.display = 'none';
     return;
   }
 
-  if (sectionParent) sectionParent.style.display = 'block';
+  groupParent.style.display = 'block';
 
   container.innerHTML = options.map(opt => {
     const isChecked = appState.modalSelectedOptions[groupName].some(o => o.id === opt.id);
-    const priceText = opt.price > 0 ? ` (+${formatRupiah(opt.price)})` : '';
+    const priceText = opt.price > 0 ? `+${formatRupiah(opt.price)}` : '';
     return `
-      <label class="checkbox-pill ${isChecked ? 'checked' : ''}">
-        <input type="checkbox" data-group="${groupName}" data-id="${opt.id}" ${isChecked ? 'checked' : ''} style="display:none;" />
-        ${opt.name}${priceText}
+      <label class="checkbox-row ${isChecked ? 'checked' : ''}">
+        <span class="checkbox-label-text">${opt.name}</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          ${priceText ? `<span class="checkbox-price">${priceText}</span>` : ''}
+          <input type="checkbox" class="custom-checkbox" data-group="${groupName}" data-id="${opt.id}" ${isChecked ? 'checked' : ''} />
+        </div>
       </label>
     `;
   }).join('');
 
-  container.querySelectorAll('.checkbox-pill').forEach(label => {
-    const input = label.querySelector('input');
-    input.addEventListener('change', () => {
+  container.querySelectorAll('.checkbox-row').forEach(row => {
+    const input = row.querySelector('input');
+    row.addEventListener('click', (e) => {
+      if (e.target !== input) {
+        input.checked = !input.checked;
+      }
       const g = input.getAttribute('data-group');
       const id = input.getAttribute('data-id');
       const opt = options.find(o => o.id === id);
 
       if (input.checked) {
-        appState.modalSelectedOptions[g].push(opt);
-        label.classList.add('checked');
+        if (!appState.modalSelectedOptions[g].some(o => o.id === id)) {
+          appState.modalSelectedOptions[g].push(opt);
+        }
+        row.classList.add('checked');
       } else {
         appState.modalSelectedOptions[g] = appState.modalSelectedOptions[g].filter(o => o.id !== id);
-        label.classList.remove('checked');
+        row.classList.remove('checked');
       }
 
       recalculateModalTotal();
@@ -671,15 +659,20 @@ function recalculateModalTotal() {
   });
 
   ['syrup', 'topping'].forEach(g => {
-    appState.modalSelectedOptions[g].forEach(opt => {
-      extraPrice += opt.price;
-    });
+    if (Array.isArray(appState.modalSelectedOptions[g])) {
+      appState.modalSelectedOptions[g].forEach(opt => {
+        extraPrice += opt.price || 0;
+      });
+    }
   });
 
   const unitPrice = basePrice + extraPrice;
   const totalPrice = unitPrice * appState.modalSelectedOptions.quantity;
 
-  document.getElementById('modal-price-total').textContent = formatRupiah(totalPrice);
+  const calculatedTotalElem = document.getElementById('detail-calculated-total');
+  if (calculatedTotalElem) {
+    calculatedTotalElem.textContent = formatRupiah(totalPrice);
+  }
 }
 
 // --- CART & MINIMUM UNIT ITEM VALIDATION ---
