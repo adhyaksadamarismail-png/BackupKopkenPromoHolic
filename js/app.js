@@ -510,31 +510,59 @@ function renderProducts() {
   });
 }
 
-// --- PRODUCT DETAIL MODAL ---
-function openProductDetailModal(productId) {
+// --- PRODUCT DETAIL MODAL & EDITING ---
+function getItemCustomizationSummary(options) {
+  if (!options) return '';
+  const opts = [];
+  if (options.ukuran) opts.push(options.ukuran.name);
+  if (options.suhu) opts.push(options.suhu.name);
+  if (options.es) opts.push(options.es.name);
+  if (options.gula) opts.push(options.gula.name);
+  if (options.beans && options.beans.name) opts.push(options.beans.name);
+  if (options.syrup && options.syrup.length > 0) opts.push(...options.syrup.map(s => s.name));
+  if (options.topping && options.topping.length > 0) opts.push(...options.topping.map(t => t.name));
+  if (options.details) opts.push(options.details);
+  if (options.notes) opts.push(`Catatan: ${options.notes}`);
+  return opts.join(', ');
+}
+
+function openProductDetailModal(productId, cartItemId = null) {
   const prod = products.find(p => p.id === productId);
   if (!prod) return;
 
   appState.modalProduct = prod;
-  
-  appState.modalSelectedOptions = {
-    suhu: prod.options.suhu.length > 0 ? prod.options.suhu[0] : null,
-    ukuran: prod.options.ukuran.length > 0 ? prod.options.ukuran[0] : null,
-    es: prod.options.es.length > 0 ? prod.options.es[0] : null,
-    gula: prod.options.gula.length > 0 ? prod.options.gula[0] : null,
-    beans: prod.options.beans && prod.options.beans.length > 0 ? prod.options.beans[0] : null,
-    syrup: [],
-    topping: [],
-    notes: '',
-    quantity: 1
-  };
+  appState.editingCartItemId = cartItemId;
+
+  if (cartItemId) {
+    const existingItem = appState.cart.find(i => i.id === cartItemId);
+    if (existingItem) {
+      appState.modalSelectedOptions = JSON.parse(JSON.stringify(existingItem.options));
+    }
+  } else {
+    appState.modalSelectedOptions = {
+      suhu: prod.options.suhu.length > 0 ? prod.options.suhu[0] : null,
+      ukuran: prod.options.ukuran.length > 0 ? prod.options.ukuran[0] : null,
+      es: prod.options.es.length > 0 ? prod.options.es[0] : null,
+      gula: prod.options.gula.length > 0 ? prod.options.gula[0] : null,
+      beans: prod.options.beans && prod.options.beans.length > 0 ? prod.options.beans[0] : null,
+      syrup: [],
+      topping: [],
+      notes: '',
+      quantity: 1
+    };
+  }
 
   document.getElementById('detail-hero-img').src = prod.image;
   document.getElementById('detail-product-title').textContent = prod.name;
   document.getElementById('detail-original-price').textContent = prod.originalPrice ? formatRupiah(prod.originalPrice) : '';
   document.getElementById('detail-promo-price').textContent = formatRupiah(prod.price);
-  document.getElementById('detail-notes-input').value = '';
-  document.getElementById('detail-qty-val').textContent = '1';
+  document.getElementById('detail-notes-input').value = appState.modalSelectedOptions.notes || '';
+  document.getElementById('detail-qty-val').textContent = appState.modalSelectedOptions.quantity || '1';
+
+  const ctaBtn = document.getElementById('btn-add-to-cart-modal');
+  if (ctaBtn) {
+    ctaBtn.textContent = cartItemId ? 'Simpan Perubahan' : '+ Tambah ke Keranjang';
+  }
 
   renderPillGroup('suhu', prod.options.suhu, 'pills-suhu', 'group-suhu');
   renderPillGroup('ukuran', prod.options.ukuran, 'pills-ukuran', 'group-ukuran');
@@ -548,6 +576,7 @@ function openProductDetailModal(productId) {
 
   const modal = document.getElementById('modal-product-detail');
   modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function renderPillGroup(groupName, options, containerId, parentGroupId) {
@@ -695,10 +724,11 @@ function openCartModal() {
   renderCartDrawerItems();
   const modal = document.getElementById('modal-cart');
   modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function renderCartDrawerItems() {
-  const container = document.getElementById('cart-drawer-items');
+  const container = document.getElementById('cart-items-container');
   if (!container) return;
 
   if (appState.cart.length === 0) {
@@ -710,17 +740,7 @@ function renderCartDrawerItems() {
   const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
   container.innerHTML = appState.cart.map((item, idx) => {
-    const opts = [];
-    if (item.options.ukuran) opts.push(item.options.ukuran.name);
-    if (item.options.es) opts.push(item.options.es.name);
-    if (item.options.gula) opts.push(item.options.gula.name);
-    if (item.options.beans && item.options.beans.price > 0) opts.push(item.options.beans.name);
-    if (item.options.syrup && item.options.syrup.length > 0) opts.push(...item.options.syrup.map(s => s.name));
-    if (item.options.topping && item.options.topping.length > 0) opts.push(...item.options.topping.map(t => t.name));
-    if (item.options.details) opts.push(item.options.details);
-    if (item.options.notes) opts.push(`Catatan: ${item.options.notes}`);
-
-    const optStr = opts.length > 0 ? opts.join(' · ') : '';
+    const optStr = getItemCustomizationSummary(item.options);
 
     return `
       <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;">
@@ -728,6 +748,7 @@ function renderCartDrawerItems() {
           <div>
             <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">${item.productName}</div>
             ${optStr ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">${optStr}</div>` : ''}
+            ${!item.productName.startsWith('[PROMO BUNDLE]') ? `<button class="btn-edit-cart-item" data-cart-id="${item.id}" data-product-id="${item.productId}" style="font-size: 11px; font-weight: 800; color: #0F172A; background: none; border: none; padding: 0; margin-top: 4px; cursor: pointer; text-decoration: underline;">Klik untuk edit</button>` : ''}
           </div>
           <button class="btn-trash" data-index="${idx}" style="background: transparent; border: none; color: #ef4444; cursor: pointer; padding: 4px;">
             <i data-feather="trash-2" style="width: 16px; height: 16px;"></i>
@@ -751,11 +772,21 @@ function renderCartDrawerItems() {
 
   if (window.feather) window.feather.replace();
 
+  container.querySelectorAll('.btn-edit-cart-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prodId = btn.getAttribute('data-product-id');
+      const cartId = btn.getAttribute('data-cart-id');
+      document.getElementById('modal-cart').classList.remove('active');
+      openProductDetailModal(prodId, cartId);
+    });
+  });
+
   container.querySelectorAll('.btn-trash').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.getAttribute('data-index'), 10);
       appState.cart.splice(idx, 1);
       saveCartState();
+      updateCartUI();
       renderCartDrawerItems();
     });
   });
@@ -765,12 +796,12 @@ function renderCartDrawerItems() {
       const idx = parseInt(btn.getAttribute('data-index'), 10);
       if (appState.cart[idx].quantity > 1) {
         appState.cart[idx].quantity--;
-        const unitPrice = appState.cart[idx].totalPrice / (appState.cart[idx].quantity + 1);
-        appState.cart[idx].totalPrice = unitPrice * appState.cart[idx].quantity;
+        appState.cart[idx].totalPrice = appState.cart[idx].unitPrice * appState.cart[idx].quantity;
       } else {
         appState.cart.splice(idx, 1);
       }
       saveCartState();
+      updateCartUI();
       renderCartDrawerItems();
     });
   });
@@ -778,16 +809,16 @@ function renderCartDrawerItems() {
   container.querySelectorAll('.btn-cart-qty-plus').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.getAttribute('data-index'), 10);
-      const unitPrice = appState.cart[idx].totalPrice / appState.cart[idx].quantity;
       appState.cart[idx].quantity++;
-      appState.cart[idx].totalPrice = unitPrice * appState.cart[idx].quantity;
+      appState.cart[idx].totalPrice = appState.cart[idx].unitPrice * appState.cart[idx].quantity;
       saveCartState();
+      updateCartUI();
       renderCartDrawerItems();
     });
   });
 }
 
-// --- CHECKOUT & OUTLET SURCHARGE CALCULATION ---
+// --- CHECKOUT & KONFIRMASI PESANAN LOGIC ---
 function openCheckoutModal() {
   if (appState.cart.length === 0) {
     alert("Keranjang Anda masih kosong!");
@@ -802,125 +833,180 @@ function openCheckoutModal() {
 
   document.getElementById('modal-cart').classList.remove('active');
   document.getElementById('modal-checkout').classList.add('active');
+  document.body.style.overflow = 'hidden';
 
-  renderCheckoutOutletSection();
+  setupCheckoutEvents();
   renderCheckoutSummary();
 }
 
-function renderCheckoutOutletSection() {
-  const card = document.getElementById('checkout-selected-outlet-card');
-  const dropdown = document.getElementById('checkout-outlets-dropdown');
-  const input = document.getElementById('input-checkout-outlet-search');
+function validateCheckoutForm() {
+  const nameInput = document.getElementById('checkout-name');
+  const outletInput = document.getElementById('checkout-manual-outlet');
+  const waBtn = document.getElementById('btn-send-whatsapp');
+  if (!nameInput || !outletInput || !waBtn) return;
 
-  if (!card || !dropdown || !input) return;
+  const nameVal = nameInput.value.trim();
+  const outletVal = outletInput.value.trim();
 
-  if (appState.selectedOutlet) {
-    dropdown.style.display = 'none';
-    card.style.display = 'flex';
-    document.getElementById('checkout-selected-outlet-name').textContent = appState.selectedOutlet.name;
-    document.getElementById('checkout-selected-outlet-address').textContent = appState.selectedOutlet.address;
-
-    // Check surcharge rule: Rest Area / Mall / Airport / Stasiun or hasSurcharge flag
-    const nameLower = appState.selectedOutlet.name.toLowerCase();
-    const isSurcharge = appState.selectedOutlet.hasSurcharge || 
-                        nameLower.includes('rest area') || 
-                        nameLower.includes('mall') || 
-                        nameLower.includes('bandara') || 
-                        nameLower.includes('airport') || 
-                        nameLower.includes('stasiun');
-
-    const badge = document.getElementById('checkout-surcharge-badge');
-    if (badge) {
-      badge.style.display = isSurcharge ? 'block' : 'none';
+  let isPickupValid = true;
+  if (appState.pickupType === 'scheduled') {
+    const timeInput = document.getElementById('checkout-pickup-time-input');
+    if (!timeInput || !timeInput.value.trim()) {
+      isPickupValid = false;
     }
+  }
+
+  if (nameVal && outletVal && isPickupValid && appState.cart.length > 0) {
+    waBtn.disabled = false;
   } else {
-    card.style.display = 'none';
-    dropdown.style.display = 'none';
-    input.value = '';
+    waBtn.disabled = true;
   }
 }
 
-function handleCheckoutOutletSearch(query) {
-  const dropdown = document.getElementById('checkout-outlets-dropdown');
-  if (!dropdown) return;
+function setupCheckoutEvents() {
+  const nameInput = document.getElementById('checkout-name');
+  const outletInput = document.getElementById('checkout-manual-outlet');
+  const btnPickupNow = document.getElementById('btn-pickup-now');
+  const btnPickupScheduled = document.getElementById('btn-pickup-scheduled');
+  const pickupTimeWrapper = document.getElementById('pickup-time-picker-wrapper');
+  const pickupTimeInput = document.getElementById('checkout-pickup-time-input');
 
-  if (!query.trim()) {
-    dropdown.style.display = 'none';
-    return;
-  }
-
-  const results = searchOutlets(appState.outlets, query, 15);
-
-  if (results.length === 0) {
-    dropdown.innerHTML = `<div style="padding: 12px; font-size: 13px; color: var(--text-muted); text-align: center;">Outlet tidak ditemukan</div>`;
-  } else {
-    dropdown.innerHTML = results.map(o => `
-      <div class="outlet-item" data-id="${o.id}">
-        <div style="font-weight: 700; font-size: 13px;">${o.name}</div>
-        <div style="font-size: 11px; color: var(--text-secondary);">${o.city} — ${o.address}</div>
-      </div>
-    `).join('');
-  }
-
-  dropdown.style.display = 'block';
-
-  dropdown.querySelectorAll('.outlet-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const id = item.getAttribute('data-id');
-      const selected = appState.outlets.find(o => o.id === id);
-      if (selected) {
-        appState.selectedOutlet = selected;
-        localStorage.setItem('promoholic_selected_outlet', JSON.stringify(selected));
-        renderCheckoutOutletSection();
-        renderCheckoutSummary();
-      }
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      validateCheckoutForm();
     });
-  });
-}
+  }
 
-function calculateFinalOrderTotal() {
-  const nameLower = appState.selectedOutlet ? appState.selectedOutlet.name.toLowerCase() : '';
-  const isSurcharge = appState.selectedOutlet && (
-    appState.selectedOutlet.hasSurcharge || 
-    nameLower.includes('rest area') || 
-    nameLower.includes('mall') || 
-    nameLower.includes('bandara') || 
-    nameLower.includes('airport') || 
-    nameLower.includes('stasiun')
-  );
+  if (outletInput) {
+    outletInput.addEventListener('input', () => {
+      renderCheckoutSummary();
+    });
+  }
 
-  let total = 0;
-  appState.cart.forEach(item => {
-    let price = item.totalPrice;
-    if (isSurcharge && item.productName.includes('2 Large')) {
-      price += 3000 * item.quantity;
-    }
-    total += price;
-  });
+  if (btnPickupNow && btnPickupScheduled) {
+    btnPickupNow.addEventListener('click', () => {
+      btnPickupNow.classList.add('active');
+      btnPickupScheduled.classList.remove('active');
+      appState.pickupType = 'now';
+      appState.pickupTime = 'Sekarang';
+      if (pickupTimeWrapper) pickupTimeWrapper.style.display = 'none';
+      validateCheckoutForm();
+    });
 
-  return { total, isSurcharge };
+    btnPickupScheduled.addEventListener('click', () => {
+      btnPickupScheduled.classList.add('active');
+      btnPickupNow.classList.remove('active');
+      appState.pickupType = 'scheduled';
+      if (pickupTimeWrapper) pickupTimeWrapper.style.display = 'block';
+      validateCheckoutForm();
+    });
+  }
+
+  if (pickupTimeInput) {
+    pickupTimeInput.addEventListener('input', () => {
+      appState.pickupTime = pickupTimeInput.value.trim();
+      validateCheckoutForm();
+    });
+  }
 }
 
 function renderCheckoutSummary() {
-  const container = document.getElementById('checkout-summary-items');
+  const container = document.getElementById('checkout-summary-items-list');
   if (!container) return;
 
-  const { total, isSurcharge } = calculateFinalOrderTotal();
+  if (appState.cart.length === 0) {
+    container.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted);">Keranjang kosong</div>`;
+    document.getElementById('checkout-subtotal-amount').textContent = 'Rp 0';
+    document.getElementById('checkout-total-final-amount').textContent = 'Rp 0';
+    validateCheckoutForm();
+    return;
+  }
 
-  container.innerHTML = appState.cart.map(item => {
-    let itemPrice = item.totalPrice;
-    if (isSurcharge && item.productName.includes('2 Large')) {
-      itemPrice += 3000 * item.quantity;
-    }
+  const manualOutletInput = document.getElementById('checkout-manual-outlet');
+  const outletText = manualOutletInput ? manualOutletInput.value.trim() : '';
+  const outletTextLower = outletText.toLowerCase();
+
+  // Check surcharge (+Rp 3.000 for Rest Area / Mall / Airport / Stasiun)
+  const hasSurcharge = outletTextLower.includes('rest area') ||
+                       outletTextLower.includes('mall') ||
+                       outletTextLower.includes('bandara') ||
+                       outletTextLower.includes('airport') ||
+                       outletTextLower.includes('stasiun');
+
+  appState.checkoutSurcharge = hasSurcharge ? 3000 : 0;
+
+  const surchargeRow = document.getElementById('row-outlet-surcharge');
+  if (surchargeRow) {
+    surchargeRow.style.display = hasSurcharge ? 'flex' : 'none';
+  }
+
+  const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
+  const kantungBelanja = 1000;
+  const totalFinal = subtotal + kantungBelanja + appState.checkoutSurcharge;
+
+  container.innerHTML = appState.cart.map((item, idx) => {
+    const summaryText = getItemCustomizationSummary(item.options);
     return `
-      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-        <span>${item.quantity}x ${item.productName}</span>
-        <span style="font-weight: 700;">${formatRupiah(itemPrice)}</span>
+      <div class="checkout-item-card">
+        <div class="checkout-item-header">
+          <span class="checkout-item-title">${item.productName}</span>
+          <span class="checkout-item-price-badge">${formatRupiah(item.totalPrice)}</span>
+        </div>
+        ${summaryText ? `<div class="checkout-item-customization">${summaryText}</div>` : ''}
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+          ${!item.productName.startsWith('[PROMO BUNDLE]') ? `<button class="checkout-item-edit-btn" data-cart-id="${item.id}" data-product-id="${item.productId}">Klik untuk edit</button>` : '<span></span>'}
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn-qty btn-checkout-item-minus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">-</button>
+            <span style="font-size: 13px; font-weight: 800;">${item.quantity}</span>
+            <button class="btn-qty btn-checkout-item-plus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">+</button>
+          </div>
+        </div>
       </div>
     `;
   }).join('');
 
-  document.getElementById('checkout-summary-total').textContent = formatRupiah(total);
+  document.getElementById('checkout-subtotal-amount').textContent = formatRupiah(subtotal);
+  document.getElementById('checkout-total-final-amount').textContent = formatRupiah(totalFinal);
+
+  // Edit item event bindings
+  container.querySelectorAll('.checkout-item-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prodId = btn.getAttribute('data-product-id');
+      const cartId = btn.getAttribute('data-cart-id');
+      document.getElementById('modal-checkout').classList.remove('active');
+      openProductDetailModal(prodId, cartId);
+    });
+  });
+
+  // Quantity button event bindings
+  container.querySelectorAll('.btn-checkout-item-minus').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-index'), 10);
+      if (appState.cart[idx].quantity > 1) {
+        appState.cart[idx].quantity--;
+        appState.cart[idx].totalPrice = appState.cart[idx].unitPrice * appState.cart[idx].quantity;
+      } else {
+        appState.cart.splice(idx, 1);
+      }
+      saveCartState();
+      updateCartUI();
+      renderCheckoutSummary();
+    });
+  });
+
+  container.querySelectorAll('.btn-checkout-item-plus').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-index'), 10);
+      appState.cart[idx].quantity++;
+      appState.cart[idx].totalPrice = appState.cart[idx].unitPrice * appState.cart[idx].quantity;
+      saveCartState();
+      updateCartUI();
+      renderCheckoutSummary();
+    });
+  });
+
+  validateCheckoutForm();
 }
 
 function processWhatsAppOrder() {
@@ -928,42 +1014,56 @@ function processWhatsAppOrder() {
     alert("Keranjang Anda masih kosong!");
     return;
   }
-  if (!appState.selectedOutlet) {
-    alert("Silakan pilih outlet Kopi Kenangan terlebih dahulu!");
-    return;
-  }
 
-  const nameInput = document.getElementById('checkout-name').value.trim();
-  const pickupInput = document.getElementById('checkout-pickup-time').value.trim();
+  const nameVal = document.getElementById('checkout-name').value.trim();
+  const outletVal = document.getElementById('checkout-manual-outlet').value.trim();
 
-  if (!nameInput) {
+  if (!nameVal) {
     alert("Silakan masukkan nama pemesan!");
     return;
   }
-  if (!pickupInput) {
-    alert("Silakan masukkan waktu pickup!");
+  if (!outletVal) {
+    alert("Silakan ketik nama outlet!");
     return;
   }
 
-  const { total, isSurcharge } = calculateFinalOrderTotal();
+  let pickupVal = "Sekarang";
+  if (appState.pickupType === 'scheduled') {
+    const timeInput = document.getElementById('checkout-pickup-time-input');
+    pickupVal = timeInput ? timeInput.value.trim() : "Jam khusus";
+    if (!pickupVal) {
+      alert("Silakan tentukan jam pickup!");
+      return;
+    }
+  }
 
-  // Generate WhatsApp message format matching user's exact specification
+  const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
+  const kantungBelanja = 1000;
+  const surcharge = appState.checkoutSurcharge || 0;
+  const totalFinal = subtotal + kantungBelanja + surcharge;
+
   let orderText = `Halo, saya ingin memesan:\n\n`;
   orderText += `☕ Brand: ☕ Kopi Kenangan\n`;
-  orderText += `👤 Nama: ${nameInput}\n`;
-  orderText += `📍 Outlet: ${appState.selectedOutlet.name}\n`;
-  orderText += `⏰ Pickup: ${pickupInput}\n\n`;
+  orderText += `👤 Nama: ${nameVal}\n`;
+  orderText += `📍 Outlet: ${outletVal}\n`;
+  orderText += `⏰ Pickup: ${pickupVal}\n\n`;
   orderText += `🍵 Pesanan:\n`;
 
   appState.cart.forEach(item => {
-    let itemPrice = item.totalPrice;
-    if (isSurcharge && item.productName.includes('2 Large')) {
-      itemPrice += 3000 * item.quantity;
+    orderText += `• ${item.productName} x${item.quantity} — ${formatRupiah(item.totalPrice)}\n`;
+    const summary = getItemCustomizationSummary(item.options);
+    if (summary) {
+      orderText += `  ${summary}\n`;
     }
-    orderText += `• ${item.productName} x${item.quantity} — ${formatRupiah(itemPrice)}\n`;
+    orderText += `\n`;
   });
 
-  orderText += `\n💰 Total: ${formatRupiah(total)}\n\n`;
+  orderText += `💰 Subtotal: ${formatRupiah(subtotal)}\n`;
+  orderText += `🛍️ Kantung Belanja: ${formatRupiah(kantungBelanja)}\n`;
+  if (surcharge > 0) {
+    orderText += `📍 Surcharge Outlet: ${formatRupiah(surcharge)}\n`;
+  }
+  orderText += `\nTotal: ${formatRupiah(totalFinal)}\n\n`;
   orderText += `Mohon konfirmasi pesanan saya. Terima kasih! 🙏`;
 
   const waNumber = appState.settings.adminWhatsApp || '6285159646922';
@@ -1086,9 +1186,20 @@ function setupEventListeners() {
 
   // Close Product Detail Modal
   const btnCloseDetail = document.getElementById('btn-close-product-detail');
-  if (btnCloseDetail) {
+  const modalDetail = document.getElementById('modal-product-detail');
+  if (btnCloseDetail && modalDetail) {
     btnCloseDetail.addEventListener('click', () => {
-      document.getElementById('modal-product-detail').classList.remove('active');
+      modalDetail.classList.remove('active');
+      document.body.style.overflow = '';
+      appState.editingCartItemId = null;
+    });
+
+    modalDetail.addEventListener('click', (e) => {
+      if (e.target === modalDetail) {
+        modalDetail.classList.remove('active');
+        document.body.style.overflow = '';
+        appState.editingCartItemId = null;
+      }
     });
   }
 
@@ -1121,11 +1232,16 @@ function setupEventListeners() {
     });
   }
 
-  // Modal Add to Cart CTA
+  // Modal Add / Save to Cart CTA
   const btnAddToCartModal = document.getElementById('btn-add-to-cart-modal');
   if (btnAddToCartModal) {
     btnAddToCartModal.addEventListener('click', () => {
       if (!appState.modalProduct) return;
+
+      const inputNotes = document.getElementById('detail-notes-input');
+      if (inputNotes) {
+        appState.modalSelectedOptions.notes = inputNotes.value.trim();
+      }
 
       const basePrice = appState.modalProduct.price;
       let extraPrice = 0;
@@ -1137,36 +1253,64 @@ function setupEventListeners() {
       });
 
       ['syrup', 'topping'].forEach(g => {
-        appState.modalSelectedOptions[g].forEach(opt => {
-          extraPrice += opt.price;
-        });
+        if (Array.isArray(appState.modalSelectedOptions[g])) {
+          appState.modalSelectedOptions[g].forEach(opt => {
+            extraPrice += opt.price || 0;
+          });
+        }
       });
 
       const unitPrice = basePrice + extraPrice;
-      const totalPrice = unitPrice * appState.modalSelectedOptions.quantity;
+      const quantity = appState.modalSelectedOptions.quantity || 1;
+      const totalPrice = unitPrice * quantity;
 
-      const cartItem = {
-        id: 'cart-item-' + Date.now(),
-        productId: appState.modalProduct.id,
-        productName: appState.modalProduct.name,
-        quantity: appState.modalSelectedOptions.quantity,
-        unitPrice: unitPrice,
-        totalPrice: totalPrice,
-        options: { ...appState.modalSelectedOptions }
-      };
+      if (appState.editingCartItemId) {
+        const itemIdx = appState.cart.findIndex(i => i.id === appState.editingCartItemId);
+        if (itemIdx !== -1) {
+          appState.cart[itemIdx].quantity = quantity;
+          appState.cart[itemIdx].unitPrice = unitPrice;
+          appState.cart[itemIdx].totalPrice = totalPrice;
+          appState.cart[itemIdx].options = JSON.parse(JSON.stringify(appState.modalSelectedOptions));
+        }
+      } else {
+        const cartItem = {
+          id: 'cart-item-' + Date.now(),
+          productId: appState.modalProduct.id,
+          productName: appState.modalProduct.name,
+          image: appState.modalProduct.image,
+          basePrice: appState.modalProduct.price,
+          quantity: quantity,
+          unitPrice: unitPrice,
+          totalPrice: totalPrice,
+          options: JSON.parse(JSON.stringify(appState.modalSelectedOptions))
+        };
+        appState.cart.push(cartItem);
+      }
 
-      appState.cart.push(cartItem);
       saveCartState();
+      updateCartUI();
 
-      document.getElementById('modal-product-detail').classList.remove('active');
+      const modal = document.getElementById('modal-product-detail');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      appState.editingCartItemId = null;
     });
   }
 
   // Cart Drawer Events
   const btnCloseCart = document.getElementById('btn-close-cart');
-  if (btnCloseCart) {
+  const modalCart = document.getElementById('modal-cart');
+  if (btnCloseCart && modalCart) {
     btnCloseCart.addEventListener('click', () => {
-      document.getElementById('modal-cart').classList.remove('active');
+      modalCart.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    modalCart.addEventListener('click', (e) => {
+      if (e.target === modalCart) {
+        modalCart.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     });
   }
 
@@ -1177,9 +1321,18 @@ function setupEventListeners() {
 
   // Checkout Events
   const btnCloseCheckout = document.getElementById('btn-close-checkout');
-  if (btnCloseCheckout) {
+  const modalCheckout = document.getElementById('modal-checkout');
+  if (btnCloseCheckout && modalCheckout) {
     btnCloseCheckout.addEventListener('click', () => {
-      document.getElementById('modal-checkout').classList.remove('active');
+      modalCheckout.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    modalCheckout.addEventListener('click', (e) => {
+      if (e.target === modalCheckout) {
+        modalCheckout.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     });
   }
 
