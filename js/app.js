@@ -1116,22 +1116,14 @@ function processWhatsAppOrder() {
   appState.cart.forEach(item => {
     const tokens = getNonDefaultCustomizationTokens(item.options);
     const tokenStr = tokens.length > 0 ? ' ' + tokens.map(t => `(${t})`).join(' ') : '';
-    const qtyStr = item.quantity > 1 ? ` x${item.quantity}` : '';
 
-    orderText += `• ${item.productName}${tokenStr}${qtyStr}\n`;
+    orderText += `• ${item.quantity}x ${item.productName}${tokenStr} ${formatRupiah(item.totalPrice)}\n`;
     if (item.options && item.options.notes) {
       orderText += `  Catatan: ${item.options.notes}\n`;
     }
   });
 
-  orderText += `\n💰 Subtotal: ${formatRupiah(subtotal)}\n`;
-  if (appState.includeShoppingBag) {
-    orderText += `🛍️ Kantung Belanja: Rp1.000\n`;
-  }
-  if (surcharge > 0) {
-    orderText += `📍 Surcharge Outlet: ${formatRupiah(surcharge)}\n`;
-  }
-  orderText += `\nTotal: ${formatRupiah(totalFinal)}\n\n`;
+  orderText += `\n💰 Total: ${formatRupiah(totalFinal)}\n\n`;
   orderText += `Mohon konfirmasi pesanan saya. Terima kasih! 🙏`;
 
   const waNumber = appState.settings.adminWhatsApp || '6285159646922';
