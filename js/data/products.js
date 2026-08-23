@@ -4397,7 +4397,7 @@ export const products = [
     "category": "non-kopi",
     "price": 16500,
     "originalPrice": 22275,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
+    "image": "https://files.catbox.moe/3nr2w0.jpeg",
     "description": "OG Aren Milky Speculoos segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
