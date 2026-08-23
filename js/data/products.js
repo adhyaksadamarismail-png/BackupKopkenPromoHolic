@@ -1,4 +1,4 @@
-// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Organized Food Subcategories)
+// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Catbox Images & Non-Kopi Matcha Latte)
 
 export const productCategories = [
   { id: 'kopi', name: 'Kopi' },
@@ -860,6 +860,167 @@ export const products = [
   },
   {
     "id": "kk_prod_6",
+    "name": "Spanish Latte",
+    "category": "kopi",
+    "price": 14500,
+    "originalPrice": 19575,
+    "image": "https://files.catbox.moe/xz536k.jpeg",
+    "description": "Spanish Latte segar dan nikmat khas Kopi Kenangan.",
+    "isBestSeller": false,
+    "options": {
+      "suhu": [
+        {
+          "id": "ice",
+          "name": "Ice",
+          "price": 0
+        },
+        {
+          "id": "hot",
+          "name": "Hot",
+          "price": 0
+        }
+      ],
+      "ukuran": [
+        {
+          "id": "normal",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "large",
+          "name": "Large",
+          "price": 5000
+        }
+      ],
+      "es": [
+        {
+          "id": "normal-ice",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-ice",
+          "name": "Less Ice",
+          "price": 0
+        },
+        {
+          "id": "no-ice",
+          "name": "No Ice",
+          "price": 0
+        }
+      ],
+      "gula": [
+        {
+          "id": "normal-sugar",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-sugar",
+          "name": "Less Sugar",
+          "price": 0
+        },
+        {
+          "id": "no-sugar",
+          "name": "No Sugar",
+          "price": 0
+        }
+      ],
+      "beans": [
+        {
+          "id": "kenangan-blend",
+          "name": "Kenangan Blend",
+          "price": 0
+        },
+        {
+          "id": "juwara-beans",
+          "name": "Juwara Beans",
+          "price": 3000
+        }
+      ],
+      "syrup": [
+        {
+          "id": "vanilla-syrup",
+          "name": "Vanilla Syrup",
+          "price": 6000
+        },
+        {
+          "id": "hazelnut-syrup",
+          "name": "Hazelnut Syrup",
+          "price": 6000
+        },
+        {
+          "id": "caramel-syrup",
+          "name": "Caramel Syrup",
+          "price": 6000
+        },
+        {
+          "id": "salted-caramel",
+          "name": "Salted Caramel Sauce",
+          "price": 6000
+        },
+        {
+          "id": "choco-sauce",
+          "name": "Choco Sauce",
+          "price": 6000
+        },
+        {
+          "id": "butterscotch",
+          "name": "Butterscotch Sauce",
+          "price": 6000
+        }
+      ],
+      "topping": [
+        {
+          "id": "shot-kenangan",
+          "name": "Espresso Shot Kenangan Blend",
+          "price": 6000
+        },
+        {
+          "id": "shot-juwara",
+          "name": "Espresso Shot Juwara Beans",
+          "price": 6000
+        },
+        {
+          "id": "golden-boba",
+          "name": "Golden Boba",
+          "price": 6000
+        },
+        {
+          "id": "grass-jelly",
+          "name": "Grass Jelly",
+          "price": 6000
+        },
+        {
+          "id": "oreo",
+          "name": "Oreo",
+          "price": 6000
+        },
+        {
+          "id": "whipped-choco",
+          "name": "Whipped Cream Chocolate",
+          "price": 6000
+        },
+        {
+          "id": "whipped-vanilla",
+          "name": "Whipped Cream Vanilla",
+          "price": 6000
+        },
+        {
+          "id": "caramel-crumble",
+          "name": "Caramel Crumble",
+          "price": 6000
+        },
+        {
+          "id": "gula-aren",
+          "name": "Gula Aren",
+          "price": 6000
+        }
+      ]
+    }
+  },
+  {
+    "id": "kk_prod_7",
     "name": "Vanilla Latte",
     "category": "kopi",
     "price": 18000,
@@ -1020,7 +1181,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_7",
+    "id": "kk_prod_8",
     "name": "Hazelnut Latte",
     "category": "kopi",
     "price": 18000,
@@ -1181,7 +1342,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_8",
+    "id": "kk_prod_9",
     "name": "Caramel Latte",
     "category": "kopi",
     "price": 18000,
@@ -1342,7 +1503,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_9",
+    "id": "kk_prod_10",
     "name": "Creamy Caramel Latte",
     "category": "kopi",
     "price": 18000,
@@ -1503,7 +1664,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_10",
+    "id": "kk_prod_11",
     "name": "Caffe Malt Latte",
     "category": "kopi",
     "price": 16500,
@@ -1664,7 +1825,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_11",
+    "id": "kk_prod_12",
     "name": "Caramel Macchiato",
     "category": "kopi",
     "price": 19000,
@@ -1825,7 +1986,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_12",
+    "id": "kk_prod_13",
     "name": "Mocha Latte",
     "category": "kopi",
     "price": 18000,
@@ -1986,7 +2147,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_13",
+    "id": "kk_prod_14",
     "name": "Kopi Susu Black Aren",
     "category": "kopi",
     "price": 15500,
@@ -2147,7 +2308,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_14",
+    "id": "kk_prod_15",
     "name": "Toffee Nut Latte",
     "category": "kopi",
     "price": 14500,
@@ -2308,7 +2469,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_15",
+    "id": "kk_prod_16",
     "name": "Toffee Nut Aren Latte",
     "category": "kopi",
     "price": 15500,
@@ -2469,7 +2630,168 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_16",
+    "id": "kk_prod_17",
+    "name": "Butterscotch Aren Latte",
+    "category": "kopi",
+    "price": 15000,
+    "originalPrice": 20250,
+    "image": "https://files.catbox.moe/zfbk5t.jpeg",
+    "description": "Butterscotch Aren Latte segar dan nikmat khas Kopi Kenangan.",
+    "isBestSeller": false,
+    "options": {
+      "suhu": [
+        {
+          "id": "ice",
+          "name": "Ice",
+          "price": 0
+        },
+        {
+          "id": "hot",
+          "name": "Hot",
+          "price": 0
+        }
+      ],
+      "ukuran": [
+        {
+          "id": "normal",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "large",
+          "name": "Large",
+          "price": 5000
+        }
+      ],
+      "es": [
+        {
+          "id": "normal-ice",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-ice",
+          "name": "Less Ice",
+          "price": 0
+        },
+        {
+          "id": "no-ice",
+          "name": "No Ice",
+          "price": 0
+        }
+      ],
+      "gula": [
+        {
+          "id": "normal-sugar",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-sugar",
+          "name": "Less Sugar",
+          "price": 0
+        },
+        {
+          "id": "no-sugar",
+          "name": "No Sugar",
+          "price": 0
+        }
+      ],
+      "beans": [
+        {
+          "id": "kenangan-blend",
+          "name": "Kenangan Blend",
+          "price": 0
+        },
+        {
+          "id": "juwara-beans",
+          "name": "Juwara Beans",
+          "price": 3000
+        }
+      ],
+      "syrup": [
+        {
+          "id": "vanilla-syrup",
+          "name": "Vanilla Syrup",
+          "price": 6000
+        },
+        {
+          "id": "hazelnut-syrup",
+          "name": "Hazelnut Syrup",
+          "price": 6000
+        },
+        {
+          "id": "caramel-syrup",
+          "name": "Caramel Syrup",
+          "price": 6000
+        },
+        {
+          "id": "salted-caramel",
+          "name": "Salted Caramel Sauce",
+          "price": 6000
+        },
+        {
+          "id": "choco-sauce",
+          "name": "Choco Sauce",
+          "price": 6000
+        },
+        {
+          "id": "butterscotch",
+          "name": "Butterscotch Sauce",
+          "price": 6000
+        }
+      ],
+      "topping": [
+        {
+          "id": "shot-kenangan",
+          "name": "Espresso Shot Kenangan Blend",
+          "price": 6000
+        },
+        {
+          "id": "shot-juwara",
+          "name": "Espresso Shot Juwara Beans",
+          "price": 6000
+        },
+        {
+          "id": "golden-boba",
+          "name": "Golden Boba",
+          "price": 6000
+        },
+        {
+          "id": "grass-jelly",
+          "name": "Grass Jelly",
+          "price": 6000
+        },
+        {
+          "id": "oreo",
+          "name": "Oreo",
+          "price": 6000
+        },
+        {
+          "id": "whipped-choco",
+          "name": "Whipped Cream Chocolate",
+          "price": 6000
+        },
+        {
+          "id": "whipped-vanilla",
+          "name": "Whipped Cream Vanilla",
+          "price": 6000
+        },
+        {
+          "id": "caramel-crumble",
+          "name": "Caramel Crumble",
+          "price": 6000
+        },
+        {
+          "id": "gula-aren",
+          "name": "Gula Aren",
+          "price": 6000
+        }
+      ]
+    }
+  },
+  {
+    "id": "kk_prod_18",
     "name": "Butterscotch Seasalt Latte",
     "category": "kopi",
     "price": 17500,
@@ -2630,7 +2952,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_17",
+    "id": "kk_prod_19",
     "name": "Creamy Aren Latte",
     "category": "kopi",
     "price": 16000,
@@ -2791,7 +3113,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_18",
+    "id": "kk_prod_20",
     "name": "Matcha Espresso",
     "category": "kopi",
     "price": 18000,
@@ -2952,7 +3274,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_19",
+    "id": "kk_prod_21",
     "name": "Avocado Coffee",
     "category": "kopi",
     "price": 19000,
@@ -3113,7 +3435,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_20",
+    "id": "kk_prod_22",
     "name": "Pistachio Aren Latte",
     "category": "kopi",
     "price": 14500,
@@ -3274,7 +3596,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_21",
+    "id": "kk_prod_23",
     "name": "OG Aren Speculoos Latte",
     "category": "kopi",
     "price": 15500,
@@ -3435,13 +3757,13 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_22",
-    "name": "Dua Shot OG Aren",
+    "id": "kk_prod_24",
+    "name": "Dua Shot Iced Shaken",
     "category": "kopi",
-    "price": 17500,
-    "originalPrice": 23625,
-    "image": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
-    "description": "Dua Shot OG Aren segar dan nikmat khas Kopi Kenangan.",
+    "price": 19000,
+    "originalPrice": 25650,
+    "image": "https://files.catbox.moe/jaj7jw.jpeg",
+    "description": "Dua Shot Iced Shaken lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [
@@ -3596,7 +3918,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_23",
+    "id": "kk_prod_25",
     "name": "Banana Americano",
     "category": "kopi",
     "price": 14500,
@@ -3758,7 +4080,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf4c Banana Series"
   },
   {
-    "id": "kk_prod_24",
+    "id": "kk_prod_26",
     "name": "Korean Banana Latte",
     "category": "kopi",
     "price": 16500,
@@ -3920,12 +4242,162 @@ export const products = [
     "seriesBadge": "\ud83c\udf4c Banana Series"
   },
   {
-    "id": "kk_prod_25",
+    "id": "kk_prod_27",
+    "name": "Matcha Latte",
+    "category": "non-kopi",
+    "price": 17500,
+    "originalPrice": 23625,
+    "image": "https://i.ibb.co.com/BvcbFLH/Frame-1410112878.png",
+    "description": "Matcha Latte segar dan nikmat khas Kopi Kenangan.",
+    "isBestSeller": true,
+    "options": {
+      "suhu": [
+        {
+          "id": "ice",
+          "name": "Ice",
+          "price": 0
+        },
+        {
+          "id": "hot",
+          "name": "Hot",
+          "price": 0
+        }
+      ],
+      "ukuran": [
+        {
+          "id": "normal",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "large",
+          "name": "Large",
+          "price": 5000
+        }
+      ],
+      "es": [
+        {
+          "id": "normal-ice",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-ice",
+          "name": "Less Ice",
+          "price": 0
+        },
+        {
+          "id": "no-ice",
+          "name": "No Ice",
+          "price": 0
+        }
+      ],
+      "gula": [
+        {
+          "id": "normal-sugar",
+          "name": "Normal",
+          "price": 0
+        },
+        {
+          "id": "less-sugar",
+          "name": "Less Sugar",
+          "price": 0
+        },
+        {
+          "id": "no-sugar",
+          "name": "No Sugar",
+          "price": 0
+        }
+      ],
+      "beans": [],
+      "syrup": [
+        {
+          "id": "vanilla-syrup",
+          "name": "Vanilla Syrup",
+          "price": 6000
+        },
+        {
+          "id": "hazelnut-syrup",
+          "name": "Hazelnut Syrup",
+          "price": 6000
+        },
+        {
+          "id": "caramel-syrup",
+          "name": "Caramel Syrup",
+          "price": 6000
+        },
+        {
+          "id": "salted-caramel",
+          "name": "Salted Caramel Sauce",
+          "price": 6000
+        },
+        {
+          "id": "choco-sauce",
+          "name": "Choco Sauce",
+          "price": 6000
+        },
+        {
+          "id": "butterscotch",
+          "name": "Butterscotch Sauce",
+          "price": 6000
+        }
+      ],
+      "topping": [
+        {
+          "id": "shot-kenangan",
+          "name": "Espresso Shot Kenangan Blend",
+          "price": 6000
+        },
+        {
+          "id": "shot-juwara",
+          "name": "Espresso Shot Juwara Beans",
+          "price": 6000
+        },
+        {
+          "id": "golden-boba",
+          "name": "Golden Boba",
+          "price": 6000
+        },
+        {
+          "id": "grass-jelly",
+          "name": "Grass Jelly",
+          "price": 6000
+        },
+        {
+          "id": "oreo",
+          "name": "Oreo",
+          "price": 6000
+        },
+        {
+          "id": "whipped-choco",
+          "name": "Whipped Cream Chocolate",
+          "price": 6000
+        },
+        {
+          "id": "whipped-vanilla",
+          "name": "Whipped Cream Vanilla",
+          "price": 6000
+        },
+        {
+          "id": "caramel-crumble",
+          "name": "Caramel Crumble",
+          "price": 6000
+        },
+        {
+          "id": "gula-aren",
+          "name": "Gula Aren",
+          "price": 6000
+        }
+      ]
+    }
+  },
+  {
+    "id": "kk_prod_28",
     "name": "OG Aren Milky",
     "category": "non-kopi",
     "price": 16500,
     "originalPrice": 22275,
-    "image": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
+    "image": "https://i.ibb.co.com/JRPdckcj/Frame-1410112856.png",
     "description": "OG Aren Milky Speculoos segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -4070,7 +4542,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_26",
+    "id": "kk_prod_29",
     "name": "OG Thai Tea",
     "category": "non-kopi",
     "price": 14500,
@@ -4220,7 +4692,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_27",
+    "id": "kk_prod_30",
     "name": "Thai Tea Loaded",
     "category": "non-kopi",
     "price": 18500,
@@ -4370,12 +4842,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_28",
+    "id": "kk_prod_31",
     "name": "Dutch Chocolate",
     "category": "non-kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
+    "image": "https://files.catbox.moe/d30myw.jpeg",
     "description": "Dutch Chocolate segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -4520,13 +4992,13 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_29",
-    "name": "Hazelnut Dutch Chocolate",
+    "id": "kk_prod_32",
+    "name": "Hazelnut Dutch Choco",
     "category": "non-kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
-    "description": "Dutch Chocolate segar dan nikmat khas Kopi Kenangan.",
+    "image": "https://files.catbox.moe/bl7fu0.jpeg",
+    "description": "Hazelnut Dutch Choco segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [
@@ -4670,7 +5142,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_30",
+    "id": "kk_prod_33",
     "name": "Choco Caramel",
     "category": "non-kopi",
     "price": 14500,
@@ -4820,7 +5292,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_31",
+    "id": "kk_prod_34",
     "name": "Mocha Caramel",
     "category": "non-kopi",
     "price": 18000,
@@ -4970,7 +5442,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_32",
+    "id": "kk_prod_35",
     "name": "Avocado Milk",
     "category": "non-kopi",
     "price": 17000,
@@ -5120,7 +5592,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_33",
+    "id": "kk_prod_36",
     "name": "Avocado Caramel",
     "category": "non-kopi",
     "price": 19000,
@@ -5270,7 +5742,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_34",
+    "id": "kk_prod_37",
     "name": "Hazelnut Chocolate Milk Tea",
     "category": "non-kopi",
     "price": 16000,
@@ -5420,12 +5892,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_35",
+    "id": "kk_prod_38",
     "name": "Milk Oreo Crumble",
     "category": "non-kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://i.ibb.co.com/gMBR7mX6/Frame-1410112875.png",
+    "image": "https://files.catbox.moe/0krxxy.jpeg",
     "description": "Milk Oreo Crumble segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -5570,7 +6042,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_36",
+    "id": "kk_prod_39",
     "name": "Toffee Nut Chocolate Macchiato",
     "category": "non-kopi",
     "price": 16000,
@@ -5720,7 +6192,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_37",
+    "id": "kk_prod_40",
     "name": "Susu Grass Jelly",
     "category": "non-kopi",
     "price": 17000,
@@ -5870,7 +6342,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_38",
+    "id": "kk_prod_41",
     "name": "Babycino",
     "category": "non-kopi",
     "price": 14500,
@@ -6020,7 +6492,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_39",
+    "id": "kk_prod_42",
     "name": "Air Mineral",
     "category": "non-kopi",
     "price": 9000,
@@ -6170,12 +6642,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_40",
+    "id": "kk_prod_43",
     "name": "Caramel Dutch Choco",
     "category": "non-kopi",
     "price": 19000,
     "originalPrice": 25650,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
+    "image": "https://files.catbox.moe/vdzsmf.jpeg",
     "description": "Caramel Dutch Choco segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -6320,12 +6792,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_41",
+    "id": "kk_prod_44",
     "name": "Kenangan Milk Tea",
     "category": "non-kopi",
     "price": 16000,
     "originalPrice": 21600,
-    "image": "https://i.ibb.co.com/qY3c3bPT/Frame-1410112872.png",
+    "image": "https://files.catbox.moe/wu359s.jpeg",
     "description": "Kenangan Milk Tea segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -6470,12 +6942,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_42",
+    "id": "kk_prod_45",
     "name": "Milo Dino",
     "category": "non-kopi",
     "price": 16000,
     "originalPrice": 21600,
-    "image": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg",
+    "image": "https://files.catbox.moe/wl2ncg.jpeg",
     "description": "Milo Dinosaurus segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -6620,7 +7092,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_43",
+    "id": "kk_prod_46",
     "name": "Oreo Shake",
     "category": "non-kopi",
     "price": 18000,
@@ -6770,12 +7242,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_44",
+    "id": "kk_prod_47",
     "name": "Butterscotch Seasalt Crumble",
     "category": "non-kopi",
     "price": 16000,
     "originalPrice": 21600,
-    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
+    "image": "https://files.catbox.moe/xy2z38.jpeg",
     "description": "Butterscotch Seasalt Crumble lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -6920,7 +7392,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_45",
+    "id": "kk_prod_48",
     "name": "Raspberry Hibiscus",
     "category": "non-kopi",
     "price": 15000,
@@ -7070,7 +7542,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_46",
+    "id": "kk_prod_49",
     "name": "Fresh Lemonade",
     "category": "non-kopi",
     "price": 13500,
@@ -7220,12 +7692,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_47",
+    "id": "kk_prod_50",
     "name": "Lemon Black Tea",
     "category": "non-kopi",
     "price": 13500,
     "originalPrice": 18225,
-    "image": "https://i.ibb.co.com/FqHmjmM4/Frame-1410112870.png",
+    "image": "https://files.catbox.moe/1l7tsg.jpeg",
     "description": "Lemon Black Tea segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -7370,7 +7842,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_48",
+    "id": "kk_prod_51",
     "name": "Banana Choco",
     "category": "non-kopi",
     "price": 17000,
@@ -7521,7 +7993,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf4c Banana Series"
   },
   {
-    "id": "kk_prod_49",
+    "id": "kk_prod_52",
     "name": "Blueberry Frappe",
     "category": "frappe",
     "price": 16500,
@@ -7660,7 +8132,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_50",
+    "id": "kk_prod_53",
     "name": "Chocoberry Frappe",
     "category": "frappe",
     "price": 18500,
@@ -7799,7 +8271,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_51",
+    "id": "kk_prod_54",
     "name": "Coffeeberry Frappe",
     "category": "frappe",
     "price": 17500,
@@ -7938,7 +8410,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_52",
+    "id": "kk_prod_55",
     "name": "Dutch Choco Kenangan Frappe",
     "category": "frappe",
     "price": 19500,
@@ -8077,7 +8549,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_53",
+    "id": "kk_prod_56",
     "name": "Kopi Kenangan Mantan Frappe",
     "category": "frappe",
     "price": 18500,
@@ -8216,7 +8688,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_54",
+    "id": "kk_prod_57",
     "name": "Vanilla Kenangan Frappe",
     "category": "frappe",
     "price": 17500,
@@ -8355,7 +8827,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_55",
+    "id": "kk_prod_58",
     "name": "Butterscotch Kenangan Frappe",
     "category": "frappe",
     "price": 19500,
@@ -8494,7 +8966,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_56",
+    "id": "kk_prod_59",
     "name": "Oatside Matcha Latte",
     "category": "oatside",
     "price": 17500,
@@ -8644,7 +9116,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_57",
+    "id": "kk_prod_60",
     "name": "Oatside Kopi Kenangan",
     "category": "oatside",
     "price": 15500,
@@ -8794,7 +9266,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_58",
+    "id": "kk_prod_61",
     "name": "Oatside Latte",
     "category": "oatside",
     "price": 17500,
@@ -8944,7 +9416,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_59",
+    "id": "kk_prod_62",
     "name": "Salt Bread Original",
     "category": "food",
     "price": 9500,
@@ -8964,7 +9436,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Salt Bread"
   },
   {
-    "id": "kk_prod_60",
+    "id": "kk_prod_63",
     "name": "Salt Bread Choco Butter",
     "category": "food",
     "price": 10000,
@@ -8984,7 +9456,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Salt Bread"
   },
   {
-    "id": "kk_prod_61",
+    "id": "kk_prod_64",
     "name": "Salt Bread Abon",
     "category": "food",
     "price": 12500,
@@ -9004,7 +9476,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Salt Bread"
   },
   {
-    "id": "kk_prod_62",
+    "id": "kk_prod_65",
     "name": "Salt Bread Sausage",
     "category": "food",
     "price": 12500,
@@ -9024,7 +9496,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Salt Bread"
   },
   {
-    "id": "kk_prod_63",
+    "id": "kk_prod_66",
     "name": "Salt Bread Beef & Cheese",
     "category": "food",
     "price": 11000,
@@ -9044,7 +9516,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Salt Bread"
   },
   {
-    "id": "kk_prod_64",
+    "id": "kk_prod_67",
     "name": "Canele Original",
     "category": "food",
     "price": 10500,
@@ -9064,7 +9536,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Canele"
   },
   {
-    "id": "kk_prod_65",
+    "id": "kk_prod_68",
     "name": "Canele Toffee Nut",
     "category": "food",
     "price": 11500,
@@ -9084,7 +9556,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Canele"
   },
   {
-    "id": "kk_prod_66",
+    "id": "kk_prod_69",
     "name": "Canele Aren",
     "category": "food",
     "price": 11500,
@@ -9104,7 +9576,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd50 Canele"
   },
   {
-    "id": "kk_prod_67",
+    "id": "kk_prod_70",
     "name": "Adam Ayam Toast",
     "category": "food",
     "price": 14500,
@@ -9124,7 +9596,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf5e Toast"
   },
   {
-    "id": "kk_prod_68",
+    "id": "kk_prod_71",
     "name": "Wahyu Sapi Toast",
     "category": "food",
     "price": 14500,
@@ -9144,7 +9616,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf5e Toast"
   },
   {
-    "id": "kk_prod_69",
+    "id": "kk_prod_72",
     "name": "Choco Mocha Swirl Toast",
     "category": "food",
     "price": 14500,
@@ -9164,7 +9636,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf5e Toast"
   },
   {
-    "id": "kk_prod_70",
+    "id": "kk_prod_73",
     "name": "Oatmeal Raisin Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -9184,7 +9656,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_71",
+    "id": "kk_prod_74",
     "name": "Banana Choco Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -9204,7 +9676,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_72",
+    "id": "kk_prod_75",
     "name": "Sweet Honey Soft Baked Cookie",
     "category": "food",
     "price": 12500,
@@ -9224,7 +9696,7 @@ export const products = [
     "seriesBadge": "\ud83c\udf6a Soft Baked Cookie"
   },
   {
-    "id": "kk_prod_73",
+    "id": "kk_prod_76",
     "name": "Blueberry Muffin",
     "category": "food",
     "price": 12000,
@@ -9244,7 +9716,7 @@ export const products = [
     "seriesBadge": "\ud83e\uddc1 Muffin"
   },
   {
-    "id": "kk_prod_74",
+    "id": "kk_prod_77",
     "name": "Choco Muffin",
     "category": "food",
     "price": 12000,
@@ -9264,7 +9736,7 @@ export const products = [
     "seriesBadge": "\ud83e\uddc1 Muffin"
   },
   {
-    "id": "kk_prod_75",
+    "id": "kk_prod_78",
     "name": "Sandwich Chicken Tartare",
     "category": "food",
     "price": 16000,
@@ -9284,7 +9756,7 @@ export const products = [
     "seriesBadge": "\ud83e\udd6a Sandwich"
   },
   {
-    "id": "kk_prod_76",
+    "id": "kk_prod_79",
     "name": "Sandwich Smoked Beef",
     "category": "food",
     "price": 16000,
@@ -9304,12 +9776,12 @@ export const products = [
     "seriesBadge": "\ud83e\udd6a Sandwich"
   },
   {
-    "id": "kk_prod_77",
+    "id": "kk_prod_80",
     "name": "Donut Almond",
     "category": "food",
     "price": 12500,
     "originalPrice": 16875,
-    "image": "https://cdn.phototourl.com/member/2026-08-23-b0df1216-45bd-4cf0-98dd-85f1b5a2c7ed.jpg",
+    "image": "https://iili.io/CimpKpn.jpg",
     "description": "Donut Almond lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9323,7 +9795,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_78",
+    "id": "kk_prod_81",
     "name": "Croissant Abon",
     "category": "food",
     "price": 12500,
@@ -9342,7 +9814,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_79",
+    "id": "kk_prod_82",
     "name": "Butter Croissant",
     "category": "food",
     "price": 11500,
@@ -9361,7 +9833,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_80",
+    "id": "kk_prod_83",
     "name": "Chocolate Croissant",
     "category": "food",
     "price": 13500,
@@ -9380,7 +9852,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_81",
+    "id": "kk_prod_84",
     "name": "Pasta Mentai",
     "category": "food",
     "price": 16000,
@@ -9399,7 +9871,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_82",
+    "id": "kk_prod_85",
     "name": "Spaghetti Tuna Aglio Olio",
     "category": "food",
     "price": 18000,
@@ -9418,7 +9890,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_83",
+    "id": "kk_prod_86",
     "name": "Thai Chicken Spaghetti",
     "category": "food",
     "price": 15000,
@@ -9437,7 +9909,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_84",
+    "id": "kk_prod_87",
     "name": "Roti Coklat Klasik",
     "category": "food",
     "price": 9000,
@@ -9456,7 +9928,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_85",
+    "id": "kk_prod_88",
     "name": "Roti Srikaya",
     "category": "food",
     "price": 11500,
@@ -9475,7 +9947,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_86",
+    "id": "kk_prod_89",
     "name": "Roti Susu Manis",
     "category": "food",
     "price": 8500,
@@ -9494,7 +9966,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_87",
+    "id": "kk_prod_90",
     "name": "Roti Gulung Abon",
     "category": "food",
     "price": 12500,
@@ -9513,7 +9985,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_88",
+    "id": "kk_prod_91",
     "name": "Sugar Donut",
     "category": "food",
     "price": 9000,
@@ -9532,7 +10004,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_89",
+    "id": "kk_prod_92",
     "name": "Donut Tiramisu",
     "category": "food",
     "price": 10500,
@@ -9551,7 +10023,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_90",
+    "id": "kk_prod_93",
     "name": "Choco Chip Cookies",
     "category": "food",
     "price": 11000,
@@ -9570,7 +10042,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_91",
+    "id": "kk_prod_94",
     "name": "Friend Chip Cookie",
     "category": "food",
     "price": 12500,
@@ -9589,7 +10061,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_92",
+    "id": "kk_prod_95",
     "name": "Join the Dark Side Cookie",
     "category": "food",
     "price": 14500,
@@ -9608,7 +10080,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_93",
+    "id": "kk_prod_96",
     "name": "Vanilla Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9627,7 +10099,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_94",
+    "id": "kk_prod_97",
     "name": "Strawberry Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9646,7 +10118,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_95",
+    "id": "kk_prod_98",
     "name": "Chocolate Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9665,7 +10137,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_96",
+    "id": "kk_prod_99",
     "name": "Bambang Choco Cheese",
     "category": "food",
     "price": 12500,
@@ -9684,7 +10156,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_97",
+    "id": "kk_prod_100",
     "name": "Aren Apple Pie",
     "category": "food",
     "price": 12500,

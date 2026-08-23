@@ -33,6 +33,19 @@ default_images = {
 }
 
 custom_images = {
+    "milk oreo crumble": "https://files.catbox.moe/0krxxy.jpeg",
+    "hazelnut dutch choco": "https://files.catbox.moe/bl7fu0.jpeg",
+    "hazelnut dutch chocolate": "https://files.catbox.moe/bl7fu0.jpeg",
+    "caramel dutch choco": "https://files.catbox.moe/vdzsmf.jpeg",
+    "milo dino": "https://files.catbox.moe/wl2ncg.jpeg",
+    "kenangan milk tea": "https://files.catbox.moe/wu359s.jpeg",
+    "butterscotch seasalt crumble": "https://files.catbox.moe/xy2z38.jpeg",
+    "lemon black tea": "https://files.catbox.moe/1l7tsg.jpeg",
+    "butterscotch aren latte": "https://files.catbox.moe/zfbk5t.jpeg",
+    "dutch chocolate": "https://files.catbox.moe/d30myw.jpeg",
+    "dua shot iced shaken": "https://files.catbox.moe/jaj7jw.jpeg",
+    "dua shot og aren": "https://files.catbox.moe/jaj7jw.jpeg",
+    "spanish latte": "https://files.catbox.moe/xz536k.jpeg",
     "donat almond": "https://cdn.phototourl.com/member/2026-08-23-b0df1216-45bd-4cf0-98dd-85f1b5a2c7ed.jpg",
     "salt bread abon": "https://cdn.phototourl.com/member/2026-08-23-47de27e6-03ed-4966-af70-ce7b1ce57dd1.jpg",
     "salt bread sausage": "https://cdn.phototourl.com/member/2026-08-23-edd766e7-ff71-4b0c-80fd-c5086ab8e5f7.jpg",
@@ -55,13 +68,11 @@ custom_images = {
     "creamy caramel latte": "https://cdn.phototourl.com/member/2026-08-23-24fa32c6-4d5f-4cf9-a969-34df7b4d4d5e.jpg",
     "creamy aren latte": "https://i.ibb.co.com/twPQMY43/IMG-9997.jpg",
     "og aren speculoos latte": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
-    "dua shot og aren": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
-    "og aren milky": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
     "og thai tea": "https://cdn.phototourl.com/member/2026-08-23-f72a51b5-b91d-45ac-b67a-ed86bafb5ada.jpg",
     "thai tea loaded": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg",
-    "milo dino": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg",
     "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg",
-    "caffe malt latte": "https://i.ibb.co.com/JjPnTkXH/IMG-9996.jpg"
+    "caffe malt latte": "https://i.ibb.co.com/JjPnTkXH/IMG-9996.jpg",
+    "matcha latte": "https://i.ibb.co.com/BvcbFLH/Frame-1410112878.png"
 }
 
 items_to_remove = {
@@ -83,6 +94,7 @@ raw_catalog = [
     {"name": "Blueberry Americano", "price": 14500, "category": "kopi"},
     {"name": "Latte", "price": 16000, "category": "kopi"},
     {"name": "Cappuccino", "price": 16000, "category": "kopi"},
+    {"name": "Spanish Latte", "price": 14500, "category": "kopi"},
     {"name": "Vanilla Latte", "price": 18000, "category": "kopi"},
     {"name": "Hazelnut Latte", "price": 18000, "category": "kopi"},
     {"name": "Caramel Latte", "price": 18000, "category": "kopi"},
@@ -93,24 +105,26 @@ raw_catalog = [
     {"name": "Kopi Susu Black Aren", "price": 15500, "category": "kopi"},
     {"name": "Toffee Nut Latte", "price": 14500, "category": "kopi"},
     {"name": "Toffee Nut Aren Latte", "price": 15500, "category": "kopi"},
+    {"name": "Butterscotch Aren Latte", "price": 15000, "category": "kopi"},
     {"name": "Butterscotch Seasalt Latte", "price": 17500, "category": "kopi"},
     {"name": "Creamy Aren Latte", "price": 16000, "category": "kopi"},
     {"name": "Matcha Espresso", "price": 18000, "category": "kopi"},
     {"name": "Avocado Coffee", "price": 19000, "category": "kopi"},
     {"name": "Pistachio Aren Latte", "price": 14500, "category": "kopi"},
     {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi"},
-    {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi"},
+    {"name": "Dua Shot Iced Shaken", "price": 19000, "category": "kopi"},
     
     # 🍌 BANANA SERIES IN KOPI
     {"name": "Banana Americano", "price": 14500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9tSoJ.jpg"},
     {"name": "Korean Banana Latte", "price": 16500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9ZyyF.jpg"},
 
     # 🥛 NON-KOPI
+    {"name": "Matcha Latte", "price": 17500, "category": "non-kopi"},
     {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi"},
     {"name": "OG Thai Tea", "price": 14500, "category": "non-kopi"},
     {"name": "Thai Tea Loaded", "price": 18500, "category": "non-kopi"},
     {"name": "Dutch Chocolate", "price": 18000, "category": "non-kopi"},
-    {"name": "Hazelnut Dutch Chocolate", "price": 18000, "category": "non-kopi"},
+    {"name": "Hazelnut Dutch Choco", "price": 18000, "category": "non-kopi"},
     {"name": "Choco Caramel", "price": 14500, "category": "non-kopi"},
     {"name": "Mocha Caramel", "price": 18000, "category": "non-kopi"},
     {"name": "Avocado Milk", "price": 17000, "category": "non-kopi"},
@@ -148,21 +162,13 @@ raw_catalog = [
     {"name": "Oatside Latte", "price": 17500, "category": "oatside"}
 ]
 
-# STRICT FOOD ORDERING AND SUBCATEGORIES:
-# 1. 🥐 SALT BREAD
-# 2. 🥐 CANELE
-# 3. 🍞 TOAST
-# 4. 🍪 SOFT BAKED COOKIE
-# 5. 🧁 MUFFIN
-# 6. 🥪 SANDWICH
-# 7. FOOD LAINNYA
-
+# FOOD subcategories in strict order:
 food_ordered = [
     # 1. SALT BREAD
     {"name": "Salt Bread Original", "price": 9500, "category": "food", "seriesBadge": "🥐 Salt Bread"},
-    {"name": "Salt Bread Choco Butter", "price": 10000, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-790ec1c4-fafa-494a-8576-9ca178372e23.jpg"},
-    {"name": "Salt Bread Abon", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-47de27e6-03ed-4966-af70-ce7b1ce57dd1.jpg"},
-    {"name": "Salt Bread Sausage", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-edd766e7-ff71-4b0c-80fd-c5086ab8e5f7.jpg"},
+    {"name": "Salt Bread Choco Butter", "price": 10000, "category": "food", "seriesBadge": "🥐 Salt Bread"},
+    {"name": "Salt Bread Abon", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread"},
+    {"name": "Salt Bread Sausage", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread"},
     {"name": "Salt Bread Beef & Cheese", "price": 11000, "category": "food", "seriesBadge": "🥐 Salt Bread"},
 
     # 2. CANELE
@@ -189,7 +195,7 @@ food_ordered = [
     {"name": "Sandwich Smoked Beef", "price": 16000, "category": "food", "seriesBadge": "🥪 Sandwich"},
 
     # 7. FOOD LAINNYA
-    {"name": "Donut Almond", "price": 12500, "category": "food", "image": "https://cdn.phototourl.com/member/2026-08-23-b0df1216-45bd-4cf0-98dd-85f1b5a2c7ed.jpg"},
+    {"name": "Donut Almond", "price": 12500, "category": "food"},
     {"name": "Croissant Abon", "price": 12500, "category": "food"},
     {"name": "Butter Croissant", "price": 11500, "category": "food"},
     {"name": "Chocolate Croissant", "price": 13500, "category": "food"},
@@ -212,7 +218,6 @@ food_ordered = [
     {"name": "Aren Apple Pie", "price": 12500, "category": "food"}
 ]
 
-# Append food items into raw_catalog in strict order
 for fitem in food_ordered:
     raw_catalog.append(fitem)
 
@@ -237,7 +242,19 @@ for idx, item in enumerate(raw_catalog, 1):
                 db_item = v
                 break
 
-    # Image lookup priority: custom_images > item.image > db_item.image > default_images
+    # Specific price overrides
+    if name == 'Roti Coklat Klasik':
+        price = 9000
+    elif name == 'Butterscotch Aren Latte':
+        price = 15000
+    elif name == 'Spanish Latte':
+        price = 14500
+    elif name == 'Dua Shot Iced Shaken':
+        price = 19000
+    elif name == 'Matcha Latte':
+        price = 17500
+
+    # Image lookup: custom_images > item.image > db_item.image > default_images
     image = custom_images.get(name_key) or item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
     desc = item.get("desc") or (db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan.")
 
@@ -296,7 +313,7 @@ for idx, item in enumerate(raw_catalog, 1):
     is_best_seller = name in [
         'Kopi Kenangan Mantan', 'Korean Banana Latte', 'Banana Choco', 
         'Butterscotch Seasalt Latte', 'Creamy Aren Latte', 'Matcha Espresso', 
-        'Oatside Matcha Latte', 'Blueberry Frappe', 'Roti Coklat Klasik', 'Salt Bread Original'
+        'Oatside Matcha Latte', 'Blueberry Frappe', 'Roti Coklat Klasik', 'Salt Bread Original', 'Matcha Latte'
     ]
 
     original_price = int(price * 1.35)
@@ -317,9 +334,9 @@ for idx, item in enumerate(raw_catalog, 1):
 
     final_products.append(prod_obj)
 
-print(f"Total catalog products after adding new food items and ordering: {len(final_products)}")
+print(f"Total catalog products after latest updates: {len(final_products)}")
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Organized Food Subcategories)
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Catbox Images & Non-Kopi Matcha Latte)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
