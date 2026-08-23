@@ -1,4 +1,4 @@
-// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Complete Food Catalog)
+// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Updated Images & Cleaned Food Catalog)
 
 export const productCategories = [
   { id: 'kopi', name: 'Kopi' },
@@ -9005,12 +9005,12 @@ export const products = [
   },
   {
     "id": "kk_prod_62",
-    "name": "Thai Chicken Spaghetti",
+    "name": "Spaghetti Tuna Aglio Olio",
     "category": "food",
-    "price": 15000,
-    "originalPrice": 20250,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Thai Chicken Spaghetti lezat khas Kopi Kenangan.",
+    "price": 18000,
+    "originalPrice": 24300,
+    "image": "https://cdn.phototourl.com/free/2026-08-23-12e3f8ec-4b1d-4646-abf0-034738b28427.jpg",
+    "description": "Spaghetti Tuna Aglio Olio lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [],
@@ -9024,12 +9024,12 @@ export const products = [
   },
   {
     "id": "kk_prod_63",
-    "name": "Croissant Abon",
+    "name": "Thai Chicken Spaghetti",
     "category": "food",
-    "price": 12500,
-    "originalPrice": 16875,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Croissant Abon lezat khas Kopi Kenangan.",
+    "price": 15000,
+    "originalPrice": 20250,
+    "image": "https://cdn.phototourl.com/free/2026-08-23-a880ede3-1c8e-41e4-a652-3640540bedd3.jpg",
+    "description": "Thai Chicken Spaghetti lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [],
@@ -9043,12 +9043,12 @@ export const products = [
   },
   {
     "id": "kk_prod_64",
-    "name": "Pasta Mentai",
+    "name": "Croissant Abon",
     "category": "food",
-    "price": 16000,
-    "originalPrice": 21600,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Pasta Mentai lezat khas Kopi Kenangan.",
+    "price": 12500,
+    "originalPrice": 16875,
+    "image": "https://cdn.phototourl.com/free/2026-08-23-ef5cf9ef-6601-4ee0-abae-f62ab4594e3a.jpg",
+    "description": "Croissant Abon lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [],
@@ -9062,12 +9062,12 @@ export const products = [
   },
   {
     "id": "kk_prod_65",
-    "name": "Salt Bread Beef & Cheese",
+    "name": "Pasta Mentai",
     "category": "food",
-    "price": 11000,
-    "originalPrice": 14850,
-    "image": "https://iili.io/Cs9eR5B.jpg",
-    "description": "Salt Bread Beef & Cheese lezat khas Kopi Kenangan.",
+    "price": 16000,
+    "originalPrice": 21600,
+    "image": "https://cdn.phototourl.com/free/2026-08-23-6b72d5e1-8ce9-46e4-aa1a-cf711ff1e427.jpg",
+    "description": "Pasta Mentai lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [],
@@ -9081,12 +9081,12 @@ export const products = [
   },
   {
     "id": "kk_prod_66",
-    "name": "Bolu Marble Chocolate",
+    "name": "Salt Bread Beef & Cheese",
     "category": "food",
     "price": 11000,
     "originalPrice": 14850,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Bolu Marble Chocolate lezat khas Kopi Kenangan.",
+    "image": "https://iili.io/Cs9eR5B.jpg",
+    "description": "Salt Bread Beef & Cheese lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
       "suhu": [],
@@ -9138,44 +9138,6 @@ export const products = [
   },
   {
     "id": "kk_prod_69",
-    "name": "Bolu Marble Ube",
-    "category": "food",
-    "price": 11000,
-    "originalPrice": 14850,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Bolu Marble Ube lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_70",
-    "name": "Bolu Marble Mocha",
-    "category": "food",
-    "price": 11000,
-    "originalPrice": 14850,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Bolu Marble Mocha lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_71",
     "name": "Roti Gulung Abon",
     "category": "food",
     "price": 12500,
@@ -9194,31 +9156,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_72",
-    "name": "Roti Gulung Aren",
-    "category": "food",
-    "price": 11000,
-    "originalPrice": 14850,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Roti Gulung Aren lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_73",
+    "id": "kk_prod_70",
     "name": "Canele Original",
     "category": "food",
     "price": 10500,
     "originalPrice": 14175,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-3669b223-f7ec-4dab-9380-69f4e9450c07.jpg",
     "description": "Canele Original lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9232,12 +9175,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_74",
+    "id": "kk_prod_71",
     "name": "Canele Toffee Nut",
     "category": "food",
     "price": 11500,
     "originalPrice": 15525,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-4a015fb2-e91c-4364-93f5-d4c293f3a6b1.jpg",
     "description": "Canele Toffee Nut lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9251,7 +9194,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_75",
+    "id": "kk_prod_72",
     "name": "Butter Croissant",
     "category": "food",
     "price": 11500,
@@ -9270,7 +9213,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_76",
+    "id": "kk_prod_73",
     "name": "Chocolate Croissant",
     "category": "food",
     "price": 13500,
@@ -9289,7 +9232,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_77",
+    "id": "kk_prod_74",
     "name": "Sandwich Smoked Beef",
     "category": "food",
     "price": 14500,
@@ -9308,7 +9251,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_78",
+    "id": "kk_prod_75",
     "name": "Sandwich Chicken Tartare",
     "category": "food",
     "price": 14500,
@@ -9327,7 +9270,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_79",
+    "id": "kk_prod_76",
     "name": "Sugar Donut",
     "category": "food",
     "price": 9000,
@@ -9346,7 +9289,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_80",
+    "id": "kk_prod_77",
     "name": "Roti Coklat Klasik",
     "category": "food",
     "price": 9000,
@@ -9365,45 +9308,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_81",
-    "name": "Roti Sisir Keju",
-    "category": "food",
-    "price": 11000,
-    "originalPrice": 14850,
-    "image": "https://iili.io/Cimg9j9.jpg",
-    "description": "Roti Sisir Keju lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_82",
-    "name": "Roti Sisir Coklat",
-    "category": "food",
-    "price": 10500,
-    "originalPrice": 14175,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Roti Sisir Coklat lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_83",
+    "id": "kk_prod_78",
     "name": "Roti Susu Manis",
     "category": "food",
     "price": 8500,
@@ -9422,12 +9327,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_84",
+    "id": "kk_prod_79",
     "name": "Roti Srikaya",
     "category": "food",
     "price": 11500,
     "originalPrice": 15525,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-cfc17218-ce27-4ffb-902a-65f48f937caf.jpg",
     "description": "Roti Srikaya lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9441,7 +9346,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_85",
+    "id": "kk_prod_80",
     "name": "Bambang Choco Cheese",
     "category": "food",
     "price": 12500,
@@ -9460,7 +9365,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_86",
+    "id": "kk_prod_81",
     "name": "Adam Ayam Toast",
     "category": "food",
     "price": 14500,
@@ -9479,31 +9384,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_87",
-    "name": "Danish Tiramisu",
-    "category": "food",
-    "price": 13500,
-    "originalPrice": 18225,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Danish Tiramisu lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_88",
+    "id": "kk_prod_82",
     "name": "Salt Bread Original",
     "category": "food",
     "price": 9500,
     "originalPrice": 12825,
-    "image": "https://iili.io/Cs9eR5B.jpg",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-53e962db-e849-43c3-8760-ea42166ea5ba.jpg",
     "description": "Salt Bread Original lezat khas Kopi Kenangan.",
     "isBestSeller": true,
     "options": {
@@ -9517,7 +9403,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_89",
+    "id": "kk_prod_83",
     "name": "Wahyu Sapi Toast",
     "category": "food",
     "price": 14500,
@@ -9536,7 +9422,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_90",
+    "id": "kk_prod_84",
     "name": "Donut Tiramisu",
     "category": "food",
     "price": 10500,
@@ -9555,26 +9441,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_91",
-    "name": "Dirty Croissant Milo",
-    "category": "food",
-    "price": 13500,
-    "originalPrice": 18225,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
-    "description": "Dirty Croissant Milo lezat khas Kopi Kenangan.",
-    "isBestSeller": false,
-    "options": {
-      "suhu": [],
-      "ukuran": [],
-      "es": [],
-      "gula": [],
-      "beans": [],
-      "syrup": [],
-      "topping": []
-    }
-  },
-  {
-    "id": "kk_prod_92",
+    "id": "kk_prod_85",
     "name": "Choco Chip Cookies",
     "category": "food",
     "price": 11000,
@@ -9593,7 +9460,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_93",
+    "id": "kk_prod_86",
     "name": "Friend Chip Cookie",
     "category": "food",
     "price": 12500,
@@ -9612,7 +9479,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_94",
+    "id": "kk_prod_87",
     "name": "Join the Dark Side Cookie",
     "category": "food",
     "price": 14500,
@@ -9631,7 +9498,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_95",
+    "id": "kk_prod_88",
     "name": "Vanilla Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9650,7 +9517,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_96",
+    "id": "kk_prod_89",
     "name": "Strawberry Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9669,7 +9536,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_97",
+    "id": "kk_prod_90",
     "name": "Chocolate Choux Puff",
     "category": "food",
     "price": 10000,
@@ -9688,7 +9555,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_98",
+    "id": "kk_prod_91",
     "name": "Choco Mocha Swirl Toast",
     "category": "food",
     "price": 14500,
@@ -9707,12 +9574,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_99",
+    "id": "kk_prod_92",
     "name": "Canele Aren",
     "category": "food",
     "price": 11500,
     "originalPrice": 15525,
-    "image": "https://iili.io/Cs961qP.jpg",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-f4bdeaff-d62f-4010-90ae-6ff6a2b42178.jpg",
     "description": "Canele Aren lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9726,12 +9593,12 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_100",
+    "id": "kk_prod_93",
     "name": "Aren Apple Pie",
     "category": "food",
     "price": 12500,
     "originalPrice": 16875,
-    "image": "https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png",
+    "image": "https://cdn.phototourl.com/free/2026-08-23-c2a9c7a7-353b-43d8-ba5d-ead21f0af4a6.jpg",
     "description": "Aren Apple Pie lezat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -9745,7 +9612,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_101",
+    "id": "kk_prod_94",
     "name": "Choco Muffin",
     "category": "food",
     "price": 11500,
@@ -9764,7 +9631,7 @@ export const products = [
     }
   },
   {
-    "id": "kk_prod_102",
+    "id": "kk_prod_95",
     "name": "Blueberry Muffin",
     "category": "food",
     "price": 11500,

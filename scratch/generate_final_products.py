@@ -32,17 +32,58 @@ default_images = {
     'food': 'https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png'
 }
 
+# Image Overrides from User
+custom_images = {
+    "croissant abon": "https://cdn.phototourl.com/free/2026-08-23-ef5cf9ef-6601-4ee0-abae-f62ab4594e3a.jpg",
+    "aren apple pie": "https://cdn.phototourl.com/free/2026-08-23-c2a9c7a7-353b-43d8-ba5d-ead21f0af4a6.jpg",
+    "canele toffee nut": "https://cdn.phototourl.com/free/2026-08-23-4a015fb2-e91c-4364-93f5-d4c293f3a6b1.jpg",
+    "canele aren": "https://cdn.phototourl.com/free/2026-08-23-f4bdeaff-d62f-4010-90ae-6ff6a2b42178.jpg",
+    "pasta mentai": "https://cdn.phototourl.com/free/2026-08-23-6b72d5e1-8ce9-46e4-aa1a-cf711ff1e427.jpg",
+    "spaghetti tuna aglio olio": "https://cdn.phototourl.com/free/2026-08-23-12e3f8ec-4b1d-4646-abf0-034738b28427.jpg",
+    "spagetti tuna aglio olio": "https://cdn.phototourl.com/free/2026-08-23-12e3f8ec-4b1d-4646-abf0-034738b28427.jpg",
+    "thai chicken spaghetti": "https://cdn.phototourl.com/free/2026-08-23-a880ede3-1c8e-41e4-a652-3640540bedd3.jpg",
+    "thai chicken spagetti": "https://cdn.phototourl.com/free/2026-08-23-a880ede3-1c8e-41e4-a652-3640540bedd3.jpg",
+    "canele original": "https://cdn.phototourl.com/free/2026-08-23-3669b223-f7ec-4dab-9380-69f4e9450c07.jpg",
+    "roti srikaya": "https://cdn.phototourl.com/free/2026-08-23-cfc17218-ce27-4ffb-902a-65f48f937caf.jpg",
+    "salt bread original": "https://cdn.phototourl.com/free/2026-08-23-53e962db-e849-43c3-8760-ea42166ea5ba.jpg",
+    "adam ayam toast": "https://cdn.phototourl.com/free/2026-08-22-44672d1e-6fd1-407b-a7dc-b0c0ad953eab.jpg",
+    "blueberry americano": "https://cdn.phototourl.com/free/2026-08-22-a1962281-ed0a-47a4-b23e-7b561d48b314.jpg",
+    "caramel latte": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg",
+    "creamy caramel latte": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg",
+    "creamy aren latte": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg",
+    "og aren speculoos latte": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
+    "dua shot og aren": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
+    "og aren milky": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg",
+    "og thai tea": "https://cdn.phototourl.com/free/2026-08-22-f11e3e5a-e4be-4e10-99e0-e379b40d1551.jpg",
+    "thai tea loaded": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg",
+    "milo dino": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg",
+    "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg"
+}
+
+# Items to remove explicitly
+items_to_remove = {
+    "dirty croissant milo",
+    "danish tiramisu",
+    "roti sisir coklat",
+    "roti sisir keju",
+    "bolu marble ube",
+    "bolu marble mocha",
+    "bolu marble chocolate",
+    "boli marble chocolate",
+    "roti gulung aren"
+}
+
 raw_catalog = [
     # ☕ KOPI
     {"name": "Kopi Kenangan Mantan", "price": 14500, "category": "kopi"},
     {"name": "Americano", "price": 13500, "category": "kopi"},
-    {"name": "Blueberry Americano", "price": 14500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-a1962281-ed0a-47a4-b23e-7b561d48b314.jpg"},
+    {"name": "Blueberry Americano", "price": 14500, "category": "kopi"},
     {"name": "Latte", "price": 16000, "category": "kopi"},
     {"name": "Cappuccino", "price": 16000, "category": "kopi"},
     {"name": "Vanilla Latte", "price": 18000, "category": "kopi"},
     {"name": "Hazelnut Latte", "price": 18000, "category": "kopi"},
-    {"name": "Caramel Latte", "price": 18000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
-    {"name": "Creamy Caramel Latte", "price": 18000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
+    {"name": "Caramel Latte", "price": 18000, "category": "kopi"},
+    {"name": "Creamy Caramel Latte", "price": 18000, "category": "kopi"},
     {"name": "Caffe Malt Latte", "price": 16500, "category": "kopi"},
     {"name": "Caramel Macchiato", "price": 19000, "category": "kopi"},
     {"name": "Mocha Latte", "price": 18000, "category": "kopi"},
@@ -50,21 +91,21 @@ raw_catalog = [
     {"name": "Toffee Nut Latte", "price": 14500, "category": "kopi"},
     {"name": "Toffee Nut Aren Latte", "price": 15500, "category": "kopi"},
     {"name": "Butterscotch Seasalt Latte", "price": 17500, "category": "kopi"},
-    {"name": "Creamy Aren Latte", "price": 16000, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6da6b3a5-b421-40bf-8329-18e2fcb5953f.jpg"},
+    {"name": "Creamy Aren Latte", "price": 16000, "category": "kopi"},
     {"name": "Matcha Espresso", "price": 18000, "category": "kopi"},
     {"name": "Avocado Coffee", "price": 19000, "category": "kopi"},
     {"name": "Pistachio Aren Latte", "price": 14500, "category": "kopi"},
-    {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
-    {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
+    {"name": "OG Aren Speculoos Latte", "price": 15500, "category": "kopi"},
+    {"name": "Dua Shot OG Aren", "price": 17500, "category": "kopi"},
     
     # 🍌 BANANA SERIES IN KOPI
     {"name": "Banana Americano", "price": 14500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9tSoJ.jpg"},
     {"name": "Korean Banana Latte", "price": 16500, "category": "kopi", "seriesBadge": "🍌 Banana Series", "image": "https://iili.io/Cs9ZyyF.jpg"},
 
     # 🥛 NON-KOPI
-    {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-55987a44-7fcc-46bc-8719-0f683020fb85.jpg"},
-    {"name": "OG Thai Tea", "price": 14500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-f11e3e5a-e4be-4e10-99e0-e379b40d1551.jpg"},
-    {"name": "Thai Tea Loaded", "price": 18500, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg"},
+    {"name": "OG Aren Milky", "price": 16500, "category": "non-kopi"},
+    {"name": "OG Thai Tea", "price": 14500, "category": "non-kopi"},
+    {"name": "Thai Tea Loaded", "price": 18500, "category": "non-kopi"},
     {"name": "Dutch Chocolate", "price": 18000, "category": "non-kopi"},
     {"name": "Hazelnut Dutch Chocolate", "price": 18000, "category": "non-kopi"},
     {"name": "Choco Caramel", "price": 14500, "category": "non-kopi"},
@@ -79,7 +120,7 @@ raw_catalog = [
     {"name": "Air Mineral", "price": 9000, "category": "non-kopi"},
     {"name": "Caramel Dutch Choco", "price": 19000, "category": "non-kopi"},
     {"name": "Kenangan Milk Tea", "price": 16000, "category": "non-kopi"},
-    {"name": "Milo Dino", "price": 16000, "category": "non-kopi", "image": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg"},
+    {"name": "Milo Dino", "price": 16000, "category": "non-kopi"},
     {"name": "Oreo Shake", "price": 18000, "category": "non-kopi"},
     {"name": "Butterscotch Seasalt Crumble", "price": 16000, "category": "non-kopi"},
     {"name": "Raspberry Hibiscus", "price": 15000, "category": "non-kopi"},
@@ -96,7 +137,7 @@ raw_catalog = [
     {"name": "Dutch Choco Kenangan Frappe", "price": 19500, "category": "frappe"},
     {"name": "Kopi Kenangan Mantan Frappe", "price": 18500, "category": "frappe"},
     {"name": "Vanilla Kenangan Frappe", "price": 17500, "category": "frappe"},
-    {"name": "Butterscotch Kenangan Frappe", "price": 19500, "category": "frappe", "image": "https://iili.io/Cs9sTgt.jpg"},
+    {"name": "Butterscotch Kenangan Frappe", "price": 19500, "category": "frappe"},
 
     # 🌾 OATSIDE SERIES
     {"name": "Oatside Matcha Latte", "price": 17500, "category": "oatside"},
@@ -104,16 +145,15 @@ raw_catalog = [
     {"name": "Oatside Latte", "price": 17500, "category": "oatside"}
 ]
 
-# Add ALL food items from database into raw_catalog (without duplicates)
-food_names_added = set()
-
-# Add Soft Baked Cookie series first
+# Add Soft Baked Cookie series & Spaghetti Tuna Aglio Olio
 soft_cookies = [
     {"name": "Oatmeal Raisin Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9gGgs.jpg"},
     {"name": "Banana Choco Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9rHIp.jpg"},
-    {"name": "Sweet Honey Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs943wQ.jpg"}
+    {"name": "Sweet Honey Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs943wQ.jpg"},
+    {"name": "Spaghetti Tuna Aglio Olio", "price": 18000, "category": "food", "image": "https://cdn.phototourl.com/free/2026-08-23-12e3f8ec-4b1d-4646-abf0-034738b28427.jpg"}
 ]
 
+food_names_added = set()
 for sc in soft_cookies:
     raw_catalog.append(sc)
     food_names_added.add(sc["name"].lower().strip())
@@ -121,7 +161,7 @@ for sc in soft_cookies:
 for fitem in db_food_items:
     fname = fitem["name"]
     fname_key = fname.lower().strip()
-    if fname_key not in food_names_added:
+    if fname_key not in food_names_added and fname_key not in items_to_remove:
         raw_catalog.append({
             "name": fname,
             "price": fitem["price"],
@@ -131,15 +171,14 @@ for fitem in db_food_items:
         })
         food_names_added.add(fname_key)
 
-print(f"Total food items included: {len(food_names_added)}")
-
 final_products = []
 seen_names = set()
 
 for idx, item in enumerate(raw_catalog, 1):
     name = item["name"]
     name_key = name.lower().strip()
-    if name_key in seen_names:
+    
+    if name_key in items_to_remove or name_key in seen_names:
         continue
     seen_names.add(name_key)
 
@@ -153,10 +192,12 @@ for idx, item in enumerate(raw_catalog, 1):
                 db_item = v
                 break
 
-    if name == 'Adam Ayam Toast':
-        image = 'https://cdn.phototourl.com/free/2026-08-22-44672d1e-6fd1-407b-a7dc-b0c0ad953eab.jpg'
+    # Price overrides if needed
+    if name == 'Roti Coklat Klasik':
+        price = 9000
 
-    image = item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
+    # Image lookup: custom_images > item.image > db_item.image > default_images
+    image = custom_images.get(name_key) or item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
     desc = item.get("desc") or (db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan.")
 
     has_suhu = cat in ['kopi', 'non-kopi', 'oatside']
@@ -217,9 +258,6 @@ for idx, item in enumerate(raw_catalog, 1):
         'Oatside Matcha Latte', 'Blueberry Frappe', 'Roti Coklat Klasik', 'Salt Bread Original'
     ]
 
-    if name == 'Roti Coklat Klasik':
-        price = 9000
-
     original_price = int(price * 1.35)
 
     prod_obj = {
@@ -238,9 +276,9 @@ for idx, item in enumerate(raw_catalog, 1):
 
     final_products.append(prod_obj)
 
-print(f"Total catalog products with ALL FOOD items: {len(final_products)}")
+print(f"Total catalog products after updates and deletions: {len(final_products)}")
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Complete Food Catalog)
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Updated Images & Cleaned Food Catalog)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
@@ -300,4 +338,4 @@ export const products = {json.dumps(final_products, indent=2)};
 with open('/Users/macbook/BackupKopkenPromoHolic/js/data/products.js', 'w') as f:
     f.write(js_code)
 
-print("Saved js/data/products.js with all food items successfully!")
+print("Saved js/data/products.js successfully!")
