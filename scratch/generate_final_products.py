@@ -68,6 +68,7 @@ custom_images = {
     "creamy caramel latte": "https://cdn.phototourl.com/member/2026-08-23-24fa32c6-4d5f-4cf9-a969-34df7b4d4d5e.jpg",
     "creamy aren latte": "https://i.ibb.co.com/twPQMY43/IMG-9997.jpg",
     "og aren speculoos latte": "https://cdn.phototourl.com/member/2026-08-23-578cd165-a216-452f-9597-c5372529f8e6.jpg",
+    "og aren milky": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
     "og thai tea": "https://cdn.phototourl.com/member/2026-08-23-f72a51b5-b91d-45ac-b67a-ed86bafb5ada.jpg",
     "thai tea loaded": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg",
     "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg",
