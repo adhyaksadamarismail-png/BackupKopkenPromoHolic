@@ -42,7 +42,7 @@ custom_images = {
     "butterscotch seasalt crumble": "https://files.catbox.moe/xy2z38.jpeg",
     "lemon black tea": "https://files.catbox.moe/1l7tsg.jpeg",
     "butterscotch aren latte": "https://files.catbox.moe/zfbk5t.jpeg",
-    "dutch chocolate": "https://files.catbox.moe/d30myw.jpeg",
+    "mocha latte": "https://files.catbox.moe/d30myw.jpeg",
     "dua shot iced shaken": "https://files.catbox.moe/jaj7jw.jpeg",
     "dua shot og aren": "https://files.catbox.moe/jaj7jw.jpeg",
     "spanish latte": "https://files.catbox.moe/xz536k.jpeg",

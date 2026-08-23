@@ -1991,7 +1991,7 @@ export const products = [
     "category": "kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://i.ibb.co.com/0yQbyxDQ/Frame-1410112838.png",
+    "image": "https://files.catbox.moe/d30myw.jpeg",
     "description": "Mocha Latte segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
@@ -4847,7 +4847,7 @@ export const products = [
     "category": "non-kopi",
     "price": 18000,
     "originalPrice": 24300,
-    "image": "https://files.catbox.moe/d30myw.jpeg",
+    "image": "https://i.ibb.co.com/WNXkfp4Q/Frame-1410112840.png",
     "description": "Dutch Chocolate segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {
