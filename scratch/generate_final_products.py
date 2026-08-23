@@ -32,8 +32,11 @@ default_images = {
     'food': 'https://i.ibb.co.com/LdNYD0sW/Frame-1410112879.png'
 }
 
-# Image Overrides from User
 custom_images = {
+    "donat almond": "https://cdn.phototourl.com/member/2026-08-23-b0df1216-45bd-4cf0-98dd-85f1b5a2c7ed.jpg",
+    "salt bread abon": "https://cdn.phototourl.com/member/2026-08-23-47de27e6-03ed-4966-af70-ce7b1ce57dd1.jpg",
+    "salt bread sausage": "https://cdn.phototourl.com/member/2026-08-23-edd766e7-ff71-4b0c-80fd-c5086ab8e5f7.jpg",
+    "salt bread choco butter": "https://cdn.phototourl.com/member/2026-08-23-790ec1c4-fafa-494a-8576-9ca178372e23.jpg",
     "croissant abon": "https://cdn.phototourl.com/free/2026-08-23-ef5cf9ef-6601-4ee0-abae-f62ab4594e3a.jpg",
     "aren apple pie": "https://cdn.phototourl.com/free/2026-08-23-c2a9c7a7-353b-43d8-ba5d-ead21f0af4a6.jpg",
     "canele toffee nut": "https://cdn.phototourl.com/free/2026-08-23-4a015fb2-e91c-4364-93f5-d4c293f3a6b1.jpg",
@@ -60,7 +63,6 @@ custom_images = {
     "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg"
 }
 
-# Items to remove explicitly
 items_to_remove = {
     "dirty croissant milo",
     "danish tiramisu",
@@ -145,31 +147,73 @@ raw_catalog = [
     {"name": "Oatside Latte", "price": 17500, "category": "oatside"}
 ]
 
-# Add Soft Baked Cookie series & Spaghetti Tuna Aglio Olio
-soft_cookies = [
+# STRICT FOOD ORDERING AND SUBCATEGORIES:
+# 1. 🥐 SALT BREAD
+# 2. 🥐 CANELE
+# 3. 🍞 TOAST
+# 4. 🍪 SOFT BAKED COOKIE
+# 5. 🧁 MUFFIN
+# 6. 🥪 SANDWICH
+# 7. FOOD LAINNYA
+
+food_ordered = [
+    # 1. SALT BREAD
+    {"name": "Salt Bread Original", "price": 9500, "category": "food", "seriesBadge": "🥐 Salt Bread"},
+    {"name": "Salt Bread Choco Butter", "price": 10000, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-790ec1c4-fafa-494a-8576-9ca178372e23.jpg"},
+    {"name": "Salt Bread Abon", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-47de27e6-03ed-4966-af70-ce7b1ce57dd1.jpg"},
+    {"name": "Salt Bread Sausage", "price": 12500, "category": "food", "seriesBadge": "🥐 Salt Bread", "image": "https://cdn.phototourl.com/member/2026-08-23-edd766e7-ff71-4b0c-80fd-c5086ab8e5f7.jpg"},
+    {"name": "Salt Bread Beef & Cheese", "price": 11000, "category": "food", "seriesBadge": "🥐 Salt Bread"},
+
+    # 2. CANELE
+    {"name": "Canele Original", "price": 10500, "category": "food", "seriesBadge": "🥐 Canele"},
+    {"name": "Canele Toffee Nut", "price": 11500, "category": "food", "seriesBadge": "🥐 Canele"},
+    {"name": "Canele Aren", "price": 11500, "category": "food", "seriesBadge": "🥐 Canele"},
+
+    # 3. TOAST
+    {"name": "Adam Ayam Toast", "price": 14500, "category": "food", "seriesBadge": "🍞 Toast"},
+    {"name": "Wahyu Sapi Toast", "price": 14500, "category": "food", "seriesBadge": "🍞 Toast"},
+    {"name": "Choco Mocha Swirl Toast", "price": 14500, "category": "food", "seriesBadge": "🍞 Toast"},
+
+    # 4. SOFT BAKED COOKIE
     {"name": "Oatmeal Raisin Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9gGgs.jpg"},
     {"name": "Banana Choco Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs9rHIp.jpg"},
     {"name": "Sweet Honey Soft Baked Cookie", "price": 12500, "category": "food", "seriesBadge": "🍪 Soft Baked Cookie", "image": "https://iili.io/Cs943wQ.jpg"},
-    {"name": "Spaghetti Tuna Aglio Olio", "price": 18000, "category": "food", "image": "https://cdn.phototourl.com/free/2026-08-23-12e3f8ec-4b1d-4646-abf0-034738b28427.jpg"}
+
+    # 5. MUFFIN
+    {"name": "Blueberry Muffin", "price": 12000, "category": "food", "seriesBadge": "🧁 Muffin"},
+    {"name": "Choco Muffin", "price": 12000, "category": "food", "seriesBadge": "🧁 Muffin"},
+
+    # 6. SANDWICH
+    {"name": "Sandwich Chicken Tartare", "price": 16000, "category": "food", "seriesBadge": "🥪 Sandwich"},
+    {"name": "Sandwich Smoked Beef", "price": 16000, "category": "food", "seriesBadge": "🥪 Sandwich"},
+
+    # 7. FOOD LAINNYA
+    {"name": "Donut Almond", "price": 12500, "category": "food", "image": "https://cdn.phototourl.com/member/2026-08-23-b0df1216-45bd-4cf0-98dd-85f1b5a2c7ed.jpg"},
+    {"name": "Croissant Abon", "price": 12500, "category": "food"},
+    {"name": "Butter Croissant", "price": 11500, "category": "food"},
+    {"name": "Chocolate Croissant", "price": 13500, "category": "food"},
+    {"name": "Pasta Mentai", "price": 16000, "category": "food"},
+    {"name": "Spaghetti Tuna Aglio Olio", "price": 18000, "category": "food"},
+    {"name": "Thai Chicken Spaghetti", "price": 15000, "category": "food"},
+    {"name": "Roti Coklat Klasik", "price": 9000, "category": "food"},
+    {"name": "Roti Srikaya", "price": 11500, "category": "food"},
+    {"name": "Roti Susu Manis", "price": 8500, "category": "food"},
+    {"name": "Roti Gulung Abon", "price": 12500, "category": "food"},
+    {"name": "Sugar Donut", "price": 9000, "category": "food"},
+    {"name": "Donut Tiramisu", "price": 10500, "category": "food"},
+    {"name": "Choco Chip Cookies", "price": 11000, "category": "food"},
+    {"name": "Friend Chip Cookie", "price": 12500, "category": "food"},
+    {"name": "Join the Dark Side Cookie", "price": 14500, "category": "food"},
+    {"name": "Vanilla Choux Puff", "price": 10000, "category": "food"},
+    {"name": "Strawberry Choux Puff", "price": 10000, "category": "food"},
+    {"name": "Chocolate Choux Puff", "price": 10000, "category": "food"},
+    {"name": "Bambang Choco Cheese", "price": 12500, "category": "food"},
+    {"name": "Aren Apple Pie", "price": 12500, "category": "food"}
 ]
 
-food_names_added = set()
-for sc in soft_cookies:
-    raw_catalog.append(sc)
-    food_names_added.add(sc["name"].lower().strip())
-
-for fitem in db_food_items:
-    fname = fitem["name"]
-    fname_key = fname.lower().strip()
-    if fname_key not in food_names_added and fname_key not in items_to_remove:
-        raw_catalog.append({
-            "name": fname,
-            "price": fitem["price"],
-            "category": "food",
-            "image": fitem["image"],
-            "desc": fitem["desc"]
-        })
-        food_names_added.add(fname_key)
+# Append food items into raw_catalog in strict order
+for fitem in food_ordered:
+    raw_catalog.append(fitem)
 
 final_products = []
 seen_names = set()
@@ -192,11 +236,7 @@ for idx, item in enumerate(raw_catalog, 1):
                 db_item = v
                 break
 
-    # Price overrides if needed
-    if name == 'Roti Coklat Klasik':
-        price = 9000
-
-    # Image lookup: custom_images > item.image > db_item.image > default_images
+    # Image lookup priority: custom_images > item.image > db_item.image > default_images
     image = custom_images.get(name_key) or item.get("image") or (db_item['image'] if db_item and db_item.get('image') else default_images[cat])
     desc = item.get("desc") or (db_item['desc'] if db_item and db_item.get('desc') else f"{name} lezat dan segar khas Kopi Kenangan.")
 
@@ -276,9 +316,9 @@ for idx, item in enumerate(raw_catalog, 1):
 
     final_products.append(prod_obj)
 
-print(f"Total catalog products after updates and deletions: {len(final_products)}")
+print(f"Total catalog products after adding new food items and ordering: {len(final_products)}")
 
-js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Updated Images & Cleaned Food Catalog)
+js_code = f"""// SOURCE OF TRUTH DATASET KOPI KENANGAN (Menu Satuan + Organized Food Subcategories)
 
 export const productCategories = [
   {{ id: 'kopi', name: 'Kopi' }},
