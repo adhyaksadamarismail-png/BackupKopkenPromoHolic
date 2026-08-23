@@ -1508,7 +1508,7 @@ export const products = [
     "category": "kopi",
     "price": 16500,
     "originalPrice": 22275,
-    "image": "https://i.ibb.co.com/nMPfxRc3/Frame-1410112855.png",
+    "image": "https://i.ibb.co.com/JjPnTkXH/IMG-9996.jpg",
     "description": "Latte segar dan nikmat khas Kopi Kenangan.",
     "isBestSeller": false,
     "options": {

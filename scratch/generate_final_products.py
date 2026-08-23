@@ -60,7 +60,8 @@ custom_images = {
     "og thai tea": "https://cdn.phototourl.com/member/2026-08-23-f72a51b5-b91d-45ac-b67a-ed86bafb5ada.jpg",
     "thai tea loaded": "https://cdn.phototourl.com/free/2026-08-22-6a50ce98-748e-4a11-896c-a314bcd506c7.jpg",
     "milo dino": "https://cdn.phototourl.com/free/2026-08-22-961057b3-c062-4ec8-9bd3-89e28e460124.jpg",
-    "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg"
+    "butterscotch kenangan frappe": "https://iili.io/Cs9sTgt.jpg",
+    "caffe malt latte": "https://i.ibb.co.com/JjPnTkXH/IMG-9996.jpg"
 }
 
 items_to_remove = {
