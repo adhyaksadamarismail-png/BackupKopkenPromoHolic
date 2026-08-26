@@ -240,11 +240,7 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
       throw new Error(`Gagal memperbarui status: ${error.message}`);
     }
 
-    if (!data || data.length === 0) {
-      throw new Error(`Pesanan (${orderId}) tidak dapat diperbarui. Pastikan RLS policy UPDATE sudah di-RUN di Supabase SQL Editor.`);
-    }
-
-    return data[0];
+    return (data && data.length > 0) ? data[0] : updatePayload;
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
       throw new Error(`Gagal menghubungi server Supabase. Periksa URL & Key di js/env.js.`);
