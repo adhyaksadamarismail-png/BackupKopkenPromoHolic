@@ -25,6 +25,11 @@ CREATE TABLE IF NOT EXISTS public.orders (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Grant Table Permissions to anon and authenticated roles for PostgREST Schema Access
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.orders TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+
 -- 2. Create Indexes for Fast Realtime & Query Lookup
 CREATE INDEX IF NOT EXISTS idx_orders_phone_number ON public.orders(phone_number);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
