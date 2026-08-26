@@ -4,10 +4,10 @@ import { createClient as createSupabaseClient } from 'https://cdn.jsdelivr.net/n
  * Get Credentials from window.ENV, Vite import.meta.env, or default fallback
  */
 export function getCredentials() {
-  let url = 'https://xyzcompany.supabase.co';
-  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5emNvbXBhbnkiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.example';
+  let url = 'https://ltseoigmcjvtaxdgcjjq.supabase.co';
+  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2VvaWdtY2p2dGF4ZGdjampxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAwMDAwMDAwMH0.example';
 
-  if (typeof window !== 'undefined' && window.ENV_SUPABASE_URL && !window.ENV_SUPABASE_URL.includes('xyzcompany')) {
+  if (typeof window !== 'undefined' && window.ENV_SUPABASE_URL) {
     url = window.ENV_SUPABASE_URL;
   }
   if (typeof window !== 'undefined' && window.ENV_SUPABASE_ANON_KEY && !window.ENV_SUPABASE_ANON_KEY.includes('example')) {
@@ -36,8 +36,8 @@ export function getSupabase() {
 
   const { url, key } = getCredentials();
 
-  if (url.includes('xyzcompany.supabase.co')) {
-    console.warn("⚠️ SUPABASE DIAGNOSTIC: SUPABASE_URL masih menggunakan URL placeholder 'xyzcompany.supabase.co'. Masukkan Project URL & Anon Key di js/env.js atau Vercel Environment Variables.");
+  if (key.includes('example')) {
+    console.warn("⚠️ SUPABASE DIAGNOSTIC: SUPABASE_ANON_KEY masih menggunakan anon key contoh. Masukkan Anon Key asli dari Dashboard Supabase (ltseoigmcjvtaxdgcjjq) ke file js/env.js atau Vercel Environment Variables.");
   }
 
   // 1. Try official ESM imported createClient
@@ -90,9 +90,9 @@ export function generateOrderId() {
  * CREATE ORDER - Stores directly into Supabase public.orders
  */
 export async function createOrder(orderPayload) {
-  const { url } = getCredentials();
-  if (url.includes('xyzcompany.supabase.co')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi!\nURL database saat ini masih placeholder 'xyzcompany.supabase.co'.\n\nSilakan masukkan SUPABASE_URL dan SUPABASE_ANON_KEY asli Anda pada file js/env.js atau Vercel Dashboard Environment Variables.");
+  const { url, key } = getCredentials();
+  if (key.includes('example')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi!\n\nSilakan masukkan SUPABASE_ANON_KEY asli Anda pada file js/env.js atau Vercel Dashboard Environment Variables.");
   }
 
   const rawPhone = orderPayload.phone_number || orderPayload.customer_name || '';
@@ -111,7 +111,7 @@ export async function createOrder(orderPayload) {
     subtotal: orderPayload.subtotal || 0,
     surcharge: orderPayload.surcharge || 0,
     total_price: orderPayload.total_price || 0,
-    payment_method: orderPayload.payment_method || 'QRIS',
+    payment_method: 'QRIS',
     status: 'BELUM_DIPROSES',
     status_label: 'Belum Diproses',
     receipt_url: null,
@@ -130,7 +130,7 @@ export async function createOrder(orderPayload) {
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
       console.error("SUPABASE NETWORK / FETCH ERROR:", err);
-      throw new Error(`Gagal menghubungi server Supabase (${url}).\nMohon pastikan URL & Key Supabase di js/env.js atau Vercel sudah benar dan dapat diakses.`);
+      throw new Error(`Gagal menghubungi server Supabase (${url}).\nMohon pastikan Anon Key Supabase di js/env.js atau Vercel sudah diisi dengan Key asli project ltseoigmcjvtaxdgcjjq.`);
     }
     throw err;
   }
@@ -140,9 +140,9 @@ export async function createOrder(orderPayload) {
  * FETCH ALL ORDERS (for Admin Web)
  */
 export async function fetchAllOrders() {
-  const { url } = getCredentials();
-  if (url.includes('xyzcompany.supabase.co')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi! URL database masih placeholder 'xyzcompany.supabase.co'. Atur js/env.js terlebih dahulu.");
+  const { url, key } = getCredentials();
+  if (key.includes('example')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi! Anon Key masih placeholder. Atur js/env.js terlebih dahulu.");
   }
 
   const client = getSupabase();
@@ -159,7 +159,7 @@ export async function fetchAllOrders() {
     return data || [];
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa URL & Key di js/env.js.`);
+      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa Anon Key di js/env.js.`);
     }
     throw err;
   }
@@ -172,9 +172,9 @@ export async function fetchOrdersByPhone(phone) {
   const cleanPhone = normalizePhone(phone);
   if (!cleanPhone) return [];
 
-  const { url } = getCredentials();
-  if (url.includes('xyzcompany.supabase.co')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi! URL database masih placeholder 'xyzcompany.supabase.co'. Atur js/env.js terlebih dahulu.");
+  const { url, key } = getCredentials();
+  if (key.includes('example')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi! Anon Key masih placeholder. Atur js/env.js terlebih dahulu.");
   }
 
   const client = getSupabase();
