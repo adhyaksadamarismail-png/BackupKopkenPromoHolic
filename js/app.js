@@ -1,6 +1,7 @@
 import { initialOutlets, searchOutlets } from './data/outlets.js';
 import { productCategories, products } from './data/products.js';
 import { loadSettings, saveSettings } from './data/settings.js';
+import { createOrder, fetchOrdersByPhone, subscribeCustomerOrders, normalizePhone } from './data/supabase.js';
 import {
   BUNDLE_LARGE2,
   BUNDLE_SERBA50,
@@ -1309,7 +1310,7 @@ function renderCheckoutSummary() {
   validateCheckoutForm();
 }
 
-function processWhatsAppOrder() {
+async function processWhatsAppOrder() {
   if (appState.cart.length === 0) {
     alert("Keranjang Anda masih kosong!");
     return;
@@ -1341,6 +1342,28 @@ function processWhatsAppOrder() {
   const shoppingBagCost = appState.includeShoppingBag ? 1000 : 0;
   const surcharge = appState.checkoutSurcharge || 0;
   const totalFinal = subtotal + shoppingBagCost + surcharge;
+
+  // Build DB Order Payload
+  const orderPayload = {
+    brand: 'Kopi Kenangan',
+    customer_name: nameVal,
+    phone_number: nameVal, // default/customer identification
+    outlet: outletVal,
+    pickup_time: pickupVal,
+    items: JSON.parse(JSON.stringify(appState.cart)),
+    subtotal: subtotal,
+    surcharge: surcharge,
+    total_price: totalFinal,
+    payment_method: 'QRIS'
+  };
+
+  // Save to Realtime Database
+  try {
+    const created = await createOrder(orderPayload);
+  } catch (err) {
+    alert("Gagal menyimpan pesanan ke database:\n" + err.message);
+    return;
+  }
 
   let orderText = `Halo, saya ingin memesan:\n\n`;
   orderText += `☕ Brand: Kopi Kenangan\n`;
@@ -1381,6 +1404,13 @@ function processWhatsAppOrder() {
   const waNumber = appState.settings.adminWhatsApp || '6285159646922';
   const encodedText = encodeURIComponent(orderText);
   const waUrl = `https://wa.me/${waNumber}?text=${encodedText}`;
+
+  // Clear cart after checkout
+  appState.cart = [];
+  saveCartState();
+  updateCartUI();
+  document.getElementById('modal-checkout').classList.remove('active');
+  document.body.style.overflow = '';
 
   window.open(waUrl, '_blank');
 }
@@ -1667,62 +1697,23 @@ function setupEventListeners() {
     btnSendWa.addEventListener('click', processWhatsAppOrder);
   }
 
-  // Admin Modal Events
-  const btnOpenAdmin = document.getElementById('btn-open-admin');
-  if (btnOpenAdmin) {
-    btnOpenAdmin.addEventListener('click', () => {
-      if (socialDropdown) socialDropdown.classList.remove('show');
-      openAdminModal();
-    });
+  // Lacak Pesanan Modal Events
+  const btnOpenTrack = document.getElementById('btn-open-track');
+  if (btnOpenTrack) {
+    btnOpenTrack.addEventListener('click', openTrackOrderModal);
   }
-  
-  const btnCloseAdmin = document.getElementById('btn-close-admin');
-  if (btnCloseAdmin) {
-    btnCloseAdmin.addEventListener('click', () => {
-      document.getElementById('modal-admin').classList.remove('active');
+
+  const btnCloseTrack = document.getElementById('btn-close-track');
+  if (btnCloseTrack) {
+    btnCloseTrack.addEventListener('click', () => {
+      document.getElementById('modal-track-order').classList.remove('active');
+      document.body.style.overflow = '';
     });
   }
 
-  const tabBtnOutlets = document.getElementById('tab-btn-outlets');
-  if (tabBtnOutlets) {
-    tabBtnOutlets.addEventListener('click', () => {
-      tabBtnOutlets.classList.add('active');
-      document.getElementById('tab-btn-settings').classList.remove('active');
-      document.getElementById('tab-content-outlets').style.display = 'block';
-      document.getElementById('tab-content-settings').style.display = 'none';
-    });
-  }
-
-  const tabBtnSettings = document.getElementById('tab-btn-settings');
-  if (tabBtnSettings) {
-    tabBtnSettings.addEventListener('click', () => {
-      tabBtnSettings.classList.add('active');
-      document.getElementById('tab-btn-outlets').classList.remove('active');
-      document.getElementById('tab-content-settings').style.display = 'block';
-      document.getElementById('tab-content-outlets').style.display = 'none';
-    });
-  }
-
-  const adminOutletSearch = document.getElementById('admin-outlet-search');
-  if (adminOutletSearch) {
-    adminOutletSearch.addEventListener('input', (e) => {
-      renderAdminOutletsList(e.target.value);
-    });
-  }
-
-  const btnSaveAdminSettings = document.getElementById('btn-save-admin-settings');
-  if (btnSaveAdminSettings) {
-    btnSaveAdminSettings.addEventListener('click', () => {
-      const waVal = document.getElementById('setting-admin-wa').value.trim();
-      const wifiVal = document.getElementById('setting-wifi-text').value.trim();
-
-      appState.settings.adminWhatsApp = waVal;
-      appState.settings.wifiPassword = wifiVal;
-
-      saveSettings(appState.settings);
-      alert('Pengaturan admin berhasil disimpan!');
-      document.getElementById('modal-admin').classList.remove('active');
-    });
+  const btnSubmitTrack = document.getElementById('btn-submit-track');
+  if (btnSubmitTrack) {
+    btnSubmitTrack.addEventListener('click', handleTrackOrderSearch);
   }
 }
 
@@ -1735,43 +1726,102 @@ function formatRupiah(number) {
   }).format(number);
 }
 
-// --- ADMIN PANEL FUNCTIONS ---
-function openAdminModal() {
-  renderAdminOutletsList();
-  document.getElementById('setting-admin-wa').value = appState.settings.adminWhatsApp;
-  document.getElementById('setting-wifi-text').value = appState.settings.wifiPassword;
+// --- LACAK PESANAN (REALTIME CUSTOMER TRACKING) ---
+let trackUnsubscribe = null;
+
+function openTrackOrderModal() {
+  const socialDropdown = document.getElementById('social-dropdown-menu');
+  if (socialDropdown) socialDropdown.classList.remove('show');
   
-  document.getElementById('modal-admin').classList.add('active');
+  const modal = document.getElementById('modal-track-order');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 }
 
-function renderAdminOutletsList(query = '') {
-  const container = document.getElementById('admin-outlets-list');
+async function handleTrackOrderSearch() {
+  const input = document.getElementById('track-phone-input');
+  if (!input) return;
+  const phone = input.value.trim();
+  if (!phone) {
+    alert("Silakan masukkan nomor HP!");
+    return;
+  }
+
+  const container = document.getElementById('track-results-container');
+  if (container) {
+    container.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted);">Mencari pesanan...</div>`;
+  }
+
+  if (trackUnsubscribe) {
+    trackUnsubscribe();
+    trackUnsubscribe = null;
+  }
+
+  try {
+    const orders = await fetchOrdersByPhone(phone);
+    renderTrackOrderResults(orders);
+
+    // Realtime subscription for customer order status changes
+    trackUnsubscribe = subscribeCustomerOrders(
+      phone, 
+      (updatedOrders) => { renderTrackOrderResults(updatedOrders); },
+      (err) => { console.warn("Track realtime update error:", err); }
+    );
+  } catch (err) {
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 20px; color: #DC2626; font-size: 13px; background: #FEF2F2; border-radius: var(--radius-md);">
+          ⚠️ Gagal melacak pesanan dari database:<br /><strong>${err.message}</strong>
+        </div>
+      `;
+    }
+  }
+}
+
+function renderTrackOrderResults(orders) {
+  const container = document.getElementById('track-results-container');
   if (!container) return;
 
-  const filtered = searchOutlets(appState.outlets, query, 100);
+  if (!orders || orders.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 30px; color: var(--text-muted); font-size: 13px;">
+        Tidak ada pesanan ditemukan untuk nomor tersebut.
+      </div>
+    `;
+    return;
+  }
 
-  container.innerHTML = filtered.map(outlet => `
-    <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 10px; display: flex; align-items: center; justify-content: space-between;">
-      <div>
-        <div style="font-size: 13px; font-weight: 700;">${outlet.name} <span class="${outlet.is_active ? 'badge-active' : 'badge-inactive'}">${outlet.is_active ? 'Aktif' : 'Nonaktif'}</span></div>
-        <div style="font-size: 11px; color: var(--text-secondary);">${outlet.city} — ${outlet.address}</div>
+  const statusBadgeMap = {
+    'BELUM_DIPROSES': '<span style="background: #FFF7ED; color: #C2410C; padding: 3px 8px; border-radius: 9999px; font-weight: 800; font-size: 11px;">🟡 Belum Diproses</span>',
+    'DIPROSES': '<span style="background: #EFF6FF; color: #1D4ED8; padding: 3px 8px; border-radius: 9999px; font-weight: 800; font-size: 11px;">🔵 Diproses</span>',
+    'SUDAH_DIPROSES': '<span style="background: #F0FDF4; color: #15803D; padding: 3px 8px; border-radius: 9999px; font-weight: 800; font-size: 11px;">🟢 Sudah Diproses</span>',
+    'SELESAI': '<span style="background: #F0FDF4; color: #15803D; padding: 3px 8px; border-radius: 9999px; font-weight: 800; font-size: 11px;">✅ Selesai</span>',
+    'DIBATALKAN': '<span style="background: #FEF2F2; color: #DC2626; padding: 3px 8px; border-radius: 9999px; font-weight: 800; font-size: 11px;">🔴 Dibatalkan</span>'
+  };
+
+  container.innerHTML = orders.map(order => `
+    <div style="background: var(--bg-card); border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 13px; font-weight: 800; color: var(--primary-orange);">${order.order_id}</span>
+        ${statusBadgeMap[order.status] || ''}
       </div>
-      <div style="display: flex; gap: 4px;">
-        <button class="btn-change-outlet btn-toggle-active" data-id="${outlet.id}" style="padding: 4px 8px; font-size: 10px;">
-          ${outlet.is_active ? 'Nonaktifkan' : 'Aktifkan'}
-        </button>
+
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
+        ☕ ${order.brand || 'Kopi Kenangan'} — 📍 ${order.outlet || ''}
       </div>
+
+      <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+        ⏰ Pickup: ${order.pickup_time || 'Sekarang'} | 💰 Total: <strong>${formatRupiah(order.total_price)}</strong>
+      </div>
+
+      ${order.receipt_url ? `
+        <div style="margin-top: 10px; padding: 10px; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: var(--radius-md);">
+          <div style="font-size: 11px; font-weight: 800; color: #16A34A; margin-bottom: 6px;">🧾 Bukti Receipt Pembayaran (Dari Admin):</div>
+          <img src="${order.receipt_url}" alt="Receipt" style="width: 100%; max-height: 180px; object-fit: contain; border-radius: var(--radius-sm); border: 1px solid var(--border-light);" />
+        </div>
+      ` : ''}
     </div>
   `).join('');
-
-  container.querySelectorAll('.btn-toggle-active').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-id');
-      const target = appState.outlets.find(o => o.id === id);
-      if (target) {
-        target.is_active = !target.is_active;
-        renderAdminOutletsList(query);
-      }
-    });
-  });
 }
