@@ -666,6 +666,8 @@
       }
     }
 
+    let currentlyOpenCard = null;
+
     function setupSwipeGestures(container) {
       const wrappers = container.querySelectorAll('.swipeable-order-card-wrapper');
 
@@ -679,7 +681,30 @@
         let isSwiping = false;
         let isOpen = false;
 
+        const closeCard = () => {
+          card.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+          card.style.transform = 'translateX(0px)';
+          isOpen = false;
+          if (currentlyOpenCard === card) currentlyOpenCard = null;
+        };
+
+        const openCard = () => {
+          if (currentlyOpenCard && currentlyOpenCard !== card) {
+            currentlyOpenCard.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            currentlyOpenCard.style.transform = 'translateX(0px)';
+          }
+          card.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+          card.style.transform = 'translateX(-110px)';
+          isOpen = true;
+          currentlyOpenCard = card;
+        };
+
         card.addEventListener('touchstart', (e) => {
+          if (currentlyOpenCard && currentlyOpenCard !== card) {
+            currentlyOpenCard.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            currentlyOpenCard.style.transform = 'translateX(0px)';
+            currentlyOpenCard = null;
+          }
           startX = e.touches[0].clientX;
           isSwiping = true;
           card.style.transition = 'none';
@@ -689,9 +714,9 @@
           if (!isSwiping) return;
           const diffX = e.touches[0].clientX - startX;
           if (isOpen) {
-            currentX = Math.min(0, Math.max(-120, -120 + diffX));
+            currentX = Math.min(0, Math.max(-110, -110 + diffX));
           } else {
-            currentX = Math.min(0, Math.max(-120, diffX));
+            currentX = Math.min(0, Math.max(-110, diffX));
           }
           card.style.transform = `translateX(${currentX}px)`;
         }, { passive: true });
@@ -699,13 +724,10 @@
         const endSwipe = () => {
           if (!isSwiping) return;
           isSwiping = false;
-          card.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-          if (currentX < -40) {
-            card.style.transform = 'translateX(-120px)';
-            isOpen = true;
+          if (currentX < -35) {
+            openCard();
           } else {
-            card.style.transform = 'translateX(0px)';
-            isOpen = false;
+            closeCard();
           }
         };
 
@@ -716,6 +738,11 @@
         let isMouseDown = false;
         card.addEventListener('mousedown', (e) => {
           if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+          if (currentlyOpenCard && currentlyOpenCard !== card) {
+            currentlyOpenCard.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            currentlyOpenCard.style.transform = 'translateX(0px)';
+            currentlyOpenCard = null;
+          }
           startX = e.clientX;
           isMouseDown = true;
           isSwiping = true;
@@ -726,9 +753,9 @@
           if (!isMouseDown) return;
           const diffX = e.clientX - startX;
           if (isOpen) {
-            currentX = Math.min(0, Math.max(-120, -120 + diffX));
+            currentX = Math.min(0, Math.max(-110, -110 + diffX));
           } else {
-            currentX = Math.min(0, Math.max(-120, diffX));
+            currentX = Math.min(0, Math.max(-110, diffX));
           }
           card.style.transform = `translateX(${currentX}px)`;
         });
@@ -749,6 +776,7 @@
             pendingCancelOrderId = orderId;
             if (modalIdEl) modalIdEl.textContent = orderId;
             if (modal) modal.classList.add('active');
+            closeCard();
           });
         }
       });

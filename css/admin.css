@@ -825,8 +825,11 @@ body {
 .swipeable-order-card-wrapper {
   position: relative;
   overflow: hidden;
+  width: 100%;
   border-radius: var(--admin-radius-lg);
   margin-bottom: 16px;
+  background-color: #FEF2F2;
+  box-sizing: border-box;
   touch-action: pan-y;
 }
 
@@ -835,27 +838,53 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  width: 120px;
+  width: 110px;
   background-color: #FEF2F2;
   border-radius: 0 var(--admin-radius-lg) var(--admin-radius-lg) 0;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1;
+  box-sizing: border-box;
+  padding: 8px;
 }
 
 .btn-swipe-cancel-order {
+  width: 94px;
   background-color: #DC2626;
   color: #FFFFFF;
   border: none;
   border-radius: var(--admin-radius-sm);
-  padding: 10px 12px;
+  padding: 10px 6px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
-  transition: transform 0.1s ease;
+  text-align: center;
+  line-height: 1.3;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+  white-space: normal;
+}
+
+.btn-swipe-cancel-order:hover {
+  background-color: #B91C1C;
+}
+
+.btn-swipe-cancel-order:active {
+  transform: scale(0.95);
+}
+
+.admin-order-card-swipe-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: var(--admin-radius-lg);
+  box-sizing: border-box;
+  transform: translateX(0);
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
 
 .btn-swipe-cancel-order:active {
