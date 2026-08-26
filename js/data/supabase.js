@@ -224,14 +224,26 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
 
   const client = getSupabase();
   try {
-    const { data, error } = await client.from('orders')
+    let { data, error } = await client.from('orders')
       .update(updatePayload)
       .eq('order_id', orderId)
       .select();
 
     if (error) {
-      console.error("SUPABASE UPDATE ERROR:", error);
-      throw new Error(`Gagal memperbarui status: ${error.message}`);
+      console.error("SUPABASE UPDATE ERROR (by order_id):", error);
+    }
+
+    if (!data || data.length === 0) {
+      const res = await client.from('orders')
+        .update(updatePayload)
+        .eq('id', orderId)
+        .select();
+
+      if (res.error) {
+        console.error("SUPABASE UPDATE ERROR (by id):", res.error);
+        throw new Error(`Gagal memperbarui status: ${res.error.message}`);
+      }
+      data = res.data;
     }
 
     return data && data.length > 0 ? data[0] : updatePayload;

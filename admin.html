@@ -554,6 +554,13 @@
           const id = btn.getAttribute('data-id');
           try {
             await updateOrderStatus(id, 'DIPROSES');
+            
+            // Auto switch active filter pill tab to DIPROSES
+            currentFilter = 'DIPROSES';
+            document.querySelectorAll('.filter-status-pill').forEach(b => {
+              b.classList.toggle('active', b.getAttribute('data-status-filter') === 'DIPROSES');
+            });
+
             adminOrders = await fetchAllOrders();
             renderDashboardStats();
             renderOrdersList();
@@ -575,6 +582,12 @@
           const id = input.getAttribute('data-id');
           try {
             await uploadReceiptImage(id, file);
+
+            currentFilter = 'DIPROSES';
+            document.querySelectorAll('.filter-status-pill').forEach(b => {
+              b.classList.toggle('active', b.getAttribute('data-status-filter') === 'DIPROSES');
+            });
+
             adminOrders = await fetchAllOrders();
             renderDashboardStats();
             renderOrdersList();
@@ -590,6 +603,13 @@
           const id = btn.getAttribute('data-id');
           try {
             await updateOrderStatus(id, 'SUDAH_DIPROSES');
+
+            // Auto switch active filter pill tab to SUDAH_DIPROSES
+            currentFilter = 'SUDAH_DIPROSES';
+            document.querySelectorAll('.filter-status-pill').forEach(b => {
+              b.classList.toggle('active', b.getAttribute('data-status-filter') === 'SUDAH_DIPROSES');
+            });
+
             adminOrders = await fetchAllOrders();
             renderDashboardStats();
             renderOrdersList();

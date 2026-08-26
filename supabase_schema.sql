@@ -78,6 +78,14 @@ CREATE POLICY "Allow authenticated admin full access"
   USING (true)
   WITH CHECK (true);
 
+-- Policy 6d: Allow anon and authenticated to update orders status
+DROP POLICY IF EXISTS "Allow update orders" ON public.orders;
+CREATE POLICY "Allow update orders"
+  ON public.orders FOR UPDATE
+  TO anon, authenticated
+  USING (true)
+  WITH CHECK (true);
+
 -- 7. Storage Bucket Security Policies for `receipts`
 DROP POLICY IF EXISTS "Public Read Receipts" ON storage.objects;
 CREATE POLICY "Public Read Receipts"
