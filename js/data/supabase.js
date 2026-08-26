@@ -99,7 +99,6 @@ export async function createOrder(orderPayload) {
   const cleanPhone = normalizePhone(rawPhone);
 
   const newOrder = {
-    id: 'ord_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
     order_id: generateOrderId(),
     brand: orderPayload.brand || 'Kopi Kenangan',
     customer_name: orderPayload.customer_name || '',
@@ -118,6 +117,11 @@ export async function createOrder(orderPayload) {
     receipt_uploaded_at: null,
     created_at: new Date().toISOString()
   };
+
+  // Include UUID id if crypto.randomUUID is available
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    newOrder.id = crypto.randomUUID();
+  }
 
   const client = getSupabase();
   try {
