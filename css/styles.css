@@ -1602,3 +1602,131 @@ body {
   box-shadow: none;
   opacity: 0.7;
 }
+
+/* ==================== BUNDLING SUGAR CONFIGURATOR & DETAIL STYLES ==================== */
+.bundle-sugar-configurator {
+  background-color: #FFF8F0;
+  border: 1px solid #FFD0B5;
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+.configurator-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #C2410C;
+  margin-bottom: 10px;
+}
+
+.configurator-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.configurator-item-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.configurator-item-header {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.configurator-item-num {
+  color: #EA580C;
+}
+
+.sugar-pills-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sugar-pill-btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  border: 1px solid #CBD5E1;
+  background-color: #F8FAFC;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sugar-pill-btn:hover {
+  border-color: #EA580C;
+  color: #EA580C;
+}
+
+.sugar-pill-btn.active {
+  background-color: #0B1B36;
+  color: #FFFFFF;
+  border-color: #0B1B36;
+  font-weight: 800;
+}
+
+.food-item-notice {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.rawan-stok-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  color: #DC2626;
+  background-color: #FEE2E2;
+  border: 1px solid #FECACA;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.checkout-bundle-details {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+}
+
+.bundle-catatan-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.bundle-catatan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bundle-catatan-row {
+  font-size: 12px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.rawan-stok-text {
+  color: #DC2626;
+  font-weight: 700;
+}
+

@@ -9424,6 +9424,7 @@ export const products = [
     "image": "https://cdn.phototourl.com/free/2026-08-23-53e962db-e849-43c3-8760-ea42166ea5ba.jpg",
     "description": "Salt Bread Original lezat khas Kopi Kenangan.",
     "isBestSeller": true,
+    "isRawanStok": true,
     "options": {
       "suhu": [],
       "ukuran": [],
@@ -9444,6 +9445,7 @@ export const products = [
     "image": "https://cdn.phototourl.com/member/2026-08-23-790ec1c4-fafa-494a-8576-9ca178372e23.jpg",
     "description": "Salt Bread Choco Butter lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
+    "isRawanStok": true,
     "options": {
       "suhu": [],
       "ukuran": [],
@@ -9464,6 +9466,7 @@ export const products = [
     "image": "https://cdn.phototourl.com/member/2026-08-23-47de27e6-03ed-4966-af70-ce7b1ce57dd1.jpg",
     "description": "Salt Bread Abon lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
+    "isRawanStok": true,
     "options": {
       "suhu": [],
       "ukuran": [],
@@ -9484,6 +9487,7 @@ export const products = [
     "image": "https://cdn.phototourl.com/member/2026-08-23-edd766e7-ff71-4b0c-80fd-c5086ab8e5f7.jpg",
     "description": "Salt Bread Sausage lezat dan segar khas Kopi Kenangan.",
     "isBestSeller": false,
+    "isRawanStok": true,
     "options": {
       "suhu": [],
       "ukuran": [],
@@ -9504,6 +9508,7 @@ export const products = [
     "image": "https://iili.io/Cs9eR5B.jpg",
     "description": "Salt Bread Beef & Cheese lezat khas Kopi Kenangan.",
     "isBestSeller": false,
+    "isRawanStok": true,
     "options": {
       "suhu": [],
       "ukuran": [],

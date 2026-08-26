@@ -36,6 +36,7 @@ let appState = {
   activeBundlingSubTab: '2large',
   selectedBundleSelection: null,
   selectedMixPicks: [],
+  selectedBundleSugars: {},
   
   // Current active item in modal
   modalProduct: null,
@@ -128,6 +129,108 @@ function updateCartUI() {
   }
 }
 
+// --- BUNDLING HELPERS & SUGAR CONFIGURATION ---
+function isItemDrink(name) {
+  if (!name) return false;
+  const n = name.toLowerCase();
+  const foodKeywords = ['bun', 'choux', 'roti', 'saltbread', 'salt bread', 'croissant', 'toast', 'cheeseburger', 'cookie', 'donat', 'donut', 'canele', 'cromboloni'];
+  return !foodKeywords.some(kw => n.includes(kw));
+}
+
+function isItemRawanStok(name) {
+  if (!name) return false;
+  const n = name.toLowerCase();
+  return n.includes('saltbread') || n.includes('salt bread');
+}
+
+function formatDrinkName(name) {
+  if (!name) return '';
+  let clean = name.trim();
+  
+  if (clean.toLowerCase() === 'kkm regular' || clean.toLowerCase() === 'kkm reg') return 'KKM Regular';
+  if (clean.toLowerCase() === 'spanish regular' || clean.toLowerCase() === 'spanish reg') return 'Spanish Regular';
+  if (clean.toLowerCase() === 'americano regular') return 'Americano Regular';
+  if (clean.toLowerCase() === 'toffe nut latte regular' || clean.toLowerCase() === 'toffee nut latte reg') return 'Toffee Nut Latte Regular';
+  if (clean.toLowerCase() === 'baby cino' || clean.toLowerCase() === 'babycino') return 'Babyccino';
+  if (clean.toLowerCase() === 'og thai tea' || clean.toLowerCase() === 'og thaitea reg') return 'OG Thai Tea Regular';
+  if (clean.toLowerCase() === 'pistachio aren') return 'Pistachio Aren';
+  if (clean.toLowerCase() === 'caramel matchiato reg') return 'Caramel Macchiato Regular';
+  if (clean.toLowerCase() === 'creamy aren latte reg' || clean.toLowerCase() === 'creamy aren latte regular') return 'Creamy Aren Latte Regular';
+  if (clean.toLowerCase() === 'hazelnut choco milk tea') return 'Hazelnut Choco Milk Tea';
+  if (clean.toLowerCase() === 'butterscotch aren latte reg') return 'Butterscotch Aren Latte Regular';
+  if (clean.toLowerCase() === 'butterscotch seasalt crumble') return 'Butterscotch Seasalt Crumble';
+  
+  return clean;
+}
+
+function expandBundleItemsList(rawItems) {
+  const result = [];
+  rawItems.forEach(raw => {
+    let count = 1;
+    let name = raw;
+    const match = raw.match(/^(\d+)x?\s+(.*)$/i);
+    if (match) {
+      count = parseInt(match[1], 10);
+      name = match[2];
+    }
+    name = name.replace(/\(bebas varian\)/gi, '').trim();
+    for (let i = 0; i < count; i++) {
+      const isDrink = isItemDrink(name);
+      const isRawan = isItemRawanStok(name);
+      result.push({
+        name: isDrink ? formatDrinkName(name) : name,
+        isDrink: isDrink,
+        isRawanStok: isRawan
+      });
+    }
+  });
+  return result;
+}
+
+function getBundleItems2Large(b) {
+  if (!b) return [];
+  const drinkName = b.name.replace(/^2\s*/i, '');
+  return [
+    { name: drinkName, isDrink: true, isRawanStok: false },
+    { name: drinkName, isDrink: true, isRawanStok: false }
+  ];
+}
+
+function renderSugarConfigurator(itemsList) {
+  if (!itemsList || itemsList.length === 0) return '';
+
+  return `
+    <div class="bundle-sugar-configurator">
+      <div class="configurator-title">
+        <span>⚙ Pilihan Sugar Level per Minuman:</span>
+      </div>
+      <div class="configurator-items-list">
+        ${itemsList.map((item, idx) => {
+          const currentSugar = (appState.selectedBundleSugars && appState.selectedBundleSugars[idx]) || 'Normal Sugar';
+          return `
+            <div class="configurator-item-card">
+              <div class="configurator-item-header">
+                <span class="configurator-item-num">${idx + 1}.</span>
+                <span class="configurator-item-name">${item.name}</span>
+                ${item.isRawanStok ? '<span class="rawan-stok-tag">⚠rawan stok</span>' : ''}
+              </div>
+              ${item.isDrink ? `
+                <div class="sugar-pills-row">
+                  <button type="button" class="sugar-pill-btn ${currentSugar === 'Normal Sugar' ? 'active' : ''}" data-item-idx="${idx}" data-sugar="Normal Sugar">Normal Sugar</button>
+                  <button type="button" class="sugar-pill-btn ${currentSugar === 'Less Sugar' ? 'active' : ''}" data-item-idx="${idx}" data-sugar="Less Sugar">Less Sugar</button>
+                  <button type="button" class="sugar-pill-btn ${currentSugar === 'No Sugar' ? 'active' : ''}" data-item-idx="${idx}" data-sugar="No Sugar">No Sugar</button>
+                </div>
+              ` : `
+                <div class="food-item-notice">🥐 Makanan (Tanpa Sugar)</div>
+              `}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
 // --- SECTION 1: PAKET BUNDLING KOPI KENANGAN (Placed right after hero) ---
 function renderBundlesSection() {
   const container = document.getElementById('bundling-section-container');
@@ -165,11 +268,11 @@ function renderBundlesSection() {
   } else if (subTab === 'serba50') {
     html += renderSubTabSerba50();
   } else if (subTab === 'mix35') {
-    html += renderSubTabMix(35000, 3, BUNDLE_MIX35_OPTS, "Pilih 3 Minuman Bebas (0/3)", "Bisa pilih produk yang sama lebih dari 1x.");
+    html += renderSubTabMix(35000, 3, BUNDLE_MIX35_OPTS, "Paket Mix 3 Minuman 35k", "Pilih 3 minuman · Pilihan sugar dapat ditentukan secara terpisah untuk tiap minuman.");
   } else if (subTab === 'serba35') {
     html += renderSubTabSerba35();
   } else if (subTab === 'serba38') {
-    html += renderSubTabMix(38000, 2, BUNDLE_SERBA38_OPTS, "2 Minuman + 2 Roti Coklat — Rp38.000", "Pilih 2 minuman · Bisa pilih produk yang sama lebih dari 1x · 2 Roti Coklat sudah termasuk otomatis.", "+ 2 Roti Coklat Klasik (sudah termasuk)");
+    html += renderSubTabMix(38000, 2, BUNDLE_SERBA38_OPTS, "Paket Serba 38k (2 Minuman + 2 Roti Coklat)", "Pilih 2 minuman · 2 Roti Coklat sudah termasuk otomatis.", "+ 2 Roti Coklat Klasik (sudah termasuk)");
   }
 
   container.innerHTML = html;
@@ -180,6 +283,7 @@ function renderBundlesSection() {
       appState.activeBundlingSubTab = btn.getAttribute('data-subtab');
       appState.selectedBundleSelection = null;
       appState.selectedMixPicks = [];
+      appState.selectedBundleSugars = {};
       renderBundlesSection();
     });
   });
@@ -209,6 +313,9 @@ function renderSubTab2Large() {
     `;
   }).join('');
 
+  const selectedItems = appState.selectedBundleSelection ? getBundleItems2Large(appState.selectedBundleSelection) : [];
+  const configuratorHtml = selectedItems.length > 0 ? renderSugarConfigurator(selectedItems) : '';
+
   const ctaDisabled = !appState.selectedBundleSelection;
   const ctaText = ctaDisabled ? 'Pilih paket dulu...' : `Tambah ke Keranjang (${formatRupiah(appState.selectedBundleSelection.price)})`;
 
@@ -217,6 +324,7 @@ function renderSubTab2Large() {
     <div class="bundle-large-grid">
       ${cards}
     </div>
+    ${configuratorHtml}
     <button class="btn-cta-sticky" id="btn-add-bundling-cta" ${ctaDisabled ? 'disabled' : ''}>
       ${ctaText}
     </button>
@@ -240,6 +348,9 @@ function renderSubTabSerba50() {
     `;
   }).join('');
 
+  const selectedItems = appState.selectedBundleSelection ? expandBundleItemsList(appState.selectedBundleSelection.items) : [];
+  const configuratorHtml = selectedItems.length > 0 ? renderSugarConfigurator(selectedItems) : '';
+
   const ctaDisabled = !appState.selectedBundleSelection;
   const ctaText = ctaDisabled ? 'Pilih paket dulu...' : 'Tambah ke Keranjang (Rp 50.000)';
 
@@ -247,6 +358,7 @@ function renderSubTabSerba50() {
     <div class="bundle-list-container">
       ${cards}
     </div>
+    ${configuratorHtml}
     <button class="btn-cta-sticky" id="btn-add-bundling-cta" ${ctaDisabled ? 'disabled' : ''}>
       ${ctaText}
     </button>
@@ -270,6 +382,9 @@ function renderSubTabSerba35() {
     `;
   }).join('');
 
+  const selectedItems = appState.selectedBundleSelection ? expandBundleItemsList(appState.selectedBundleSelection.items) : [];
+  const configuratorHtml = selectedItems.length > 0 ? renderSugarConfigurator(selectedItems) : '';
+
   const ctaDisabled = !appState.selectedBundleSelection;
   const ctaText = ctaDisabled ? 'Pilih paket dulu...' : 'Tambah ke Keranjang (Rp 35.000)';
 
@@ -277,6 +392,7 @@ function renderSubTabSerba35() {
     <div class="bundle-list-container">
       ${cards}
     </div>
+    ${configuratorHtml}
     <button class="btn-cta-sticky" id="btn-add-bundling-cta" ${ctaDisabled ? 'disabled' : ''}>
       ${ctaText}
     </button>
@@ -304,6 +420,19 @@ function renderSubTabMix(price, maxPicks, optionsList, titleText, subTextInfo = 
     `;
   }).join('');
 
+  const selectedItems = appState.selectedMixPicks.map(name => ({
+    name: formatDrinkName(name),
+    isDrink: true,
+    isRawanStok: false
+  }));
+
+  if (appState.activeBundlingSubTab === 'serba38') {
+    selectedItems.push({ name: 'Roti Coklat Klasik', isDrink: false, isRawanStok: false });
+    selectedItems.push({ name: 'Roti Coklat Klasik', isDrink: false, isRawanStok: false });
+  }
+
+  const configuratorHtml = selectedItems.length > 0 ? renderSugarConfigurator(selectedItems) : '';
+
   const remaining = maxPicks - currentCount;
   const ctaText = ctaDisabled
     ? `Pilih ${remaining} minuman lagi...`
@@ -325,6 +454,8 @@ function renderSubTabMix(price, maxPicks, optionsList, titleText, subTextInfo = 
 
     ${subTextExtra ? `<div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; text-align: center;">${subTextExtra}</div>` : ''}
 
+    ${configuratorHtml}
+
     <button class="btn-cta-sticky" id="btn-add-mix-cta" ${ctaDisabled ? 'disabled' : ''}>
       ${ctaText}
     </button>
@@ -332,11 +463,25 @@ function renderSubTabMix(price, maxPicks, optionsList, titleText, subTextInfo = 
 }
 
 function bindBundlingInteractions(container, subTab) {
+  // Bind Sugar Pill click handlers
+  container.querySelectorAll('.sugar-pill-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = parseInt(btn.getAttribute('data-item-idx'), 10);
+      const sugar = btn.getAttribute('data-sugar');
+      if (!appState.selectedBundleSugars) appState.selectedBundleSugars = {};
+      appState.selectedBundleSugars[idx] = sugar;
+      renderBundlesSection();
+    });
+  });
+
   if (subTab === '2large') {
     container.querySelectorAll('.bundle-large-card').forEach(card => {
       card.addEventListener('click', () => {
         const id = card.getAttribute('data-large-id');
         appState.selectedBundleSelection = BUNDLE_LARGE2.find(b => b.id === id);
+        appState.selectedBundleSugars = {};
         renderBundlesSection();
       });
     });
@@ -345,6 +490,7 @@ function bindBundlingInteractions(container, subTab) {
       card.addEventListener('click', () => {
         const code = card.getAttribute('data-serba50-code');
         appState.selectedBundleSelection = BUNDLE_SERBA50.find(b => b.code === code);
+        appState.selectedBundleSugars = {};
         renderBundlesSection();
       });
     });
@@ -353,6 +499,7 @@ function bindBundlingInteractions(container, subTab) {
       card.addEventListener('click', () => {
         const code = card.getAttribute('data-serba35-code');
         appState.selectedBundleSelection = BUNDLE_SERBA35.find(b => b.code === code);
+        appState.selectedBundleSugars = {};
         renderBundlesSection();
       });
     });
@@ -378,16 +525,38 @@ function bindBundlingInteractions(container, subTab) {
     btnCta.addEventListener('click', () => {
       if (!appState.selectedBundleSelection) return;
       const b = appState.selectedBundleSelection;
+      let rawItems = [];
+      let nameTitle = '';
+
+      if (subTab === '2large') {
+        rawItems = getBundleItems2Large(b);
+        nameTitle = `🔀 ${b.name}`;
+      } else if (subTab === 'serba50') {
+        rawItems = expandBundleItemsList(b.items);
+        nameTitle = `🔀 Paket ${b.code} Serba 50k`;
+      } else if (subTab === 'serba35') {
+        rawItems = expandBundleItemsList(b.items);
+        nameTitle = `🔀 ${b.name || ('Paket ' + b.code)} 35k`;
+      }
+
+      const bundleItems = rawItems.map((item, idx) => ({
+        name: item.name,
+        sugar: item.isDrink ? ((appState.selectedBundleSugars && appState.selectedBundleSugars[idx]) || 'Normal Sugar') : undefined,
+        isDrink: item.isDrink,
+        isRawanStok: item.isRawanStok || false
+      }));
       
       const cartItem = {
         id: 'cart-bundle-' + Date.now(),
         productId: `bundle-${b.id || b.code}`,
-        productName: `[PROMO BUNDLE] ${b.name || ('Paket ' + b.code)}`,
+        productName: nameTitle,
         quantity: 1,
         unitPrice: b.price,
         totalPrice: b.price,
+        isBundle: true,
+        bundleItems: bundleItems,
         options: {
-          details: b.items ? b.items.join(', ') : '2 Cup Large'
+          details: bundleItems.map(bi => bi.name + (bi.sugar ? ` (${bi.sugar})` : '')).join(', ')
         }
       };
 
@@ -395,6 +564,7 @@ function bindBundlingInteractions(container, subTab) {
       saveCartState();
       updateCartUI();
       appState.selectedBundleSelection = null;
+      appState.selectedBundleSugars = {};
       renderBundlesSection();
     });
   }
@@ -406,18 +576,31 @@ function bindBundlingInteractions(container, subTab) {
       if (appState.selectedMixPicks.length < maxPicks) return;
 
       const price = subTab === 'mix35' ? 35000 : 38000;
-      const title = subTab === 'mix35' ? 'Paket Mix 35k (3 Minuman)' : 'Paket Serba 38k (2 Minuman + 2 Roti Coklat)';
-      const detailsText = appState.selectedMixPicks.join(', ') + (subTab === 'serba38' ? ' + 2x Roti Coklat Klasik' : '');
+      const title = subTab === 'mix35' ? '🔀 Paket Mix 3 Minuman 35k' : '🔀 Paket Serba 38k (2 Minuman + 2 Roti Coklat)';
+
+      const bundleItems = appState.selectedMixPicks.map((pickName, idx) => ({
+        name: formatDrinkName(pickName),
+        sugar: (appState.selectedBundleSugars && appState.selectedBundleSugars[idx]) || 'Normal Sugar',
+        isDrink: true,
+        isRawanStok: false
+      }));
+
+      if (subTab === 'serba38') {
+        bundleItems.push({ name: 'Roti Coklat Klasik', isDrink: false, isRawanStok: false });
+        bundleItems.push({ name: 'Roti Coklat Klasik', isDrink: false, isRawanStok: false });
+      }
 
       const cartItem = {
         id: 'cart-bundle-' + Date.now(),
         productId: `bundle-mix-${Date.now()}`,
-        productName: `[PROMO BUNDLE] ${title}`,
+        productName: title,
         quantity: 1,
         unitPrice: price,
         totalPrice: price,
+        isBundle: true,
+        bundleItems: bundleItems,
         options: {
-          details: detailsText
+          details: bundleItems.map(bi => bi.name + (bi.sugar ? ` (${bi.sugar})` : '')).join(', ')
         }
       };
 
@@ -425,6 +608,7 @@ function bindBundlingInteractions(container, subTab) {
       saveCartState();
       updateCartUI();
       appState.selectedMixPicks = [];
+      appState.selectedBundleSugars = {};
       renderBundlesSection();
     });
   }
@@ -781,7 +965,15 @@ function renderCartDrawerItems() {
   const subtotal = appState.cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
   container.innerHTML = appState.cart.map((item, idx) => {
-    const optStr = getItemCustomizationSummary(item.options);
+    let optStr = getItemCustomizationSummary(item.options);
+
+    if (item.isBundle && item.bundleItems && item.bundleItems.length > 0) {
+      optStr = item.bundleItems.map((bItem, bIdx) => {
+        const sugarText = bItem.isDrink ? ` (${bItem.sugar || 'Normal Sugar'})` : '';
+        const rawanText = bItem.isRawanStok ? ' ⚠rawan stok' : '';
+        return `${bIdx + 1}. ${bItem.name}${sugarText}${rawanText}`;
+      }).join(', ');
+    }
 
     return `
       <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;">
@@ -789,7 +981,7 @@ function renderCartDrawerItems() {
           <div>
             <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">${item.productName}</div>
             ${optStr ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">${optStr}</div>` : ''}
-            ${!item.productName.startsWith('[PROMO BUNDLE]') ? `<button class="btn-edit-cart-item" data-cart-id="${item.id}" data-product-id="${item.productId}" style="font-size: 11px; font-weight: 800; color: #0F172A; background: none; border: none; padding: 0; margin-top: 4px; cursor: pointer; text-decoration: underline;">Klik untuk edit</button>` : ''}
+            ${!item.productName.startsWith('[PROMO BUNDLE]') && !item.isBundle ? `<button class="btn-edit-cart-item" data-cart-id="${item.id}" data-product-id="${item.productId}" style="font-size: 11px; font-weight: 800; color: #0F172A; background: none; border: none; padding: 0; margin-top: 4px; cursor: pointer; text-decoration: underline;">Klik untuk edit</button>` : ''}
           </div>
           <button class="btn-trash" data-index="${idx}" style="background: transparent; border: none; color: #ef4444; cursor: pointer; padding: 4px;">
             <i data-feather="trash-2" style="width: 16px; height: 16px;"></i>
@@ -1009,25 +1201,56 @@ function renderCheckoutSummary() {
   const totalFinal = subtotal + shoppingBagCost + appState.checkoutSurcharge;
 
   container.innerHTML = appState.cart.map((item, idx) => {
-    const summaryText = getItemCustomizationSummary(item.options);
-    return `
-      <div class="checkout-item-card">
-        <div class="checkout-item-header">
-          <span class="checkout-item-title">${item.productName}</span>
-          <span class="checkout-item-price-badge">${formatRupiah(item.totalPrice)}</span>
-        </div>
-        ${summaryText ? `<div class="checkout-item-customization">${summaryText}</div>` : ''}
-        
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
-          ${!item.productName.startsWith('[PROMO BUNDLE]') ? `<button class="checkout-item-edit-btn" data-cart-id="${item.id}" data-product-id="${item.productId}">Klik untuk edit</button>` : '<span></span>'}
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="btn-qty btn-checkout-item-minus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">-</button>
-            <span style="font-size: 13px; font-weight: 800;">${item.quantity}</span>
-            <button class="btn-qty btn-checkout-item-plus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">+</button>
+    const isRawan = item.isRawanStok || (item.productName && item.productName.toLowerCase().includes('salt bread'));
+    const rawanHtml = isRawan ? ' <span class="rawan-stok-text">⚠rawan stok</span>' : '';
+
+    if (item.isBundle && item.bundleItems && item.bundleItems.length > 0) {
+      return `
+        <div class="checkout-item-card bundle-checkout-card">
+          <div class="checkout-item-header">
+            <span class="checkout-item-title">• ${item.quantity}x ${item.productName}</span>
+            <span class="checkout-item-price-badge">${formatRupiah(item.totalPrice)}</span>
+          </div>
+          <div class="checkout-bundle-details">
+            <div class="bundle-catatan-label">Catatan:</div>
+            <div class="bundle-catatan-list">
+              ${item.bundleItems.map((bItem, bIdx) => {
+                const sugarStr = bItem.isDrink ? ` + ${bItem.sugar || 'Normal Sugar'}` : '';
+                const bRawanStr = bItem.isRawanStok ? ' <span class="rawan-stok-text">⚠rawan stok</span>' : '';
+                return `<div class="bundle-catatan-row">${bIdx + 1}. ${bItem.name}${sugarStr}${bRawanStr}</div>`;
+              }).join('')}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-end; margin-top: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn-qty btn-checkout-item-minus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">-</button>
+              <span style="font-size: 13px; font-weight: 800;">${item.quantity}</span>
+              <button class="btn-qty btn-checkout-item-plus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">+</button>
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      const summaryText = getItemCustomizationSummary(item.options);
+      return `
+        <div class="checkout-item-card">
+          <div class="checkout-item-header">
+            <span class="checkout-item-title">• ${item.quantity}x ${item.productName}${rawanHtml}</span>
+            <span class="checkout-item-price-badge">${formatRupiah(item.totalPrice)}</span>
+          </div>
+          ${summaryText ? `<div class="checkout-item-customization">${summaryText}</div>` : ''}
+          
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+            ${!item.productName.startsWith('[PROMO BUNDLE]') && !item.isBundle ? `<button class="checkout-item-edit-btn" data-cart-id="${item.id}" data-product-id="${item.productId}">Klik untuk edit</button>` : '<span></span>'}
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn-qty btn-checkout-item-minus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">-</button>
+              <span style="font-size: 13px; font-weight: 800;">${item.quantity}</span>
+              <button class="btn-qty btn-checkout-item-plus" data-index="${idx}" style="width: 26px; height: 26px; font-size: 12px;">+</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   }).join('');
 
   document.getElementById('checkout-subtotal-amount').textContent = formatRupiah(subtotal);
@@ -1107,24 +1330,40 @@ function processWhatsAppOrder() {
   const totalFinal = subtotal + shoppingBagCost + surcharge;
 
   let orderText = `Halo, saya ingin memesan:\n\n`;
-  orderText += `☕ Brand: ☕ Kopi Kenangan\n`;
+  orderText += `☕ Brand: Kopi Kenangan\n`;
   orderText += `👤 Nama: ${nameVal}\n`;
   orderText += `📍 Outlet: ${outletVal}\n`;
   orderText += `⏰ Pickup: ${pickupVal}\n\n`;
   orderText += `🍵 Pesanan:\n`;
 
-  appState.cart.forEach(item => {
-    const tokens = getNonDefaultCustomizationTokens(item.options);
-    const tokenStr = tokens.length > 0 ? ' ' + tokens.map(t => `(${t})`).join(' ') : '';
+  appState.cart.forEach((item, iIdx) => {
+    if (item.isBundle && item.bundleItems && item.bundleItems.length > 0) {
+      orderText += `• ${item.quantity}x ${item.productName} ${formatRupiah(item.totalPrice)}\n`;
+      orderText += `Catatan:\n\n`;
+      item.bundleItems.forEach((bItem, bIdx) => {
+        const sugarText = bItem.isDrink ? ` + ${bItem.sugar || 'Normal Sugar'}` : '';
+        const rawanText = bItem.isRawanStok ? ` ⚠rawan stok` : '';
+        orderText += `${bIdx + 1}. ${bItem.name}${sugarText}${rawanText}\n`;
+      });
+      if (iIdx < appState.cart.length - 1) {
+        orderText += `\n`;
+      }
+    } else {
+      const tokens = getNonDefaultCustomizationTokens(item.options);
+      const tokenStr = tokens.length > 0 ? ' ' + tokens.map(t => `(${t})`).join(' ') : '';
+      const isRawan = item.isRawanStok || (item.productName && item.productName.toLowerCase().includes('salt bread'));
+      const rawanText = isRawan ? ` ⚠rawan stok` : '';
 
-    orderText += `• ${item.quantity}x ${item.productName}${tokenStr} ${formatRupiah(item.totalPrice)}\n`;
-    if (item.options && item.options.notes) {
-      orderText += `  Catatan: ${item.options.notes}\n`;
+      orderText += `• ${item.quantity}x ${item.productName}${tokenStr} ${formatRupiah(item.totalPrice)}${rawanText}\n`;
+      if (item.options && item.options.notes) {
+        orderText += `  Catatan: ${item.options.notes}\n`;
+      }
     }
   });
 
   orderText += `\n💰 Total: ${formatRupiah(totalFinal)}\n\n`;
-  orderText += `Mohon konfirmasi pesanan saya. Terima kasih! 🙏`;
+  orderText += `⚠ Outlet & jenis harga dikonfirmasi manual oleh pelanggan.\n`;
+  orderText += `Mohon cek ketersediaan outlet & menu ya`;
 
   const waNumber = appState.settings.adminWhatsApp || '6285159646922';
   const encodedText = encodeURIComponent(orderText);
@@ -1342,6 +1581,7 @@ function setupEventListeners() {
           quantity: quantity,
           unitPrice: unitPrice,
           totalPrice: totalPrice,
+          isRawanStok: !!(appState.modalProduct.isRawanStok || (appState.modalProduct.name && appState.modalProduct.name.toLowerCase().includes('salt bread'))),
           options: JSON.parse(JSON.stringify(appState.modalSelectedOptions))
         };
         appState.cart.push(cartItem);
