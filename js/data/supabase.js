@@ -1,16 +1,29 @@
 import { createClient as createSupabaseClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// ENVIRONMENT TOGGLE: Set to false for Production (Supabase primary)
-export const IS_DEV = false;
+/**
+ * Get Credentials from window.ENV, Vite import.meta.env, or default fallback
+ */
+export function getCredentials() {
+  let url = 'https://xyzcompany.supabase.co';
+  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5emNvbXBhbnkiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.example';
 
-// Configurable Credentials (via window.ENV or environment vars)
-export const SUPABASE_URL = (typeof window !== 'undefined' && window.ENV_SUPABASE_URL)
-  ? window.ENV_SUPABASE_URL
-  : 'https://xyzcompany.supabase.co';
+  if (typeof window !== 'undefined' && window.ENV_SUPABASE_URL && !window.ENV_SUPABASE_URL.includes('xyzcompany')) {
+    url = window.ENV_SUPABASE_URL;
+  }
+  if (typeof window !== 'undefined' && window.ENV_SUPABASE_ANON_KEY && !window.ENV_SUPABASE_ANON_KEY.includes('example')) {
+    key = window.ENV_SUPABASE_ANON_KEY;
+  }
 
-export const SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.ENV_SUPABASE_ANON_KEY)
-  ? window.ENV_SUPABASE_ANON_KEY
-  : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5emNvbXBhbnkiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.example';
+  // Check Vite environment variables if available
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      if (import.meta.env.VITE_SUPABASE_URL) url = import.meta.env.VITE_SUPABASE_URL;
+      if (import.meta.env.VITE_SUPABASE_ANON_KEY) key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    }
+  } catch (e) {}
+
+  return { url: url.trim(), key: key.trim() };
+}
 
 // Singleton Supabase Client Instance
 let supabaseClient = null;
@@ -21,10 +34,16 @@ let supabaseClient = null;
 export function getSupabase() {
   if (supabaseClient) return supabaseClient;
 
+  const { url, key } = getCredentials();
+
+  if (url.includes('xyzcompany.supabase.co')) {
+    console.warn("⚠️ SUPABASE DIAGNOSTIC: SUPABASE_URL masih menggunakan URL placeholder 'xyzcompany.supabase.co'. Masukkan Project URL & Anon Key di js/env.js atau Vercel Environment Variables.");
+  }
+
   // 1. Try official ESM imported createClient
   try {
     if (typeof createSupabaseClient === 'function') {
-      supabaseClient = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      supabaseClient = createSupabaseClient(url, key);
       return supabaseClient;
     }
   } catch (err) {
@@ -34,18 +53,14 @@ export function getSupabase() {
   // 2. Fallback to window.supabase if attached by UMD CDN script
   if (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
     try {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      supabaseClient = window.supabase.createClient(url, key);
       return supabaseClient;
     } catch (err) {
       console.warn("window.supabase init notice:", err);
     }
   }
 
-  if (!IS_DEV) {
-    throw new Error("Gagal terhubung ke Supabase SDK. Mohon periksa koneksi internet Anda.");
-  }
-
-  return null;
+  throw new Error("Gagal terhubung ke Supabase SDK. Mohon periksa koneksi internet Anda.");
 }
 
 /**
@@ -75,6 +90,11 @@ export function generateOrderId() {
  * CREATE ORDER - Stores directly into Supabase public.orders
  */
 export async function createOrder(orderPayload) {
+  const { url } = getCredentials();
+  if (url.includes('xyzcompany.supabase.co')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi!\nURL database saat ini masih placeholder 'xyzcompany.supabase.co'.\n\nSilakan masukkan SUPABASE_URL dan SUPABASE_ANON_KEY asli Anda pada file js/env.js atau Vercel Dashboard Environment Variables.");
+  }
+
   const rawPhone = orderPayload.phone_number || orderPayload.customer_name || '';
   const cleanPhone = normalizePhone(rawPhone);
 
@@ -100,36 +120,49 @@ export async function createOrder(orderPayload) {
   };
 
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Koneksi database Supabase tidak tersedia.");
+  try {
+    const { data, error } = await client.from('orders').insert([newOrder]).select().single();
+    if (error) {
+      console.error("SUPABASE INSERT ERROR DETAILS:", error);
+      throw new Error(`Database Error (${error.code || 'INSERT_FAILED'}): ${error.message}`);
+    }
+    return data || newOrder;
+  } catch (err) {
+    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
+      console.error("SUPABASE NETWORK / FETCH ERROR:", err);
+      throw new Error(`Gagal menghubungi server Supabase (${url}).\nMohon pastikan URL & Key Supabase di js/env.js atau Vercel sudah benar dan dapat diakses.`);
+    }
+    throw err;
   }
-
-  const { data, error } = await client.from('orders').insert([newOrder]).select();
-  if (error) {
-    throw new Error("Gagal menyimpan pesanan ke database Supabase: " + error.message);
-  }
-
-  return data && data.length > 0 ? data[0] : newOrder;
 }
 
 /**
  * FETCH ALL ORDERS (for Admin Web)
  */
 export async function fetchAllOrders() {
+  const { url } = getCredentials();
+  if (url.includes('xyzcompany.supabase.co')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi! URL database masih placeholder 'xyzcompany.supabase.co'. Atur js/env.js terlebih dahulu.");
+  }
+
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Koneksi database Supabase tidak tersedia.");
+  try {
+    const { data, error } = await client.from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("SUPABASE FETCH ALL ERROR:", error);
+      throw new Error(`Gagal mengambil data pesanan: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (err) {
+    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
+      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa URL & Key di js/env.js.`);
+    }
+    throw err;
   }
-
-  const { data, error } = await client.from('orders')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    throw new Error("Gagal mengambil data pesanan dari Supabase: " + error.message);
-  }
-
-  return data || [];
 }
 
 /**
@@ -139,22 +172,30 @@ export async function fetchOrdersByPhone(phone) {
   const cleanPhone = normalizePhone(phone);
   if (!cleanPhone) return [];
 
+  const { url } = getCredentials();
+  if (url.includes('xyzcompany.supabase.co')) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi! URL database masih placeholder 'xyzcompany.supabase.co'. Atur js/env.js terlebih dahulu.");
+  }
+
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Koneksi database Supabase tidak tersedia.");
+  try {
+    const { data, error } = await client.from('orders')
+      .select('*')
+      .eq('phone_number', cleanPhone)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("SUPABASE FETCH PHONE ERROR:", error);
+      throw new Error(`Gagal melacak pesanan dari database: ${error.message}`);
+    }
+
+    return data || [];
+  } catch (err) {
+    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
+      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa URL & Key di js/env.js.`);
+    }
+    throw err;
   }
-
-  // Exact query directly to database by normalized phone number
-  const { data, error } = await client.from('orders')
-    .select('*')
-    .eq('phone_number', cleanPhone)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    throw new Error("Gagal melacak pesanan dari database: " + error.message);
-  }
-
-  return data || [];
 }
 
 /**
@@ -178,20 +219,24 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
   };
 
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Koneksi database Supabase tidak tersedia.");
+  try {
+    const { data, error } = await client.from('orders')
+      .update(updatePayload)
+      .eq('order_id', orderId)
+      .select();
+
+    if (error) {
+      console.error("SUPABASE UPDATE ERROR:", error);
+      throw new Error(`Gagal memperbarui status: ${error.message}`);
+    }
+
+    return data && data.length > 0 ? data[0] : updatePayload;
+  } catch (err) {
+    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
+      throw new Error(`Gagal menghubungi server Supabase. Periksa URL & Key di js/env.js.`);
+    }
+    throw err;
   }
-
-  const { data, error } = await client.from('orders')
-    .update(updatePayload)
-    .eq('order_id', orderId)
-    .select();
-
-  if (error) {
-    throw new Error("Gagal memperbarui status pesanan di Supabase: " + error.message);
-  }
-
-  return data && data.length > 0 ? data[0] : updatePayload;
 }
 
 /**
@@ -202,7 +247,6 @@ export async function uploadReceiptImage(orderId, file) {
     throw new Error("File receipt tidak ditemukan.");
   }
 
-  // File validation (JPG, JPEG, PNG max 5MB)
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
   if (!validTypes.includes(file.type)) {
     throw new Error("Format file receipt harus berupa JPG, JPEG, atau PNG.");
@@ -212,43 +256,40 @@ export async function uploadReceiptImage(orderId, file) {
   }
 
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Koneksi database Supabase tidak tersedia.");
-  }
-
-  // Generate unique file path in Supabase Storage
   const ext = file.name.split('.').pop() || 'png';
   const cleanId = orderId.replace(/[^a-zA-Z0-9]/g, '');
   const filePath = `receipt_${cleanId}_${Date.now()}.${ext}`;
 
-  // 1. Upload to Supabase Storage Bucket 'receipts'
-  const { data: storageData, error: storageError } = await client.storage
-    .from('receipts')
-    .upload(filePath, file, { cacheControl: '3600', upsert: true });
+  try {
+    const { data: storageData, error: storageError } = await client.storage
+      .from('receipts')
+      .upload(filePath, file, { cacheControl: '3600', upsert: true });
 
-  let publicUrl = '';
-  if (!storageError && storageData) {
-    const { data: urlData } = client.storage.from('receipts').getPublicUrl(filePath);
-    publicUrl = urlData ? urlData.publicUrl : '';
-  } else {
-    // If bucket doesn't exist or storage fails, use DataURL fallback gracefully
-    publicUrl = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
+    let publicUrl = '';
+    if (!storageError && storageData) {
+      const { data: urlData } = client.storage.from('receipts').getPublicUrl(filePath);
+      publicUrl = urlData ? urlData.publicUrl : '';
+    } else {
+      console.warn("Storage upload notice (using base64 fallback):", storageError);
+      publicUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    const uploadedAt = new Date().toISOString();
+    const updateData = {
+      receipt_url: publicUrl,
+      receipt_uploaded_at: uploadedAt
+    };
+
+    const updatedOrder = await updateOrderStatus(orderId, 'DIPROSES', updateData);
+    return { receipt_url: publicUrl, uploadedAt, order: updatedOrder };
+  } catch (err) {
+    console.error("SUPABASE UPLOAD RECEIPT ERROR:", err);
+    throw new Error("Gagal mengunggah foto receipt: " + err.message);
   }
-
-  const uploadedAt = new Date().toISOString();
-
-  // 2. Update order row in Supabase database with receipt URL
-  const updateData = {
-    receipt_url: publicUrl,
-    receipt_uploaded_at: uploadedAt
-  };
-
-  const updatedOrder = await updateOrderStatus(orderId, 'DIPROSES', updateData);
-  return { receipt_url: publicUrl, uploadedAt, order: updatedOrder };
 }
 
 /**
@@ -258,12 +299,8 @@ let adminChannel = null;
 
 export function subscribeAdminOrders(onUpdateCallback, onErrorCallback) {
   const client = getSupabase();
-  if (!client) {
-    if (onErrorCallback) onErrorCallback(new Error("Supabase client tidak tersedia."));
-    return () => {};
-  }
+  if (!client) return () => {};
 
-  // Clean up existing channel if active
   if (adminChannel) {
     client.removeChannel(adminChannel);
     adminChannel = null;
@@ -307,12 +344,8 @@ export function subscribeCustomerOrders(phone, onUpdateCallback, onErrorCallback
   if (!cleanPhone) return () => {};
 
   const client = getSupabase();
-  if (!client) {
-    if (onErrorCallback) onErrorCallback(new Error("Supabase client tidak tersedia."));
-    return () => {};
-  }
+  if (!client) return () => {};
 
-  // Clean up existing channel for this phone if active
   if (customerChannels[cleanPhone]) {
     client.removeChannel(customerChannels[cleanPhone]);
     delete customerChannels[cleanPhone];
@@ -360,9 +393,7 @@ export function subscribeCustomerOrders(phone, onUpdateCallback, onErrorCallback
  */
 export async function loginAdmin(email, password) {
   const client = getSupabase();
-  if (!client) {
-    throw new Error("Supabase client tidak tersedia.");
-  }
+  if (!client) throw new Error("Supabase client tidak tersedia.");
 
   const { data, error } = await client.auth.signInWithPassword({
     email: email,
