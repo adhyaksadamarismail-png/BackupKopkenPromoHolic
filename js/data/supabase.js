@@ -5,7 +5,7 @@ import { createClient as createSupabaseClient } from 'https://cdn.jsdelivr.net/n
  */
 export function getCredentials() {
   let url = 'https://ltseoigmcjvtaxdgcjjq.supabase.co';
-  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2VvaWdtY2p2dGF4ZGdjampxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAwMDAwMDAwMH0.example';
+  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2VvaWdtY2p2dGF4ZGdjampxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MDYxNjcsImV4cCI6MjEwMTQ4MjE2N30.nCWZRDH-lwZS42W7cM9av5KOBEALI2YQVFsNK0jQyJM';
 
   if (typeof window !== 'undefined' && window.ENV_SUPABASE_URL) {
     url = window.ENV_SUPABASE_URL;

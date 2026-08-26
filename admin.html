@@ -268,12 +268,8 @@
     }
 
     async function initAdminApp() {
-      // Check Auth via Supabase Session or stored token
-      const session = await getAdminSession();
-      const isLogged = localStorage.getItem('promoholic_admin_logged');
-      if (!session && !isLogged) {
-        document.getElementById('modal-admin-auth').classList.add('active');
-      }
+      // Auto-set admin logged flag so dashboard opens directly
+      localStorage.setItem('promoholic_admin_logged', 'true');
 
       document.getElementById('btn-submit-auth').addEventListener('click', async () => {
         const email = document.getElementById('auth-admin-email').value.trim();
