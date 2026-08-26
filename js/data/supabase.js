@@ -224,29 +224,27 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
 
   const client = getSupabase();
   try {
-    let { data, error } = await client.from('orders')
-      .update(updatePayload)
-      .eq('order_id', orderId)
-      .select();
+    const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(orderId);
+    
+    let query = client.from('orders').update(updatePayload);
+    if (isUuid) {
+      query = query.eq('id', orderId);
+    } else {
+      query = query.eq('order_id', orderId);
+    }
+
+    const { data, error } = await query.select();
 
     if (error) {
-      console.error("SUPABASE UPDATE ERROR (by order_id):", error);
+      console.error("SUPABASE UPDATE ERROR:", error);
+      throw new Error(`Gagal memperbarui status: ${error.message}`);
     }
 
     if (!data || data.length === 0) {
-      const res = await client.from('orders')
-        .update(updatePayload)
-        .eq('id', orderId)
-        .select();
-
-      if (res.error) {
-        console.error("SUPABASE UPDATE ERROR (by id):", res.error);
-        throw new Error(`Gagal memperbarui status: ${res.error.message}`);
-      }
-      data = res.data;
+      throw new Error(`Pesanan (${orderId}) tidak dapat diperbarui. Pastikan RLS policy UPDATE sudah di-RUN di Supabase SQL Editor.`);
     }
 
-    return data && data.length > 0 ? data[0] : updatePayload;
+    return data[0];
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
       throw new Error(`Gagal menghubungi server Supabase. Periksa URL & Key di js/env.js.`);
