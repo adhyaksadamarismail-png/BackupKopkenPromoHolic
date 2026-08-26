@@ -930,16 +930,29 @@ function recalculateModalTotal() {
 }
 
 // --- CART & MINIMUM UNIT ITEM VALIDATION ---
-function validateCartMinimum() {
-  const unitItems = appState.cart.filter(item => !item.productName.startsWith('[PROMO BUNDLE]'));
-  const unitTotalQty = unitItems.reduce((sum, item) => sum + item.quantity, 0);
-  const bundleItems = appState.cart.filter(item => item.productName.startsWith('[PROMO BUNDLE]'));
+function isBundleCartItem(item) {
+  if (!item) return false;
+  return !!(item.isBundle || (item.productName && (item.productName.startsWith('🔀') || item.productName.startsWith('[PROMO BUNDLE]'))));
+}
 
-  // Minimum 2 items requirement for unit items
-  if (unitTotalQty > 0 && unitTotalQty < 2 && bundleItems.length === 0) {
+function validateCartMinimum() {
+  const bundleItems = appState.cart.filter(item => isBundleCartItem(item));
+  
+  // Produk Bundling tidak termasuk dalam aturan minimum pembelian 2 item.
+  // Pelanggan boleh checkout langsung meskipun hanya membeli 1 produk bundling.
+  if (bundleItems.length > 0) {
+    return { valid: true };
+  }
+
+  const unitItems = appState.cart.filter(item => !isBundleCartItem(item));
+  const unitTotalQty = unitItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Aturan minimum pembelian 2 item hanya berlaku untuk produk non-bundling
+  if (unitTotalQty < 2) {
+    const remaining = 2 - unitTotalQty;
     return {
       valid: false,
-      message: "Minimum pembelian adalah 2 item. Silakan tambahkan 1 item lagi."
+      message: `Minimum pembelian menu satuan adalah 2 item. Silakan tambahkan ${remaining} item lagi.`
     };
   }
   return { valid: true };
