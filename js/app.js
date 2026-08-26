@@ -1382,7 +1382,7 @@ async function processWhatsAppOrder() {
   let orderText = `Halo, saya ingin memesan:\n\n`;
   orderText += `☕ Brand: Kopi Kenangan\n`;
   orderText += `👤 Nama: ${nameVal}\n`;
-  orderText += `📱 No Telp: ${phoneVal}\n`;
+  orderText += `📱 Nomor: ${phoneVal}\n`;
   orderText += `📍 Outlet: ${outletVal}\n`;
   orderText += `⏰ Pickup: ${pickupVal}\n\n`;
   orderText += `🍵 Pesanan:\n`;
