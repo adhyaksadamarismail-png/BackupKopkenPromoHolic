@@ -91,3 +91,6 @@ CREATE POLICY "Update Receipts Policy"
   ON storage.objects FOR UPDATE
   TO anon, authenticated
   USING (bucket_id = 'receipts');
+
+-- 8. Notify PostgREST to reload schema cache immediately
+NOTIFY pgrst, 'reload schema';
