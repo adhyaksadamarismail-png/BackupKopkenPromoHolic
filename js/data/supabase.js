@@ -1,6 +1,4 @@
-/**
- * PromoHolic Supabase Realtime, Storage & Database Production Layer
- */
+import { createClient as createSupabaseClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 // ENVIRONMENT TOGGLE: Set to false for Production (Supabase primary)
 export const IS_DEV = false;
@@ -14,27 +12,37 @@ export const SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.ENV_SU
   ? window.ENV_SUPABASE_ANON_KEY
   : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5emNvbXBhbnkiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.example';
 
+// Singleton Supabase Client Instance
 let supabaseClient = null;
 
 /**
- * Initialize Supabase Client
+ * Initialize / Get Singleton Supabase Client Instance
  */
 export function getSupabase() {
   if (supabaseClient) return supabaseClient;
 
+  // 1. Try official ESM imported createClient
+  try {
+    if (typeof createSupabaseClient === 'function') {
+      supabaseClient = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return supabaseClient;
+    }
+  } catch (err) {
+    console.warn("ESM createClient init notice:", err);
+  }
+
+  // 2. Fallback to window.supabase if attached by UMD CDN script
   if (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
     try {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       return supabaseClient;
     } catch (err) {
-      if (!IS_DEV) {
-        throw new Error("Gagal menginisialisasi client Supabase: " + err.message);
-      }
+      console.warn("window.supabase init notice:", err);
     }
   }
 
   if (!IS_DEV) {
-    throw new Error("Library Supabase JS SDK belum dimuat di browser. Pastikan script Supabase CDN diikutsertakan.");
+    throw new Error("Gagal terhubung ke Supabase SDK. Mohon periksa koneksi internet Anda.");
   }
 
   return null;

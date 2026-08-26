@@ -1088,11 +1088,13 @@ function openCheckoutModal() {
 
 function validateCheckoutForm() {
   const nameInput = document.getElementById('checkout-name');
+  const phoneInput = document.getElementById('checkout-phone');
   const outletInput = document.getElementById('checkout-manual-outlet');
   const waBtn = document.getElementById('btn-send-whatsapp');
-  if (!nameInput || !outletInput || !waBtn) return;
+  if (!nameInput || !phoneInput || !outletInput || !waBtn) return;
 
   const nameVal = nameInput.value.trim();
+  const phoneVal = phoneInput.value.trim();
   const outletVal = outletInput.value.trim();
 
   let isPickupValid = true;
@@ -1103,7 +1105,7 @@ function validateCheckoutForm() {
     }
   }
 
-  if (nameVal && outletVal && isPickupValid && appState.cart.length > 0) {
+  if (nameVal && phoneVal && outletVal && isPickupValid && appState.cart.length > 0) {
     waBtn.disabled = false;
   } else {
     waBtn.disabled = true;
@@ -1112,6 +1114,7 @@ function validateCheckoutForm() {
 
 function setupCheckoutEvents() {
   const nameInput = document.getElementById('checkout-name');
+  const phoneInput = document.getElementById('checkout-phone');
   const outletInput = document.getElementById('checkout-manual-outlet');
   const btnPickupNow = document.getElementById('btn-pickup-now');
   const btnPickupScheduled = document.getElementById('btn-pickup-scheduled');
@@ -1122,6 +1125,12 @@ function setupCheckoutEvents() {
 
   if (nameInput) {
     nameInput.addEventListener('input', () => {
+      validateCheckoutForm();
+    });
+  }
+
+  if (phoneInput) {
+    phoneInput.addEventListener('input', () => {
       validateCheckoutForm();
     });
   }
@@ -1317,10 +1326,15 @@ async function processWhatsAppOrder() {
   }
 
   const nameVal = document.getElementById('checkout-name').value.trim();
+  const phoneVal = document.getElementById('checkout-phone') ? document.getElementById('checkout-phone').value.trim() : '';
   const outletVal = document.getElementById('checkout-manual-outlet').value.trim();
 
   if (!nameVal) {
     alert("Silakan masukkan nama pemesan!");
+    return;
+  }
+  if (!phoneVal) {
+    alert("Silakan masukkan nomor telepon pemesan!");
     return;
   }
   if (!outletVal) {
@@ -1347,7 +1361,7 @@ async function processWhatsAppOrder() {
   const orderPayload = {
     brand: 'Kopi Kenangan',
     customer_name: nameVal,
-    phone_number: nameVal, // default/customer identification
+    phone_number: phoneVal,
     outlet: outletVal,
     pickup_time: pickupVal,
     items: JSON.parse(JSON.stringify(appState.cart)),
@@ -1368,6 +1382,7 @@ async function processWhatsAppOrder() {
   let orderText = `Halo, saya ingin memesan:\n\n`;
   orderText += `☕ Brand: Kopi Kenangan\n`;
   orderText += `👤 Nama: ${nameVal}\n`;
+  orderText += `📱 No Telp: ${phoneVal}\n`;
   orderText += `📍 Outlet: ${outletVal}\n`;
   orderText += `⏰ Pickup: ${pickupVal}\n\n`;
   orderText += `🍵 Pesanan:\n`;
