@@ -1,0 +1,176 @@
+import crypto from 'crypto';
+
+// In-Memory Rate Limiting Tracker
+const failedAttempts = new Map();
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+
+// Server Secret for HMAC Token Signing
+const SERVER_SECRET = process.env.ADMIN_JWT_SECRET || 'promoholic-super-secret-server-key-2026';
+
+// Server-Side Credentials (NEVER EXPOSED TO FRONTEND)
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+function signToken(payload) {
+  const json = JSON.stringify(payload);
+  const base64 = Buffer.from(json).toString('base64url');
+  const signature = crypto.createHmac('sha256', SERVER_SECRET).update(base64).digest('base64url');
+  return `${base64}.${signature}`;
+}
+
+function verifyToken(token) {
+  if (!token || !token.includes('.')) return null;
+  const [base64, signature] = token.split('.');
+  const expectedSig = crypto.createHmac('sha256', SERVER_SECRET).update(base64).digest('base64url');
+
+  try {
+    const bufSig = Buffer.from(signature);
+    const bufExp = Buffer.from(expectedSig);
+    if (bufSig.length !== bufExp.length || !crypto.timingSafeEqual(bufSig, bufExp)) {
+      return null;
+    }
+
+    const payload = JSON.parse(Buffer.from(base64, 'base64url').toString('utf8'));
+    if (payload.exp && Date.now() > payload.exp) return null;
+    return payload;
+  } catch (e) {
+    return null;
+  }
+}
+
+function parseCookies(cookieHeader) {
+  const list = {};
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach(cookie => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (!name) return;
+    const value = rest.join('=').trim();
+    list[name] = decodeURIComponent(value);
+  });
+  return list;
+}
+
+export default async function handler(req, res) {
+  // Security Headers
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
+  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+
+  // GET: Verify Active Admin Session via HttpOnly Cookie
+  if (req.method === 'GET') {
+    const cookies = parseCookies(req.headers.cookie);
+    const sessionToken = cookies['ph_admin_session'];
+    const session = verifyToken(sessionToken);
+
+    if (session && session.role === 'admin') {
+      return res.status(200).json({ authenticated: true, username: session.username });
+    }
+    return res.status(401).json({ authenticated: false });
+  }
+
+  // POST: Login / Logout
+  if (req.method === 'POST') {
+    let body = {};
+    try {
+      body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    } catch (e) {
+      body = {};
+    }
+
+    const action = body.action || req.query.action || 'login';
+
+    if (action === 'logout') {
+      res.setHeader('Set-Cookie', 'ph_admin_session=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
+      return res.status(200).json({ success: true, message: 'Session terminated' });
+    }
+
+    if (action === 'login') {
+      const username = String(body.username || '').trim();
+      const password = String(body.password || '').trim();
+      const turnstileToken = body.turnstileToken;
+
+      const attemptKey = `${clientIp}_${username}`;
+      const now = Date.now();
+      const record = failedAttempts.get(attemptKey) || { count: 0, lockUntil: 0 };
+
+      if (record.lockUntil && now < record.lockUntil) {
+        const minutesLeft = Math.ceil((record.lockUntil - now) / 60000);
+        return res.status(429).json({ 
+          error: `Akses login dikunci sementara karena 5x kesalahan. Coba lagi dalam ${minutesLeft} menit.` 
+        });
+      }
+
+      if (record.lockUntil && now >= record.lockUntil) {
+        failedAttempts.delete(attemptKey);
+      }
+
+      if (!username || !password) {
+        return res.status(400).json({ error: 'Username dan Password wajib diisi.' });
+      }
+
+      // Verify Cloudflare Turnstile CAPTCHA Server-Side
+      if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
+        try {
+          const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              secret: process.env.TURNSTILE_SECRET_KEY,
+              response: turnstileToken,
+              remoteip: clientIp
+            })
+          });
+          const verifyJson = await verifyRes.json();
+          if (!verifyJson.success) {
+            return res.status(400).json({ error: 'Verifikasi CAPTCHA gagal. Silakan coba lagi.' });
+          }
+        } catch (e) {
+          console.error("Turnstile server verification error:", e);
+        }
+      }
+
+      // Server-Side Credentials Verification
+      const isUsernameValid = username.toLowerCase() === ADMIN_USERNAME.toLowerCase();
+      const isPasswordValid = password === ADMIN_PASSWORD;
+
+      if (!isUsernameValid || !isPasswordValid) {
+        const newCount = (record.count || 0) + 1;
+        let lockUntil = 0;
+        if (newCount >= MAX_ATTEMPTS) {
+          lockUntil = now + LOCKOUT_MS;
+        }
+        failedAttempts.set(attemptKey, { count: newCount, lockUntil });
+
+        if (lockUntil > 0) {
+          return res.status(429).json({ 
+            error: 'Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.' 
+          });
+        }
+
+        return res.status(401).json({ 
+          error: `Login Gagal (${newCount}/5): Username atau Password salah.` 
+        });
+      }
+
+      // Login Successful: Clear Failed Attempt Record
+      failedAttempts.delete(attemptKey);
+
+      // Issue 30-Minute Expiring Server Session Cookie
+      const exp = Date.now() + (30 * 60 * 1000); // 30 minutes
+      const sessionToken = signToken({ username, role: 'admin', exp });
+
+      res.setHeader(
+        'Set-Cookie', 
+        `ph_admin_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=1800`
+      );
+
+      return res.status(200).json({ success: true, username });
+    }
+  }
+
+  return res.status(405).json({ error: 'Method Not Allowed' });
+}

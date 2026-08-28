@@ -227,8 +227,8 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; text-align: left;">
         <div>
-          <label style="font-size: 12px; font-weight: 700; color: var(--admin-text-sub);">Email / ID Admin</label>
-          <input type="text" id="auth-admin-email" placeholder="admin@promoholic.id" class="search-input-field" style="padding-left: 12px; margin-top: 4px;" />
+          <label style="font-size: 12px; font-weight: 700; color: var(--admin-text-sub);">Username Admin</label>
+          <input type="text" id="auth-admin-username" placeholder="Masukkan username admin..." class="search-input-field" style="padding-left: 12px; margin-top: 4px;" />
         </div>
         <div>
           <label style="font-size: 12px; font-weight: 700; color: var(--admin-text-sub);">Password</label>
@@ -481,11 +481,20 @@
     }
 
     async function initAdminApp() {
-      // Check auth status
+      // Check auth status via Server-side HttpOnly Cookie API
+      let isAuthenticated = false;
+      try {
+        const authRes = await fetch('/api/admin-auth');
+        const authData = await authRes.json();
+        if (authData && authData.authenticated) {
+          isAuthenticated = true;
+        }
+      } catch (e) {}
+
       const session = await getAdminSession();
       const isLogged = localStorage.getItem('promoholic_admin_logged') === 'true';
 
-      if (!session && !isLogged) {
+      if (!isAuthenticated && !session && !isLogged) {
         showAuthModal();
       }
 
@@ -499,16 +508,35 @@
           return;
         }
 
-        const email = document.getElementById('auth-admin-email').value.trim();
-        const password = document.getElementById('auth-admin-password').value.trim();
+        const usernameInput = document.getElementById('auth-admin-username');
+        const passwordInput = document.getElementById('auth-admin-password');
+        const username = usernameInput ? usernameInput.value.trim() : '';
+        const password = passwordInput ? passwordInput.value.trim() : '';
 
-        if (!email || !password) {
-          showAuthAlert("Silakan isi Email dan Password Admin.");
+        if (!username || !password) {
+          showAuthAlert("Silakan isi Username dan Password Admin.");
           return;
         }
 
+        let turnstileToken = '';
         try {
-          await loginAdmin(email, password);
+          if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
+            turnstileToken = window.turnstile.getResponse();
+          }
+        } catch (e) {}
+
+        try {
+          const loginRes = await fetch('/api/admin-auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', username, password, turnstileToken })
+          });
+          const loginData = await loginRes.json();
+
+          if (!loginRes.ok) {
+            throw new Error(loginData.error || 'Username atau Password salah.');
+          }
+
           clearLoginAttempts();
           localStorage.setItem('promoholic_admin_logged', 'true');
           document.getElementById('modal-admin-auth').classList.remove('active');
@@ -518,12 +546,19 @@
           if (res.lockUntil > 0) {
             showAuthAlert("Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.");
           } else {
-            showAuthAlert(`Login Gagal (${res.count}/5): Email atau Password salah.`);
+            showAuthAlert(`Login Gagal (${res.count}/5): ${err.message || 'Username atau Password salah.'}`);
           }
         }
       });
 
       document.getElementById('btn-admin-logout').addEventListener('click', async () => {
+        try {
+          await fetch('/api/admin-auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'logout' })
+          });
+        } catch (e) {}
         await logoutAdmin();
         localStorage.removeItem('promoholic_admin_logged');
         location.reload();
