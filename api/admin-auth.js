@@ -112,24 +112,41 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Username dan Password wajib diisi.' });
       }
 
-      // Verify Cloudflare Turnstile CAPTCHA Server-Side
-      if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
+      // Cloudflare Turnstile CAPTCHA Verification
+      const turnstileToken = String(body.turnstileToken || body['cf-turnstile-response'] || '').trim();
+      const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
+
+      if (turnstileToken || process.env.TURNSTILE_SECRET_KEY) {
+        if (!turnstileToken) {
+          return res.status(400).json({ error: 'Mohon selesaikan verifikasi CAPTCHA terlebih dahulu.' });
+        }
+
         try {
+          const verifyParams = new URLSearchParams();
+          verifyParams.append('secret', turnstileSecret);
+          verifyParams.append('response', turnstileToken);
+          if (clientIp && clientIp !== 'unknown') {
+            verifyParams.append('remoteip', clientIp);
+          }
+
           const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              secret: process.env.TURNSTILE_SECRET_KEY,
-              response: turnstileToken,
-              remoteip: clientIp
-            })
+            body: verifyParams
           });
+
           const verifyJson = await verifyRes.json();
+          console.log("Cloudflare Turnstile Verification Result:", verifyJson);
+
           if (!verifyJson.success) {
-            return res.status(400).json({ error: 'Verifikasi CAPTCHA gagal. Silakan coba lagi.' });
+            const errCodes = (verifyJson['error-codes'] || []).join(', ');
+            return res.status(400).json({ 
+              error: `Verifikasi CAPTCHA gagal (${errCodes || 'invalid-token'}). Silakan centang ulang CAPTCHA.` 
+            });
           }
         } catch (e) {
-          console.error("Turnstile server verification error:", e);
+          console.error("Turnstile server verification exception:", e);
+          return res.status(400).json({ error: 'Gagal menghubungi server Cloudflare Turnstile. Silakan coba lagi.' });
         }
       }
 

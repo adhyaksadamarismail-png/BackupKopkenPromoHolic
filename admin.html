@@ -525,6 +525,11 @@
           }
         } catch (e) {}
 
+        if (!turnstileToken) {
+          const cfInput = document.querySelector('[name="cf-turnstile-response"]');
+          if (cfInput) turnstileToken = cfInput.value;
+        }
+
         try {
           const loginRes = await fetch('/api/admin-auth', {
             method: 'POST',
