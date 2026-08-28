@@ -547,6 +547,11 @@
           document.getElementById('modal-admin-auth').classList.remove('active');
           location.reload();
         } catch (err) {
+          try {
+            if (window.turnstile && typeof window.turnstile.reset === 'function') {
+              window.turnstile.reset();
+            }
+          } catch (e) {}
           const res = recordFailedLogin();
           if (res.lockUntil > 0) {
             showAuthAlert("Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.");
