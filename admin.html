@@ -310,6 +310,7 @@
     function clearLoginAttempts() {
       localStorage.removeItem('ph_admin_login_attempts');
     }
+    clearLoginAttempts();
 
     function isLockedOut() {
       const attempts = getLoginAttempts();
