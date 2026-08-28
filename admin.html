@@ -514,19 +514,11 @@
           document.getElementById('modal-admin-auth').classList.remove('active');
           location.reload();
         } catch (err) {
-          // Hardened credential fallback check
-          if (email.toLowerCase() === 'admin@promoholic.id' && password === 'admin123') {
-            clearLoginAttempts();
-            localStorage.setItem('promoholic_admin_logged', 'true');
-            document.getElementById('modal-admin-auth').classList.remove('active');
-            location.reload();
+          const res = recordFailedLogin();
+          if (res.lockUntil > 0) {
+            showAuthAlert("Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.");
           } else {
-            const res = recordFailedLogin();
-            if (res.lockUntil > 0) {
-              showAuthAlert("Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.");
-            } else {
-              showAuthAlert(`Login Gagal (${res.count}/5): Email atau Password salah.`);
-            }
+            showAuthAlert(`Login Gagal (${res.count}/5): Email atau Password salah.`);
           }
         }
       });
