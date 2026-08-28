@@ -75,6 +75,29 @@ export function normalizePhone(phone) {
 }
 
 /**
+ * HTML Escaper / Anti-XSS Sanitizer
+ */
+export function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ * String Input Sanitizer (removes null bytes, script tags, control chars)
+ */
+export function sanitizeInput(str, maxLen = 500) {
+  if (!str) return '';
+  let clean = String(str).replace(/\0/g, '').trim();
+  clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  return clean.slice(0, maxLen);
+}
+
+/**
  * Generate Unique Order ID (e.g. #ORD-260826-001)
  */
 export function generateOrderId() {
@@ -100,16 +123,16 @@ export async function createOrder(orderPayload) {
 
   const newOrder = {
     order_id: generateOrderId(),
-    brand: orderPayload.brand || 'Kopi Kenangan',
-    customer_name: orderPayload.customer_name || '',
+    brand: sanitizeInput(orderPayload.brand || 'Kopi Kenangan', 100),
+    customer_name: sanitizeInput(orderPayload.customer_name || '', 100),
     phone_number: cleanPhone,
-    outlet: orderPayload.outlet || '',
-    pickup_time: orderPayload.pickup_time || 'Sekarang',
+    outlet: sanitizeInput(orderPayload.outlet || '', 150),
+    pickup_time: sanitizeInput(orderPayload.pickup_time || 'Sekarang', 50),
     items: orderPayload.items || [],
-    notes: orderPayload.notes || '',
-    subtotal: orderPayload.subtotal || 0,
-    surcharge: orderPayload.surcharge || 0,
-    total_price: orderPayload.total_price || 0,
+    notes: sanitizeInput(orderPayload.notes || '', 500),
+    subtotal: Number(orderPayload.subtotal) || 0,
+    surcharge: Number(orderPayload.surcharge) || 0,
+    total_price: Number(orderPayload.total_price) || 0,
     payment_method: 'QRIS',
     status: 'BELUM_DIPROSES',
     status_label: 'Belum Diproses',

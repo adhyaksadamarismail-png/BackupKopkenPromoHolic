@@ -1,7 +1,7 @@
 import { initialOutlets, searchOutlets } from './data/outlets.js';
 import { productCategories, products } from './data/products.js';
 import { loadSettings, saveSettings } from './data/settings.js';
-import { createOrder, fetchOrdersByPhone, subscribeCustomerOrders, normalizePhone } from './data/supabase.js';
+import { createOrder, fetchOrdersByPhone, subscribeCustomerOrders, normalizePhone, escapeHtml } from './data/supabase.js';
 import {
   BUNDLE_LARGE2,
   BUNDLE_SERBA50,
@@ -1819,22 +1819,22 @@ function renderTrackOrderResults(orders) {
   container.innerHTML = orders.map(order => `
     <div style="background: var(--bg-card); border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span style="font-size: 13px; font-weight: 800; color: var(--primary-orange);">${order.order_id}</span>
+        <span style="font-size: 13px; font-weight: 800; color: var(--primary-orange);">${escapeHtml(order.order_id)}</span>
         ${statusBadgeMap[order.status] || ''}
       </div>
 
       <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
-        ☕ ${order.brand || 'Kopi Kenangan'} — 📍 ${order.outlet || ''}
+        ☕ ${escapeHtml(order.brand || 'Kopi Kenangan')} — 📍 ${escapeHtml(order.outlet || '')}
       </div>
 
       <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
-        ⏰ Pickup: ${order.pickup_time || 'Sekarang'} | 💰 Total: <strong>${formatRupiah(order.total_price)}</strong>
+        ⏰ Pickup: ${escapeHtml(order.pickup_time || 'Sekarang')} | 💰 Total: <strong>${formatRupiah(order.total_price)}</strong>
       </div>
 
       ${order.receipt_url ? `
         <div style="margin-top: 10px; padding: 10px; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: var(--radius-md);">
           <div style="font-size: 11px; font-weight: 800; color: #16A34A; margin-bottom: 6px;">🧾 Bukti Receipt Pembayaran (Dari Admin):</div>
-          <img src="${order.receipt_url}" alt="Receipt" style="width: 100%; max-height: 180px; object-fit: contain; border-radius: var(--radius-sm); border: 1px solid var(--border-light);" />
+          <img src="${escapeHtml(order.receipt_url)}" alt="Receipt" style="width: 100%; max-height: 180px; object-fit: contain; border-radius: var(--radius-sm); border: 1px solid var(--border-light);" />
         </div>
       ` : ''}
     </div>
