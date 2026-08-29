@@ -8,10 +8,6 @@ const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
 // Server Secret for HMAC Token Signing
 const SERVER_SECRET = process.env.ADMIN_JWT_SECRET || 'promoholic-super-secret-server-key-2026';
 
-// Server-Side Credentials (NEVER EXPOSED TO FRONTEND)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-
 function signToken(payload) {
   const json = JSON.stringify(payload);
   const base64 = Buffer.from(json).toString('base64url');
@@ -84,14 +80,14 @@ export default async function handler(req, res) {
     const action = body.action || req.query.action || 'login';
 
     if (action === 'logout') {
-      res.setHeader('Set-Cookie', 'ph_admin_session=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
+      res.setHeader('Set-Cookie', 'ph_admin_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0');
       return res.status(200).json({ success: true, message: 'Session terminated' });
     }
 
     if (action === 'login') {
       const username = String(body.username || '').trim();
       const password = String(body.password || '').trim();
-      const turnstileToken = body.turnstileToken;
+      const turnstileToken = String(body.turnstileToken || body['cf-turnstile-response'] || '').trim();
 
       const attemptKey = `${clientIp}_${username}`;
       const now = Date.now();
@@ -112,68 +108,47 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Username dan Password wajib diisi.' });
       }
 
-      // Cloudflare Turnstile CAPTCHA Verification
-      const turnstileToken = String(body.turnstileToken || body['cf-turnstile-response'] || '').trim();
-      let turnstileSecret = process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
-
-      if (turnstileToken || process.env.TURNSTILE_SECRET_KEY) {
-        if (!turnstileToken) {
-          return res.status(400).json({ error: 'Mohon selesaikan verifikasi CAPTCHA terlebih dahulu.' });
-        }
-
-        try {
-          const verifyParams = new URLSearchParams();
-          verifyParams.append('secret', turnstileSecret);
-          verifyParams.append('response', turnstileToken);
-          if (clientIp && clientIp !== 'unknown') {
-            verifyParams.append('remoteip', clientIp);
-          }
-
-          let verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: verifyParams.toString()
-          });
-
-          let verifyJson = await verifyRes.json();
-          console.log("Cloudflare Turnstile Verification Result:", verifyJson);
-
-          // If failed and custom TURNSTILE_SECRET_KEY was used, try testing secret key fallback for testing sitekey
-          if (!verifyJson.success && turnstileSecret !== '1x0000000000000000000000000000000AA') {
-            const fallbackParams = new URLSearchParams();
-            fallbackParams.append('secret', '1x0000000000000000000000000000000AA');
-            fallbackParams.append('response', turnstileToken);
-            if (clientIp && clientIp !== 'unknown') fallbackParams.append('remoteip', clientIp);
-
-            const retryRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: fallbackParams.toString()
-            });
-            const retryJson = await retryRes.json();
-            if (retryJson.success) {
-              verifyJson = retryJson;
-            }
-          }
-
-          if (!verifyJson.success) {
-            const errCodes = (verifyJson['error-codes'] || []).join(', ');
-            return res.status(400).json({ 
-              error: `Verifikasi CAPTCHA gagal (${errCodes || 'invalid-token'}). Silakan centang ulang CAPTCHA.` 
-            });
-          }
-        } catch (e) {
-          console.error("Turnstile server verification exception:", e);
-          // Fallback gracefully for test sitekeys if network exception occurs
-          if (turnstileSecret === '1x0000000000000000000000000000000AA') {
-            console.warn("Bypassing exception for official testing sitekey.");
-          } else {
-            return res.status(400).json({ error: 'Gagal menghubungi server Cloudflare Turnstile. Silakan coba lagi.' });
-          }
-        }
+      // 1. Cloudflare Turnstile CAPTCHA Verification (Strictly process.env.TURNSTILE_SECRET_KEY)
+      const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+      if (!turnstileSecret) {
+        return res.status(500).json({ 
+          error: 'Konfigurasi server belum lengkap: TURNSTILE_SECRET_KEY belum di-set di Vercel Environment Variables.' 
+        });
       }
 
-      // Server-Side Credentials Verification (Zero-Trust PBKDF2 SHA-512 Hash Check)
+      if (!turnstileToken) {
+        return res.status(400).json({ error: 'Mohon selesaikan verifikasi CAPTCHA terlebih dahulu.' });
+      }
+
+      try {
+        const verifyParams = new URLSearchParams();
+        verifyParams.append('secret', turnstileSecret);
+        verifyParams.append('response', turnstileToken);
+        if (clientIp && clientIp !== 'unknown') {
+          verifyParams.append('remoteip', clientIp);
+        }
+
+        const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: verifyParams.toString()
+        });
+
+        const verifyJson = await verifyRes.json();
+        console.log("Cloudflare Turnstile Siteverify Response:", verifyJson);
+
+        if (!verifyJson.success) {
+          const errCodes = (verifyJson['error-codes'] || []).join(', ');
+          return res.status(400).json({ 
+            error: `Verifikasi CAPTCHA gagal (${errCodes || 'invalid-token'}). Silakan centang ulang CAPTCHA.` 
+          });
+        }
+      } catch (e) {
+        console.error("Turnstile server verification exception:", e);
+        return res.status(500).json({ error: 'Gagal menghubungi server Cloudflare Turnstile: ' + e.message });
+      }
+
+      // 2. Server-Side Credentials Verification (Zero-Trust PBKDF2 SHA-512 Hash Check)
       const allowedUsernames = [
         'ph.holics5gf',
         process.env.ADMIN_USERNAME ? process.env.ADMIN_USERNAME.toLowerCase() : null,
@@ -212,13 +187,13 @@ export default async function handler(req, res) {
       // Login Successful: Clear Failed Attempt Record
       failedAttempts.delete(attemptKey);
 
-      // Issue 30-Minute Expiring Server Session Cookie
+      // Issue 30-Minute Expiring Server Session Cookie (SameSite=Lax)
       const exp = Date.now() + (30 * 60 * 1000); // 30 minutes
       const sessionToken = signToken({ username, role: 'admin', exp });
 
       res.setHeader(
         'Set-Cookie', 
-        `ph_admin_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=1800`
+        `ph_admin_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=1800`
       );
 
       return res.status(200).json({ success: true, username });
