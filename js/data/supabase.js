@@ -1,17 +1,16 @@
 import { createClient as createSupabaseClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 /**
- * Get Credentials from window.ENV, Vite import.meta.env, or default fallback
+ * Get Credentials from window.ENV, Vite import.meta.env, or process.env
+ * ZERO HARDCODED DEFAULT KEYS IN SOURCE CODE
  */
 export function getCredentials() {
-  let url = 'https://ltseoigmcjvtaxdgcjjq.supabase.co';
-  let key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c2VvaWdtY2p2dGF4ZGdjampxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MDYxNjcsImV4cCI6MjEwMTQ4MjE2N30.nCWZRDH-lwZS42W7cM9av5KOBEALI2YQVFsNK0jQyJM';
+  let url = '';
+  let key = '';
 
-  if (typeof window !== 'undefined' && window.ENV_SUPABASE_URL) {
-    url = window.ENV_SUPABASE_URL;
-  }
-  if (typeof window !== 'undefined' && window.ENV_SUPABASE_ANON_KEY && !window.ENV_SUPABASE_ANON_KEY.includes('example')) {
-    key = window.ENV_SUPABASE_ANON_KEY;
+  if (typeof window !== 'undefined') {
+    if (window.ENV_SUPABASE_URL) url = window.ENV_SUPABASE_URL;
+    if (window.ENV_SUPABASE_ANON_KEY) key = window.ENV_SUPABASE_ANON_KEY;
   }
 
   // Check Vite environment variables if available
@@ -21,6 +20,18 @@ export function getCredentials() {
       if (import.meta.env.VITE_SUPABASE_ANON_KEY) key = import.meta.env.VITE_SUPABASE_ANON_KEY;
     }
   } catch (e) {}
+
+  // Check process.env if available
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      if (process.env.SUPABASE_URL) url = process.env.SUPABASE_URL;
+      if (process.env.SUPABASE_ANON_KEY) key = process.env.SUPABASE_ANON_KEY;
+    }
+  } catch (e) {}
+
+  if (!url || !key) {
+    console.warn("⚠️ SUPABASE CONFIG NOTICE: URL atau Anon Key belum terpasang di window.ENV atau Vercel Environment Variables.");
+  }
 
   return { url: url.trim(), key: key.trim() };
 }
@@ -35,9 +46,8 @@ export function getSupabase() {
   if (supabaseClient) return supabaseClient;
 
   const { url, key } = getCredentials();
-
-  if (key.includes('example')) {
-    console.warn("⚠️ SUPABASE DIAGNOSTIC: SUPABASE_ANON_KEY masih menggunakan anon key contoh. Masukkan Anon Key asli dari Dashboard Supabase (ltseoigmcjvtaxdgcjjq) ke file js/env.js atau Vercel Environment Variables.");
+  if (!url || !key) {
+    throw new Error("Koneksi Supabase belum dikonfigurasi! Pastikan SUPABASE_URL dan SUPABASE_ANON_KEY di-set di Vercel Environment Variables.");
   }
 
   // 1. Try official ESM imported createClient
@@ -110,14 +120,9 @@ export function generateOrderId() {
 }
 
 /**
- * CREATE ORDER - Stores directly into Supabase public.orders
+ * CREATE ORDER - Customer Checkout (Stores directly into Supabase public.orders via Anon Key)
  */
 export async function createOrder(orderPayload) {
-  const { url, key } = getCredentials();
-  if (key.includes('example')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi!\n\nSilakan masukkan SUPABASE_ANON_KEY asli Anda pada file js/env.js atau Vercel Dashboard Environment Variables.");
-  }
-
   const rawPhone = orderPayload.phone_number || orderPayload.customer_name || '';
   const cleanPhone = normalizePhone(rawPhone);
 
@@ -141,7 +146,6 @@ export async function createOrder(orderPayload) {
     created_at: new Date().toISOString()
   };
 
-  // Include UUID id if crypto.randomUUID is available
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     newOrder.id = crypto.randomUUID();
   }
@@ -158,24 +162,27 @@ export async function createOrder(orderPayload) {
     console.log("✅ [CREATE ORDER SUCCESS] Inserted row returned from Supabase:", data);
     return data || newOrder;
   } catch (err) {
-    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      console.error("❌ [CREATE ORDER NETWORK / FETCH ERROR]:", err);
-      throw new Error(`Gagal menghubungi server Supabase (${url}).\nMohon pastikan Anon Key Supabase di js/env.js atau Vercel sudah diisi dengan Key asli project ltseoigmcjvtaxdgcjjq.`);
-    }
+    console.error("❌ [CREATE ORDER EXCEPTION]:", err);
     throw err;
   }
 }
 
 /**
- * FETCH ALL ORDERS (for Admin Web)
+ * FETCH ALL ORDERS (for Admin Web - Secured Server-Side API Routing)
  */
 export async function fetchAllOrders() {
-  const { url, key } = getCredentials();
-  if (key.includes('example')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi! Anon Key masih placeholder. Atur js/env.js terlebih dahulu.");
+  console.log("📦 [FETCH ALL ORDERS STARTED] Fetching rows via Server-side API /api/admin-orders...");
+  try {
+    const apiRes = await fetch('/api/admin-orders');
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      console.log("✅ [FETCH ALL ORDERS VIA SERVER API SUCCESS] Total orders fetched:", data ? data.length : 0);
+      return data || [];
+    }
+  } catch (e) {
+    console.warn("Server API fetch notice, falling back to Supabase client:", e);
   }
 
-  console.log("📦 [FETCH ALL ORDERS STARTED] Fetching all rows from public.orders...");
   const client = getSupabase();
   try {
     const { data, error } = await client.from('orders')
@@ -187,28 +194,19 @@ export async function fetchAllOrders() {
       throw new Error(`Gagal mengambil data pesanan: ${error.message}`);
     }
 
-    console.log("✅ [FETCH ALL ORDERS SUCCESS] Total orders fetched:", data ? data.length : 0, data);
     return data || [];
   } catch (err) {
-    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      console.error("❌ [FETCH ALL ORDERS NETWORK ERROR]:", err);
-      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa Anon Key di js/env.js.`);
-    }
+    console.error("❌ [FETCH ALL ORDERS EXCEPTION]:", err);
     throw err;
   }
 }
 
 /**
- * FETCH ORDERS BY PHONE (Direct database query for Customer Tracking)
+ * FETCH ORDERS BY PHONE (Direct RPC/Database Query for Customer Tracking)
  */
 export async function fetchOrdersByPhone(phone) {
   const cleanPhone = normalizePhone(phone);
   if (!cleanPhone) return [];
-
-  const { url, key } = getCredentials();
-  if (key.includes('example')) {
-    throw new Error("Koneksi Supabase belum dikonfigurasi! Anon Key masih placeholder. Atur js/env.js terlebih dahulu.");
-  }
 
   const client = getSupabase();
   try {
@@ -218,7 +216,7 @@ export async function fetchOrdersByPhone(phone) {
       return rpcData || [];
     }
 
-    // 2. Fallback to direct query if RPC function is not yet created
+    // 2. Fallback to direct query
     const { data, error } = await client.from('orders')
       .select('*')
       .eq('phone_number', cleanPhone)
@@ -231,15 +229,13 @@ export async function fetchOrdersByPhone(phone) {
 
     return data || [];
   } catch (err) {
-    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa URL & Key di js/env.js.`);
-    }
+    console.error("SUPABASE FETCH PHONE EXCEPTION:", err);
     throw err;
   }
 }
 
 /**
- * UPDATE ORDER STATUS
+ * UPDATE ORDER STATUS - Secured Server API Routing
  */
 export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
   const statusLabels = {
@@ -258,10 +254,23 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
     ...extraData
   };
 
+  try {
+    const apiRes = await fetch('/api/admin-orders', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, newStatus, extraData })
+    });
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      return data || updatePayload;
+    }
+  } catch (e) {
+    console.warn("Server API status update notice, falling back to Supabase client:", e);
+  }
+
   const client = getSupabase();
   try {
     const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(orderId);
-    
     let query = client.from('orders').update(updatePayload);
     if (isUuid) {
       query = query.eq('id', orderId);
@@ -270,7 +279,6 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
     }
 
     const { data, error } = await query.select();
-
     if (error) {
       console.error("SUPABASE UPDATE ERROR:", error);
       throw new Error(`Gagal memperbarui status: ${error.message}`);
@@ -278,15 +286,13 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
 
     return (data && data.length > 0) ? data[0] : updatePayload;
   } catch (err) {
-    if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      throw new Error(`Gagal menghubungi server Supabase. Periksa URL & Key di js/env.js.`);
-    }
+    console.error("SUPABASE UPDATE EXCEPTION:", err);
     throw err;
   }
 }
 
 /**
- * UPLOAD RECEIPT IMAGE - Uploads file to Supabase Storage bucket 'receipts'
+ * UPLOAD RECEIPT IMAGE - Secured Server-Side API Upload
  */
 export async function uploadReceiptImage(orderId, file) {
   if (!file) {
@@ -299,6 +305,34 @@ export async function uploadReceiptImage(orderId, file) {
   }
   if (file.size > 5 * 1024 * 1024) {
     throw new Error("Ukuran file receipt maksimal 5 MB.");
+  }
+
+  // Convert File to base64 for Server-Side Upload Processing
+  const base64Data = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (e) => reject(e);
+    reader.readAsDataURL(file);
+  });
+
+  try {
+    const apiRes = await fetch('/api/admin-upload-receipt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId,
+        fileData: base64Data,
+        fileName: file.name,
+        mimeType: file.type
+      })
+    });
+
+    if (apiRes.ok) {
+      const resultData = await apiRes.json();
+      return resultData;
+    }
+  } catch (e) {
+    console.warn("Server API upload notice, falling back to Supabase client storage:", e);
   }
 
   const client = getSupabase();
@@ -316,12 +350,7 @@ export async function uploadReceiptImage(orderId, file) {
       const { data: urlData } = client.storage.from('receipts').getPublicUrl(filePath);
       publicUrl = urlData ? urlData.publicUrl : '';
     } else {
-      console.warn("Storage upload notice (using base64 fallback):", storageError);
-      publicUrl = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
+      publicUrl = base64Data;
     }
 
     const uploadedAt = new Date().toISOString();
@@ -443,37 +472,4 @@ export function subscribeCustomerOrders(phone, onUpdateCallback, onErrorCallback
     if (onErrorCallback) onErrorCallback(e);
     return () => {};
   }
-}
-
-/**
- * SUPABASE AUTHENTICATION HELPERS FOR ADMIN
- */
-export async function loginAdmin(email, password) {
-  const client = getSupabase();
-  if (!client) throw new Error("Supabase client tidak tersedia.");
-
-  const { data, error } = await client.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
-
-  if (error) {
-    throw new Error("Login Gagal: " + error.message);
-  }
-
-  return data;
-}
-
-export async function logoutAdmin() {
-  const client = getSupabase();
-  if (client) {
-    await client.auth.signOut();
-  }
-}
-
-export async function getAdminSession() {
-  const client = getSupabase();
-  if (!client) return null;
-  const { data } = await client.auth.getSession();
-  return data ? data.session : null;
 }
