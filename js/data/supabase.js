@@ -154,13 +154,13 @@ export async function createOrder(orderPayload) {
 
   const client = getSupabase();
   try {
-    const { data, error } = await client.from('orders').insert([newOrder]).select().single();
+    const { error } = await client.from('orders').insert([newOrder]);
     if (error) {
       console.error("❌ [CREATE ORDER ERROR DETAILS]:", error);
       throw new Error(`Database Error (${error.code || 'INSERT_FAILED'}): ${error.message}`);
     }
-    console.log("✅ [CREATE ORDER SUCCESS] Inserted row returned from Supabase:", data);
-    return data || newOrder;
+    console.log("✅ [CREATE ORDER SUCCESS] Inserted order successfully:", newOrder);
+    return newOrder;
   } catch (err) {
     console.error("❌ [CREATE ORDER EXCEPTION]:", err);
     throw err;
