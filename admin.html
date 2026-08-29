@@ -282,47 +282,9 @@
     let sortOrder = 'newest';
     let pendingCancelOrderId = null;
 
-    // --- SECURITY & RATE LIMITING LOGIC ---
-    const MAX_LOGIN_ATTEMPTS = 5;
-    const LOCKOUT_TIME_MS = 15 * 60 * 1000; // 15 minutes
+    // --- SECURITY LOGIC (ZERO LOCALSTORAGE - SERVER-SIDE COOKIE AUTH ONLY) ---
     const SESSION_INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
     let lastActivityTime = Date.now();
-
-    function getLoginAttempts() {
-      try {
-        return JSON.parse(localStorage.getItem('ph_admin_login_attempts') || '{}');
-      } catch (e) {
-        return { count: 0, lockUntil: 0 };
-      }
-    }
-
-    function recordFailedLogin() {
-      const attempts = getLoginAttempts();
-      const newCount = (attempts.count || 0) + 1;
-      let lockUntil = 0;
-      if (newCount >= MAX_LOGIN_ATTEMPTS) {
-        lockUntil = Date.now() + LOCKOUT_TIME_MS;
-      }
-      localStorage.setItem('ph_admin_login_attempts', JSON.stringify({ count: newCount, lockUntil }));
-      return { count: newCount, lockUntil };
-    }
-
-    function clearLoginAttempts() {
-      localStorage.removeItem('ph_admin_login_attempts');
-    }
-    clearLoginAttempts();
-
-    function isLockedOut() {
-      const attempts = getLoginAttempts();
-      if (attempts.lockUntil && Date.now() < attempts.lockUntil) {
-        const minutesLeft = Math.ceil((attempts.lockUntil - Date.now()) / 60000);
-        return `Akses login dikunci karena 5x kesalahan berturut-turut. Silakan coba lagi dalam ${minutesLeft} menit.`;
-      }
-      if (attempts.lockUntil && Date.now() >= attempts.lockUntil) {
-        clearLoginAttempts();
-      }
-      return null;
-    }
 
     function showAuthAlert(msg) {
       const alertBox = document.getElementById('auth-alert-box');
@@ -346,10 +308,15 @@
         window.addEventListener(evt, resetActivityTimer, { passive: true });
       });
 
-      setInterval(() => {
-        const isLogged = localStorage.getItem('promoholic_admin_logged') === 'true';
-        if (isLogged && Date.now() - lastActivityTime > SESSION_INACTIVITY_LIMIT_MS) {
-          localStorage.removeItem('promoholic_admin_logged');
+      setInterval(async () => {
+        if (Date.now() - lastActivityTime > SESSION_INACTIVITY_LIMIT_MS) {
+          try {
+            await fetch('/api/admin-auth', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'logout' })
+            });
+          } catch (e) {}
           showAuthModal("Sesi Anda telah berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.");
         }
       }, 30000);
@@ -482,7 +449,7 @@
     }
 
     async function initAdminApp() {
-      // Check auth status via Server-side HttpOnly Cookie API
+      // 1. Server-Side Authentication Check (HttpOnly Cookie check via /api/admin-auth)
       let isAuthenticated = false;
       try {
         const authRes = await fetch('/api/admin-auth');
@@ -492,22 +459,16 @@
         }
       } catch (e) {}
 
-      const session = await getAdminSession();
-      const isLogged = localStorage.getItem('promoholic_admin_logged') === 'true';
-
-      if (!isAuthenticated && !session && !isLogged) {
+      // Middleware Protection: Show modal and halt initialization if not authenticated
+      if (!isAuthenticated) {
         showAuthModal();
       }
 
       startInactivityCheck();
 
+      // Login Submit Handler
       document.getElementById('btn-submit-auth').addEventListener('click', async () => {
         hideAuthAlert();
-        const lockMsg = isLockedOut();
-        if (lockMsg) {
-          showAuthAlert(lockMsg);
-          return;
-        }
 
         const usernameInput = document.getElementById('auth-admin-username');
         const passwordInput = document.getElementById('auth-admin-password');
@@ -543,26 +504,30 @@
             throw new Error(loginData.error || 'Username atau Password salah.');
           }
 
-          clearLoginAttempts();
-          localStorage.setItem('promoholic_admin_logged', 'true');
+          // REQUIREMENT 3: Empty DOM username and password inputs on login success
+          if (usernameInput) usernameInput.value = '';
+          if (passwordInput) passwordInput.value = '';
+
           document.getElementById('modal-admin-auth').classList.remove('active');
           location.reload();
         } catch (err) {
+          if (passwordInput) passwordInput.value = '';
           try {
             if (window.turnstile && typeof window.turnstile.reset === 'function') {
               window.turnstile.reset();
             }
           } catch (e) {}
-          const res = recordFailedLogin();
-          if (res.lockUntil > 0) {
-            showAuthAlert("Akses login dikunci selama 15 menit karena 5x kesalahan berturut-turut.");
-          } else {
-            showAuthAlert(`Login Gagal (${res.count}/5): ${err.message || 'Username atau Password salah.'}`);
-          }
+          showAuthAlert(`Login Gagal: ${err.message || 'Username atau Password salah.'}`);
         }
       });
 
+      // REQUIREMENT 6: Logout destroys HttpOnly Cookie on server via POST /api/admin-auth
       document.getElementById('btn-admin-logout').addEventListener('click', async () => {
+        const usernameInput = document.getElementById('auth-admin-username');
+        const passwordInput = document.getElementById('auth-admin-password');
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+
         try {
           await fetch('/api/admin-auth', {
             method: 'POST',
@@ -570,10 +535,12 @@
             body: JSON.stringify({ action: 'logout' })
           });
         } catch (e) {}
-        await logoutAdmin();
-        localStorage.removeItem('promoholic_admin_logged');
+
         location.reload();
       });
+
+      // Block loading admin data if server authentication failed
+      if (!isAuthenticated) return;
 
       try {
         adminOrders = await fetchAllOrders();
