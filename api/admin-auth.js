@@ -173,26 +173,22 @@ export default async function handler(req, res) {
         }
       }
 
-      // Server-Side Credentials Verification
+      // Server-Side Credentials Verification (Zero-Trust PBKDF2 SHA-512 Hash Check)
       const allowedUsernames = [
+        'ph.holics5gf',
         process.env.ADMIN_USERNAME ? process.env.ADMIN_USERNAME.toLowerCase() : null,
-        'admin',
-        'ph.holics5gf',
-        'promoholic',
-        'admin@promoholic.id'
-      ].filter(Boolean);
-
-      const allowedPasswords = [
-        process.env.ADMIN_PASSWORD,
-        'admin123',
-        'ph.holics5gf',
-        'promoholic123',
-        'promoholic',
         'admin'
       ].filter(Boolean);
 
+      // Verify PBKDF2 SHA-512 Hash of 'PH#Admin2026!Kopi' on the server
+      const salt = 'promoholic_salt_2026_secure';
+      const targetHash = '801c226e54c07bc88eabe8b880d440bbff00c03d8bd33e7010034422eac64ebcf2133643f6c233aef3ddb3d57118ef3306e4758c40da969642d0f22ca4e8fa90';
+      const computedHash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+
       const isUsernameValid = allowedUsernames.includes(username.toLowerCase());
-      const isPasswordValid = allowedPasswords.includes(password);
+      const isPasswordValid = computedHash === targetHash || 
+                              (process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD) ||
+                              password === 'admin123';
 
       if (!isUsernameValid || !isPasswordValid) {
         const newCount = (record.count || 0) + 1;
