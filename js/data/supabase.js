@@ -171,9 +171,9 @@ export async function createOrder(orderPayload) {
  * FETCH ALL ORDERS (for Admin Web - Secured Server-Side API Routing)
  */
 export async function fetchAllOrders() {
-  console.log("📦 [FETCH ALL ORDERS STARTED] Fetching rows via Server-side API /api/admin-orders...");
+  console.log("📦 [FETCH ALL ORDERS STARTED] Fetching rows via Server-side API /api/orders...");
   try {
-    const apiRes = await fetch('/api/admin-orders');
+    const apiRes = await fetch('/api/orders');
     if (apiRes.ok) {
       const data = await apiRes.json();
       console.log("✅ [FETCH ALL ORDERS VIA SERVER API SUCCESS] Total orders fetched:", data ? data.length : 0);
@@ -255,7 +255,7 @@ export async function updateOrderStatus(orderId, newStatus, extraData = {}) {
   };
 
   try {
-    const apiRes = await fetch('/api/admin-orders', {
+    const apiRes = await fetch('/api/orders', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ orderId, newStatus, extraData })

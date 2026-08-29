@@ -83,7 +83,7 @@ export default async function handler(req, res) {
     const fileBuffer = Buffer.from(base64Content, 'base64');
     const uploadMime = mimeType || 'image/png';
 
-    // Upload to Supabase Storage Bucket 'receipts' via Server API
+    // Upload to Private Supabase Storage Bucket 'receipts' via Server API
     const uploadResponse = await fetch(`${supabaseUrl}/storage/v1/object/receipts/${filePath}`, {
       method: 'POST',
       headers: {
@@ -95,17 +95,40 @@ export default async function handler(req, res) {
       body: fileBuffer
     });
 
-    let publicUrl = `${supabaseUrl}/storage/v1/object/public/receipts/${filePath}`;
-    if (!uploadResponse.ok) {
-      console.warn("Storage API upload notice (using data URL fallback):", await uploadResponse.text());
-      publicUrl = fileData.startsWith('data:') ? fileData : `data:${uploadMime};base64,${base64Content}`;
+    let receiptAccessUrl = '';
+    if (uploadResponse.ok) {
+      // Generate 1-Year (31,536,000 seconds) Signed URL for private receipts bucket
+      try {
+        const signRes = await fetch(`${supabaseUrl}/storage/v1/object/sign/receipts/${filePath}`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ expiresIn: 31536000 })
+        });
+        const signData = await signRes.json();
+        if (signData && signData.signedURL) {
+          receiptAccessUrl = signData.signedURL.startsWith('http') 
+            ? signData.signedURL 
+            : `${supabaseUrl}/storage/v1${signData.signedURL}`;
+        }
+      } catch (e) {}
+
+      if (!receiptAccessUrl) {
+        receiptAccessUrl = `${supabaseUrl}/storage/v1/object/public/receipts/${filePath}`;
+      }
+    } else {
+      console.warn("Storage API upload notice (using base64 fallback):", await uploadResponse.text());
+      receiptAccessUrl = fileData.startsWith('data:') ? fileData : `data:${uploadMime};base64,${base64Content}`;
     }
 
     const uploadedAt = new Date().toISOString();
     const updatePayload = {
       status: 'DIPROSES',
       status_label: 'Diproses',
-      receipt_url: publicUrl,
+      receipt_url: receiptAccessUrl,
       receipt_uploaded_at: uploadedAt
     };
 
@@ -128,7 +151,7 @@ export default async function handler(req, res) {
     const updatedOrder = (updateData && updateData.length > 0) ? updateData[0] : updatePayload;
 
     return res.status(200).json({
-      receipt_url: publicUrl,
+      receipt_url: receiptAccessUrl,
       uploadedAt,
       order: updatedOrder
     });

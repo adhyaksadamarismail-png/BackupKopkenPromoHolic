@@ -47,15 +47,17 @@ BEGIN
   END IF;
 END $$;
 
--- 4. Set Up Supabase Storage Bucket for Receipts (Public Read, Admin Write)
+-- 4. Set Up Supabase Storage Bucket for Receipts (PRIVATE BUCKET)
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('receipts', 'receipts', true)
-ON CONFLICT (id) DO UPDATE SET public = true;
+VALUES ('receipts', 'receipts', false)
+ON CONFLICT (id) DO UPDATE SET public = false;
 
 -- 5. Enable Row Level Security (RLS) on `public.orders`
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 -- 6. STRICT ROW LEVEL SECURITY (RLS) POLICIES
+-- NOTE: ALL ADMIN READ/UPDATE/DELETE OPERATIONS ARE ROUTED VIA SERVER-SIDE API (/api/orders) USING SERVICE_ROLE KEY.
+-- DIRECT FRONTEND POSTGREST SELECT/UPDATE/DELETE WITH ANON OR AUTHENTICATED KEYS ARE BLOCKED.
 
 -- Policy 6a: Customer Order Creation (INSERT ONLY FOR ANON & AUTHENTICATED)
 DROP POLICY IF EXISTS "Allow anon and authenticated to insert orders" ON public.orders;
@@ -65,64 +67,65 @@ CREATE POLICY "Allow customer order creation"
   TO anon, authenticated
   WITH CHECK (true);
 
--- Policy 6b: STRICT SELECT Policy (ADMIN ONLY FOR DIRECT TABLE ACCESS)
--- Note: Customer tracking uses the RPC function get_customer_orders_by_phone(p_phone text)
+-- Policy 6b: REMOVE DIRECT SELECT FOR ANON & AUTHENTICATED
+-- Direct SELECT * on public.orders via PostgREST is blocked for anon & authenticated.
+-- All admin reading is handled securely by /api/orders on the server using service_role key.
 DROP POLICY IF EXISTS "Allow select orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow select orders by phone or admin" ON public.orders;
 DROP POLICY IF EXISTS "Only admin select orders" ON public.orders;
 
-CREATE POLICY "Only admin select orders"
-  ON public.orders FOR SELECT
-  TO authenticated
-  USING (true);
-
--- Policy 6c: STRICT UPDATE Policy (ADMIN ONLY)
+-- Policy 6c: REMOVE DIRECT UPDATE FOR ANON & AUTHENTICATED
+-- Direct UPDATE via PostgREST is blocked. Server API (/api/orders) handles updates.
 DROP POLICY IF EXISTS "Allow update orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow authenticated admin full access" ON public.orders;
 DROP POLICY IF EXISTS "Only admin update orders" ON public.orders;
 
-CREATE POLICY "Only admin update orders"
-  ON public.orders FOR UPDATE
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
-
--- Policy 6d: STRICT DELETE Policy (ADMIN ONLY)
+-- Policy 6d: REMOVE DIRECT DELETE FOR ANON & AUTHENTICATED
+-- Direct DELETE via PostgREST is blocked. Server API (/api/orders) handles deletion.
 DROP POLICY IF EXISTS "Only admin delete orders" ON public.orders;
-CREATE POLICY "Only admin delete orders"
-  ON public.orders FOR DELETE
-  TO authenticated
-  USING (true);
 
--- 7. Secure Storage Bucket Security Policies for `receipts`
+
+-- 7. Secure Storage Bucket Security Policies for `receipts` (PRIVATE BUCKET)
 DROP POLICY IF EXISTS "Public Read Receipts" ON storage.objects;
-CREATE POLICY "Public Read Receipts"
-  ON storage.objects FOR SELECT
-  TO anon, authenticated
-  USING (bucket_id = 'receipts');
-
--- Only Authenticated Admin users can upload receipt photos
 DROP POLICY IF EXISTS "Upload Receipts Policy" ON storage.objects;
 DROP POLICY IF EXISTS "Admin Upload Receipts Policy" ON storage.objects;
-CREATE POLICY "Admin Upload Receipts Policy"
-  ON storage.objects FOR INSERT
-  TO authenticated
-  WITH CHECK (bucket_id = 'receipts');
-
 DROP POLICY IF EXISTS "Update Receipts Policy" ON storage.objects;
 DROP POLICY IF EXISTS "Admin Update Receipts Policy" ON storage.objects;
-CREATE POLICY "Admin Update Receipts Policy"
-  ON storage.objects FOR UPDATE
-  TO authenticated
-  USING (bucket_id = 'receipts');
 
--- 8. Secure RPC Function for Customer Order Tracking by Phone
+-- Storage objects access for anon and authenticated is blocked.
+-- Uploads & Signed URL generation are handled strictly by Server API (/api/admin-upload-receipt) using service_role key.
+
+
+-- 8. Secure RPC Function for Customer Order Tracking (EXPLICIT COLUMNS ONLY)
+-- Returns strictly necessary columns for the customer's own order tracking
+DROP FUNCTION IF EXISTS public.get_customer_orders_by_phone(text);
+
 CREATE OR REPLACE FUNCTION public.get_customer_orders_by_phone(p_phone text)
-RETURNS SETOF public.orders
+RETURNS TABLE (
+  order_id text,
+  brand text,
+  outlet text,
+  pickup_time text,
+  total_price numeric,
+  status text,
+  status_label text,
+  receipt_url text,
+  created_at timestamptz
+)
 LANGUAGE sql
 SECURITY DEFINER
 AS $$
-  SELECT * FROM public.orders
+  SELECT 
+    order_id,
+    brand,
+    outlet,
+    pickup_time,
+    total_price,
+    status,
+    status_label,
+    receipt_url,
+    created_at
+  FROM public.orders
   WHERE phone_number = p_phone
   ORDER BY created_at DESC;
 $$;
