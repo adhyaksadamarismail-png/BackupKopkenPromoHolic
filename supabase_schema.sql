@@ -57,7 +57,7 @@ ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 -- 6. STRICT ROW LEVEL SECURITY (RLS) POLICIES
 
--- Policy 6a: Allow anyone (Anon & Authenticated) to INSERT new orders
+-- Policy 6a: Customer Order Creation (INSERT ONLY FOR ANON & AUTHENTICATED)
 DROP POLICY IF EXISTS "Allow anon and authenticated to insert orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow customer order creation" ON public.orders;
 CREATE POLICY "Allow customer order creation"
@@ -65,19 +65,18 @@ CREATE POLICY "Allow customer order creation"
   TO anon, authenticated
   WITH CHECK (true);
 
--- Policy 6b: SELECT Policy
--- Authenticated users (Admin) can read ALL orders.
--- Anon users can read orders for customer tracking.
+-- Policy 6b: STRICT SELECT Policy (ADMIN ONLY FOR DIRECT TABLE ACCESS)
+-- Note: Customer tracking uses the RPC function get_customer_orders_by_phone(p_phone text)
 DROP POLICY IF EXISTS "Allow select orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow select orders by phone or admin" ON public.orders;
-CREATE POLICY "Allow select orders by phone or admin"
+DROP POLICY IF EXISTS "Only admin select orders" ON public.orders;
+
+CREATE POLICY "Only admin select orders"
   ON public.orders FOR SELECT
-  TO anon, authenticated
+  TO authenticated
   USING (true);
 
 -- Policy 6c: STRICT UPDATE Policy (ADMIN ONLY)
--- ONLY Authenticated Admin users can update order status and receipt URL!
--- Anonymous users CANNOT update any orders!
 DROP POLICY IF EXISTS "Allow update orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow authenticated admin full access" ON public.orders;
 DROP POLICY IF EXISTS "Only admin update orders" ON public.orders;

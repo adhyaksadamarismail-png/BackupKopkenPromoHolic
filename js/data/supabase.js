@@ -212,6 +212,13 @@ export async function fetchOrdersByPhone(phone) {
 
   const client = getSupabase();
   try {
+    // 1. Try RPC function get_customer_orders_by_phone first
+    const { data: rpcData, error: rpcError } = await client.rpc('get_customer_orders_by_phone', { p_phone: cleanPhone });
+    if (!rpcError && rpcData) {
+      return rpcData || [];
+    }
+
+    // 2. Fallback to direct query if RPC function is not yet created
     const { data, error } = await client.from('orders')
       .select('*')
       .eq('phone_number', cleanPhone)
