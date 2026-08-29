@@ -146,17 +146,20 @@ export async function createOrder(orderPayload) {
     newOrder.id = crypto.randomUUID();
   }
 
+  console.log("🚀 [CREATE ORDER STARTED] Payload to INSERT into public.orders:", newOrder);
+
   const client = getSupabase();
   try {
     const { data, error } = await client.from('orders').insert([newOrder]).select().single();
     if (error) {
-      console.error("SUPABASE INSERT ERROR DETAILS:", error);
+      console.error("❌ [CREATE ORDER ERROR DETAILS]:", error);
       throw new Error(`Database Error (${error.code || 'INSERT_FAILED'}): ${error.message}`);
     }
+    console.log("✅ [CREATE ORDER SUCCESS] Inserted row returned from Supabase:", data);
     return data || newOrder;
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
-      console.error("SUPABASE NETWORK / FETCH ERROR:", err);
+      console.error("❌ [CREATE ORDER NETWORK / FETCH ERROR]:", err);
       throw new Error(`Gagal menghubungi server Supabase (${url}).\nMohon pastikan Anon Key Supabase di js/env.js atau Vercel sudah diisi dengan Key asli project ltseoigmcjvtaxdgcjjq.`);
     }
     throw err;
@@ -172,6 +175,7 @@ export async function fetchAllOrders() {
     throw new Error("Koneksi Supabase belum dikonfigurasi! Anon Key masih placeholder. Atur js/env.js terlebih dahulu.");
   }
 
+  console.log("📦 [FETCH ALL ORDERS STARTED] Fetching all rows from public.orders...");
   const client = getSupabase();
   try {
     const { data, error } = await client.from('orders')
@@ -179,13 +183,15 @@ export async function fetchAllOrders() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error("SUPABASE FETCH ALL ERROR:", error);
+      console.error("❌ [FETCH ALL ORDERS ERROR]:", error);
       throw new Error(`Gagal mengambil data pesanan: ${error.message}`);
     }
 
+    console.log("✅ [FETCH ALL ORDERS SUCCESS] Total orders fetched:", data ? data.length : 0, data);
     return data || [];
   } catch (err) {
     if (err.message.includes('Fetch') || err.message.includes('Load failed') || err.name === 'TypeError') {
+      console.error("❌ [FETCH ALL ORDERS NETWORK ERROR]:", err);
       throw new Error(`Gagal menghubungi server Supabase (${url}). Periksa Anon Key di js/env.js.`);
     }
     throw err;
@@ -340,28 +346,39 @@ export function subscribeAdminOrders(onUpdateCallback, onErrorCallback) {
   }
 
   try {
+    console.log("📡 [SUBSCRIBE ADMIN REALTIME] Subscribing to postgres_changes on public.orders...");
     adminChannel = client.channel('admin-orders-realtime-channel')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
+        console.log("🔔 [REALTIME EVENT RECEIVED IN ADMIN]:", payload.eventType, payload);
         try {
           const orders = await fetchAllOrders();
+          console.log("✅ [REALTIME RE-FETCH COMPLETE]: Updated orders list count =", orders.length);
           onUpdateCallback(orders, payload);
         } catch (err) {
+          console.error("❌ [REALTIME CALLBACK ERROR]:", err);
           if (onErrorCallback) onErrorCallback(err);
         }
       })
       .subscribe((status, err) => {
+        console.log("📡 [REALTIME ADMIN CHANNEL STATUS]:", status, err || '');
+        if (status === 'SUBSCRIBED') {
+          console.log("🟢 [REALTIME ADMIN CHANNEL SUBSCRIBED] Admin is now listening for INSERT, UPDATE, DELETE in real-time.");
+        }
         if (status === 'CHANNEL_ERROR' || err) {
-          if (onErrorCallback) onErrorCallback(err || new Error("Gagal berlangganan channel Realtime admin."));
+          console.error("❌ [REALTIME ADMIN CHANNEL ERROR]:", status, err);
+          if (onErrorCallback) onErrorCallback(err || new Error(`Gagal berlangganan channel Realtime admin (${status}).`));
         }
       });
 
     return () => {
       if (adminChannel) {
+        console.log("🧹 [CLEANUP REALTIME ADMIN CHANNEL]");
         client.removeChannel(adminChannel);
         adminChannel = null;
       }
     };
   } catch (e) {
+    console.error("❌ [REALTIME SUBSCRIBE EXCEPTION]:", e);
     if (onErrorCallback) onErrorCallback(e);
     return () => {};
   }
